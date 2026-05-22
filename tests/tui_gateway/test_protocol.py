@@ -22,7 +22,7 @@ def _restore_stdout():
 @pytest.fixture()
 def server():
     with patch.dict("sys.modules", {
-        "kase_constants": MagicMock(get_kase_home=MagicMock(return_value="/tmp/hermes_test")),
+        "kase_constants": MagicMock(get_kase_home=MagicMock(return_value="/tmp/kase_test")),
         "kase_cli.env_loader": MagicMock(),
         "kase_cli.banner": MagicMock(),
         "kase_state": MagicMock(),

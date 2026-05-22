@@ -142,7 +142,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def _print_version() -> None:
-    from kase_cli import __version__ as hermes_version
+    from kase_cli import __version__ as kase_version
 
     print(hermes_version)
 

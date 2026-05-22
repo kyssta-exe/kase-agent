@@ -110,7 +110,7 @@ _install_results: Dict[str, Optional[str]] = {}
 _install_lock_meta = threading.Lock()
 
 
-def hermes_lsp_bin_dir() -> Path:
+def kase_lsp_bin_dir() -> Path:
     """Return the Kase-owned bin staging dir for LSP servers."""
     home = os.environ.get("KASE_HOME")
     if home is None:
@@ -118,6 +118,9 @@ def hermes_lsp_bin_dir() -> Path:
     p = Path(home) / "lsp" / "bin"
     p.mkdir(parents=True, exist_ok=True)
     return p
+
+
+hermes_lsp_bin_dir = kase_lsp_bin_dir  # backward compat
 
 
 def _existing_binary(name: str) -> Optional[str]:

@@ -191,7 +191,7 @@ class XAIImageGenProvider(ImageGenProvider):
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "User-Agent": hermes_xai_user_agent(),
+            "User-Agent": kase_xai_user_agent(),
         }
 
         base_url = str(creds.get("base_url") or "https://api.x.ai/v1").strip().rstrip("/")

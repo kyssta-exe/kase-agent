@@ -336,7 +336,7 @@ def x_search_tool(
                     headers={
                         "Authorization": f"Bearer {api_key}",
                         "Content-Type": "application/json",
-                        "User-Agent": hermes_xai_user_agent(),
+                        "User-Agent": kase_xai_user_agent(),
                     },
                     json=payload,
                     timeout=timeout_seconds,

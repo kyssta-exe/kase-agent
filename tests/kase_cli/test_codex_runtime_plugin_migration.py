@@ -808,7 +808,7 @@ class TestKaseHomeLeakGuard:
 
     def test_tempdir_detector_recognizes_pytest_paths(self):
         assert _looks_like_test_tempdir(
-            "/private/var/folders/abc/pytest-of-kshitij/pytest-137/popen-gw2/test_X/hermes_test"
+            "/private/var/folders/abc/pytest-of-kshitij/pytest-137/popen-gw2/test_X/kase_test"
         )
         assert _looks_like_test_tempdir(
             "/tmp/pytest-of-user/pytest-12/test_X/kase"
@@ -828,7 +828,7 @@ class TestKaseHomeLeakGuard:
         tempdir, _build_hermes_tools_mcp_entry() must NOT propagate it."""
         monkeypatch.setenv(
             "KASE_HOME",
-            "/private/var/folders/xx/pytest-of-user/pytest-99/test_x/hermes_test",
+            "/private/var/folders/xx/pytest-of-user/pytest-99/test_x/kase_test",
         )
         entry = _build_hermes_tools_mcp_entry()
         env = entry.get("env", {})

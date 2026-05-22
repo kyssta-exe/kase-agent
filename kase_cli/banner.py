@@ -499,7 +499,7 @@ def build_welcome_banner(console: Console, model: str, cwd: str,
         from kase_cli.skin_engine import get_active_skin
         _bskin = get_active_skin()
         _hero = _bskin.banner_hero if hasattr(_bskin, 'banner_hero') and _bskin.banner_hero else KASE_HERO
-    else:
+    except Exception:
         _hero = KASE_HERO
     left_lines = ["", _hero, ""]
     model_short = model.split("/")[-1] if "/" in model else model

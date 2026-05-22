@@ -335,7 +335,7 @@ def _hermetic_environment(tmp_path, monkeypatch):
     #    fixture. Any code in the codebase reading ``~/.kase/*`` via
     #    ``Path.home() / ".kase"`` instead of ``get_kase_home()``
     #    is a bug to fix at the callsite.
-    fake_kase_home = tmp_path / "hermes_test"
+    fake_kase_home = tmp_path / "kase_test"
     fake_kase_home.mkdir()
     (fake_kase_home / "sessions").mkdir()
     (fake_kase_home / "cron").mkdir()

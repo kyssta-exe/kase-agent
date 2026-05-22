@@ -244,7 +244,7 @@ class TestSystemdServiceRefresh:
         ``Environment=`` line. Without this guard, any test that drives
         ``run_gateway()`` end-to-end on a real Linux dev box silently
         rewrites the developer's installed gateway unit with a
-        ``/tmp/pytest-of-.../hermes_test`` KASE_HOME — silently breaking
+        ``/tmp/pytest-of-.../kase_test`` KASE_HOME — silently breaking
         their gateway on the next boot. The guard sniffs the generated
         unit body for tmpdir markers and refuses the write. Tests that
         legitimately exercise the refresh flow patch
@@ -261,7 +261,7 @@ class TestSystemdServiceRefresh:
         polluted_unit = (
             "[Service]\n"
             'Environment="KASE_HOME=/tmp/pytest-of-alice/pytest-42/'
-            'popen-gw0/test_x/hermes_test"\n'
+            'popen-gw0/test_x/kase_test"\n'
         )
         monkeypatch.setattr(
             gateway_cli,

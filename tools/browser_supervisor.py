@@ -72,8 +72,8 @@ DIALOG_BRIDGE_URL_PATTERN = f"http://{DIALOG_BRIDGE_HOST}/*"
 # in the first place — the overrides take precedence.
 _DIALOG_BRIDGE_SCRIPT = r"""
 (() => {
-  if (window.__hermesDialogBridgeInstalled) return;
-  window.__hermesDialogBridgeInstalled = true;
+  if (window.__kaseDialogBridgeInstalled) return;
+  window.__kaseDialogBridgeInstalled = true;
   const ENDPOINT = "http://kase-dialog-bridge.invalid/";
   function ask(kind, message, defaultPrompt) {
     try {

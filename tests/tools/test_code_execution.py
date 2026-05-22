@@ -119,8 +119,8 @@ class TestHermesToolsGeneration(unittest.TestCase):
     def test_file_transport_uses_tempfile_fallback_for_rpc_dir(self):
         src = generate_hermes_tools_module(["terminal"], transport="file")
         self.assertIn("import json, os, shlex, tempfile, threading, time", src)
-        self.assertIn("os.path.join(tempfile.gettempdir(), \"hermes_rpc\")", src)
-        self.assertNotIn('os.environ.get("HERMES_RPC_DIR", "/tmp/hermes_rpc")', src)
+        self.assertIn("os.path.join(tempfile.gettempdir(), \"kase_rpc\")", src)
+        self.assertNotIn('os.environ.get("HERMES_RPC_DIR", "/tmp/kase_rpc")', src)
 
     def test_uds_transport_serializes_concurrent_calls(self):
         """Regression: UDS _call() must hold a lock across send+recv so that
@@ -309,7 +309,7 @@ print(result)
 """
         # Only enable web_search -- terminal should be excluded
         result = self._run(code, enabled_tools=["web_search"])
-        # terminal won't be in hermes_tools.py, so import fails
+        # terminal won't be in kase_tools.py, so import fails
         self.assertEqual(result["status"], "error")
 
     def test_empty_code(self):
@@ -524,12 +524,12 @@ class TestStubSchemaDrift(unittest.TestCase):
                          "search_files stub docstring still uses obsolete 'find' target value")
 
     def test_generated_module_accepts_all_params(self):
-        """The generated hermes_tools.py module should accept all current params
+        """The generated kase_tools.py module should accept all current params
         without TypeError when called with keyword arguments."""
         src = generate_hermes_tools_module(list(SANDBOX_ALLOWED_TOOLS))
 
         # Compile the generated module to check for syntax errors
-        compile(src, "hermes_tools.py", "exec")
+        compile(src, "kase_tools.py", "exec")
 
         # Verify specific parameter signatures are in the source
         # search_files must accept context, offset, output_mode
@@ -737,7 +737,7 @@ class TestEnvVarFiltering(unittest.TestCase):
         child_env = self._get_child_env()
         self.assertIn("HOME", child_env)
 
-    def test_hermes_rpc_socket_injected(self):
+    def test_kase_rpc_socket_injected(self):
         child_env = self._get_child_env()
         self.assertIn("HERMES_RPC_SOCKET", child_env)
 

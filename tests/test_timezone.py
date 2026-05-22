@@ -346,7 +346,7 @@ class TestCronTimezone:
         monkeypatch.setattr(jobs_module, "OUTPUT_DIR", tmp_path / "cron" / "output")
 
         # Use a Kase timezone far behind UTC so that the numeric wall time
-        # of the naive timestamp exceeds _hermes_now's wall time — this would
+        # of the naive timestamp exceeds _kase_now's wall time — this would
         # have caused a false "not due" with the old replace(tzinfo=...) approach.
         os.environ["HERMES_TIMEZONE"] = "Pacific/Midway"  # UTC-11
         _reset_kase_time_cache()

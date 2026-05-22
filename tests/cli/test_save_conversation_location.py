@@ -1,6 +1,6 @@
 """Tests for /save — the conversation snapshot slash command.
 
-Regression: the old implementation wrote ``hermes_conversation_<ts>.json``
+Regression: the old implementation wrote ``kase_conversation_<ts>.json``
 to the current working directory (CWD). Users who ran /save expected the
 file to be discoverable via ``kase sessions browse``, but CWD-resident
 snapshots are not indexed in the state DB and are generally invisible.
@@ -65,13 +65,13 @@ def test_save_conversation_writes_under_kase_home(hermes_home, tmp_path, monkeyp
     cli.KaseCLI.save_conversation(stub)
 
     # File must NOT be in CWD
-    cwd_leak = list(work.glob("hermes_conversation_*.json"))
+    cwd_leak = list(work.glob("kase_conversation_*.json"))
     assert not cwd_leak, f"snapshot leaked to CWD: {cwd_leak}"
 
     # File MUST be under ~/.kase/sessions/saved/
     saved_dir = hermes_home / "sessions" / "saved"
     assert saved_dir.is_dir(), "expected saved/ subdirectory to be created"
-    files = list(saved_dir.glob("hermes_conversation_*.json"))
+    files = list(saved_dir.glob("kase_conversation_*.json"))
     assert len(files) == 1, files
 
     payload = json.loads(files[0].read_text())

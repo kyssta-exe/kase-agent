@@ -292,7 +292,7 @@ gateway:
   update:
     platform_not_messaging:  "✗ /update ist nur auf Messaging-Plattformen verfügbar. Führen Sie `kase update` im Terminal aus."
     not_git_repo:            "✗ Kein Git-Repository — Update nicht möglich."
-    hermes_cmd_not_found:    "✗ Der Befehl `kase` konnte nicht gefunden werden. Kase läuft, aber der Update-Befehl konnte das ausführbare Programm weder im PATH noch über den aktuellen Python-Interpreter finden. Versuchen Sie, `kase update` manuell im Terminal auszuführen."
+    kase_cmd_not_found:    "✗ Der Befehl `kase` konnte nicht gefunden werden. Kase läuft, aber der Update-Befehl konnte das ausführbare Programm weder im PATH noch über den aktuellen Python-Interpreter finden. Versuchen Sie, `kase update` manuell im Terminal auszuführen."
     start_failed:            "✗ Update konnte nicht gestartet werden: {error}"
     starting:                "⚕ Kase-Update wird gestartet… Ich streame den Fortschritt hier."
 

@@ -38,7 +38,7 @@ from typing import Any, Awaitable, Dict, Optional
 from urllib.parse import urlparse
 import httpx
 from agent.auxiliary_client import async_call_llm, extract_content_or_reasoning
-from kase_constants import get_hermes_dir
+from kase_constants import get_kase_dir as get_hermes_dir
 from tools.debug_helpers import DebugSession
 from tools.website_policy import check_website_access
 import sys

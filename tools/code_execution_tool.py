@@ -8,13 +8,13 @@ collapsing multi-step tool chains into a single inference turn.
 Architecture (two transports):
 
   **Local backend (UDS):**
-  1. Parent generates a `hermes_tools.py` stub module with UDS RPC functions
+  1. Parent generates a `kase_tools.py` stub module with UDS RPC functions
   2. Parent opens a Unix domain socket and starts an RPC listener thread
   3. Parent spawns a child process that runs the LLM's script
   4. Tool calls travel over the UDS back to the parent for dispatch
 
   **Remote backends (file-based RPC):**
-  1. Parent generates `hermes_tools.py` with file-based RPC stubs
+  1. Parent generates `kase_tools.py` with file-based RPC stubs
   2. Parent ships both files to the remote environment
   3. Script runs inside the terminal backend (Docker/SSH/Modal/Daytona/etc.)
   4. Tool calls are written as request files; a polling thread on the parent
@@ -176,7 +176,7 @@ def check_sandbox_requirements() -> bool:
 
 
 # ---------------------------------------------------------------------------
-# hermes_tools.py code generator
+# kase_tools.py code generator
 # ---------------------------------------------------------------------------
 
 # Per-tool stub templates: (function_name, signature, docstring, args_dict_expr)
@@ -230,7 +230,7 @@ _TOOL_STUBS = {
 def generate_hermes_tools_module(enabled_tools: List[str],
                                  transport: str = "uds") -> str:
     """
-    Build the source code for the hermes_tools.py stub module.
+    Build the source code for the kase_tools.py stub module.
 
     Only tools in both SANDBOX_ALLOWED_TOOLS and enabled_tools get stubs.
 
@@ -372,7 +372,7 @@ _FILE_TRANSPORT_HEADER = '''\
 """Auto-generated Kase tools RPC stubs (file-based transport)."""
 import json, os, shlex, tempfile, threading, time
 
-_RPC_DIR = os.environ.get("HERMES_RPC_DIR") or os.path.join(tempfile.gettempdir(), "hermes_rpc")
+_RPC_DIR = os.environ.get("HERMES_RPC_DIR") or os.path.join(tempfile.gettempdir(), "kase_rpc")
 _seq = 0
 # `_seq += 1` is not atomic (read-modify-write), so concurrent _call()
 # invocations from multiple threads could allocate the same sequence number
@@ -845,7 +845,7 @@ def _execute_remote(
 ) -> str:
     """Run a script on the remote terminal backend via file-based RPC.
 
-    The script and the generated hermes_tools.py module are shipped to
+    The script and the generated kase_tools.py module are shipped to
     the remote environment, and tool calls are proxied through a polling
     thread that communicates via request/response files.
     """
@@ -901,7 +901,7 @@ def _execute_remote(
         tools_src = generate_hermes_tools_module(
             list(sandbox_tools), transport="file",
         )
-        _ship_file_to_remote(env, f"{sandbox_dir}/hermes_tools.py", tools_src)
+        _ship_file_to_remote(env, f"{sandbox_dir}/kase_tools.py", tools_src)
         _ship_file_to_remote(env, f"{sandbox_dir}/script.py", code)
 
         # Start RPC polling thread
@@ -1086,8 +1086,8 @@ def execute_code(
     if not sandbox_tools:
         sandbox_tools = SANDBOX_ALLOWED_TOOLS
 
-    # --- Set up temp directory with hermes_tools.py and script.py ---
-    tmpdir = tempfile.mkdtemp(prefix="hermes_sandbox_")
+    # --- Set up temp directory with kase_tools.py and script.py ---
+    tmpdir = tempfile.mkdtemp(prefix="kase_sandbox_")
     # Use /tmp on macOS to avoid the long /var/folders/... path that pushes
     # Unix domain socket paths past the 104-byte macOS AF_UNIX limit.
     # On Linux, tempfile.gettempdir() already returns /tmp.
@@ -1105,7 +1105,7 @@ def execute_code(
         sock_path = None  # not used on Windows; TCP endpoint stored below
         rpc_endpoint = None  # set after bind()
     else:
-        sock_path = os.path.join(_sock_tmpdir, f"hermes_rpc_{uuid.uuid4().hex}.sock")
+        sock_path = os.path.join(_sock_tmpdir, f"kase_rpc_{uuid.uuid4().hex}.sock")
         rpc_endpoint = sock_path
 
     tool_call_log: list = []
@@ -1125,7 +1125,7 @@ def execute_code(
         # sandbox_tools is already the correct set (intersection with session
         # tools, or SANDBOX_ALLOWED_TOOLS as fallback — see lines above).
         tools_src = generate_hermes_tools_module(list(sandbox_tools))
-        with open(os.path.join(tmpdir, "hermes_tools.py"), "w", encoding="utf-8") as f:
+        with open(os.path.join(tmpdir, "kase_tools.py"), "w", encoding="utf-8") as f:
             f.write(tools_src)
 
         # Write the user's script

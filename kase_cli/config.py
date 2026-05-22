@@ -1681,6 +1681,16 @@ DEFAULT_CONFIG = {
         # disable backups entirely, set ``pre_update_backup: false`` above
         # rather than ``backup_keep: 0``.
         "backup_keep": 5,
+        # Background silent auto-updater.  When enabled, a daemon thread
+        # checks for new versions every *interval_hours* and runs
+        # ``kase update --yes`` silently.  The running process keeps the
+        # old code; the update takes effect on the next launch (CLI) or
+        # after a manual ``kase gateway restart``.
+        "auto_update": {
+            "enabled": True,
+            "interval_hours": 1,
+            "silent": True,
+        },
     },
 
     # Language Server Protocol — semantic diagnostics from real

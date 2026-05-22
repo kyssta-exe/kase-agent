@@ -194,7 +194,7 @@ def get_bundled_skills_dir(default: Path | None = None) -> Path:
     return get_kase_home() / "skills"
 
 
-def get_hermes_dir(new_subpath: str, old_name: str) -> Path:
+def get_kase_dir(new_subpath: str, old_name: str) -> Path:
     """Resolve a Kase subdirectory with backward compatibility.
 
     New installs get the consolidated layout (e.g. ``cache/images``).
@@ -213,6 +213,9 @@ def get_hermes_dir(new_subpath: str, old_name: str) -> Path:
     if old_path.exists():
         return old_path
     return home / new_subpath
+
+
+get_hermes_dir = get_kase_dir  # backward compat
 
 
 def display_kase_home() -> str:

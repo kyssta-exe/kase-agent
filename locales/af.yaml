@@ -292,7 +292,7 @@ gateway:
   update:
     platform_not_messaging:  "✗ /update is slegs beskikbaar vanaf boodskapplatforms. Voer `kase update` vanaf die terminale uit."
     not_git_repo:            "✗ Nie 'n git-bewaarplek nie — kan nie opdateer nie."
-    hermes_cmd_not_found:    "✗ Kon nie die `kase`-opdrag vind nie. Kase loop, maar die opdateeropdrag kon nie die uitvoerbare lêer op PATH of via die huidige Python-vertolker vind nie. Probeer `kase update` met die hand in jou terminale uitvoer."
+    kase_cmd_not_found:    "✗ Kon nie die `kase`-opdrag vind nie. Kase loop, maar die opdateeropdrag kon nie die uitvoerbare lêer op PATH of via die huidige Python-vertolker vind nie. Probeer `kase update` met die hand in jou terminale uitvoer."
     start_failed:            "✗ Kon nie opdatering begin nie: {error}"
     starting:                "⚕ Begin Kase-opdatering… Ek sal vordering hier stroom."
 

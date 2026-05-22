@@ -178,8 +178,8 @@ GEMINI_TTS_CHANNELS = 1
 GEMINI_TTS_SAMPLE_WIDTH = 2  # 16-bit PCM (L16)
 
 def _get_default_output_dir() -> str:
-    from kase_constants import get_hermes_dir
-    return str(get_hermes_dir("cache/audio", "audio_cache"))
+    from kase_constants import get_kase_dir
+    return str(get_kase_dir("cache/audio", "audio_cache"))
 
 DEFAULT_OUTPUT_DIR = _get_default_output_dir()
 
@@ -1025,7 +1025,7 @@ def _generate_xai_tts(text: str, output_path: str, tts_config: Dict[str, Any]) -
         headers={
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "User-Agent": hermes_xai_user_agent(),
+            "User-Agent": kase_xai_user_agent(),
         },
         json=payload,
         timeout=60,
@@ -1496,8 +1496,8 @@ def _get_piper_voices_dir() -> Path:
     Resolves to ``~/.kase/cache/piper-voices/`` under the active
     KASE_HOME so voice downloads follow profile boundaries.
     """
-    from kase_constants import get_hermes_dir
-    root = Path(get_hermes_dir("cache/piper-voices", "piper_voices_cache"))
+    from kase_constants import get_kase_dir
+    root = Path(get_kase_dir("cache/piper-voices", "piper_voices_cache"))
     root.mkdir(parents=True, exist_ok=True)
     return root
 

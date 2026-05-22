@@ -292,7 +292,7 @@ gateway:
   update:
     platform_not_messaging:  "✗ /update はメッセージングプラットフォームでのみ利用可能です。ターミナルで `kase update` を実行してください。"
     not_git_repo:            "✗ Git リポジトリではありません — 更新できません。"
-    hermes_cmd_not_found:    "✗ `kase` コマンドが見つかりません。Kase は実行中ですが、更新コマンドは PATH 上にも現在の Python インタープリタ経由でも実行可能ファイルを見つけられませんでした。ターミナルで `kase update` を手動で実行してみてください。"
+    kase_cmd_not_found:    "✗ `kase` コマンドが見つかりません。Kase は実行中ですが、更新コマンドは PATH 上にも現在の Python インタープリタ経由でも実行可能ファイルを見つけられませんでした。ターミナルで `kase update` を手動で実行してみてください。"
     start_failed:            "✗ 更新の開始に失敗しました: {error}"
     starting:                "⚕ Kase の更新を開始しています… 進捗をここにストリーミングします。"
 

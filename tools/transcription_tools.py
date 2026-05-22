@@ -784,7 +784,7 @@ def _transcribe_xai(file_path: str, model_name: str) -> Dict[str, Any]:
                 f"{base_url}/stt",
                 headers={
                     "Authorization": f"Bearer {api_key}",
-                    "User-Agent": hermes_xai_user_agent(),
+                    "User-Agent": kase_xai_user_agent(),
                 },
                 files={
                     "file": (Path(file_path).name, audio_file),

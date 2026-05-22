@@ -98,7 +98,7 @@ def _xai_user_agent() -> str:
     try:
         from tools.xai_http import kase_xai_user_agent
 
-        return hermes_xai_user_agent()
+        return kase_xai_user_agent()
     except Exception:
         return "kase/video_gen"
 

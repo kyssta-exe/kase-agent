@@ -297,7 +297,7 @@ def _backend_warnings() -> list:
     from agent.lsp.install import kase_lsp_bin_dir
     notes: list = []
     bash_installed = _shutil.which("bash-language-server") is not None or (
-        (hermes_lsp_bin_dir() / "bash-language-server").exists()
+        (kase_lsp_bin_dir() / "bash-language-server").exists()
     )
     if bash_installed and _shutil.which("shellcheck") is None:
         notes.append(

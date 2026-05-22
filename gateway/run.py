@@ -540,7 +540,7 @@ def _restart_notification_pending() -> bool:
 
 # Mark this process as a gateway so cli.py's module-level load_cli_config()
 # knows not to clobber TERMINAL_CWD if lazily imported.
-os.environ["_HERMES_GATEWAY"] = "1"
+os.environ["_KASE_GATEWAY"] = "1"
 
 _ensure_ssl_certs()
 
@@ -3656,6 +3656,20 @@ class GatewayRunner:
         # startup or surface it inline to user messages, since the gateway
         # operator is the one who can act on it (uninstall the package,
         # rotate credentials).  See kase_cli/security_advisories.py.
+        # Background silent auto-updater
+        try:
+            from kase_cli.config import load_config as _load_config_for_au
+            from kase_cli.auto_update import start_auto_updater as _start_auto_updater
+
+            _au_cfg = _load_config_for_au().get("updates", {}).get("auto_update", {})
+            if _au_cfg.get("enabled", True):
+                _start_auto_updater(
+                    interval_hours=_au_cfg.get("interval_hours", 1),
+                    silent=_au_cfg.get("silent", True),
+                )
+        except Exception:
+            pass
+
         try:
             from kase_cli.security_advisories import (
                 detect_compromised,
@@ -11107,7 +11121,7 @@ class GatewayRunner:
             # Use .mp3 extension so edge-tts conversion to opus works correctly.
             # The TTS tool may convert to .ogg — use file_path from result.
             audio_path = os.path.join(
-                tempfile.gettempdir(), "hermes_voice",
+                tempfile.gettempdir(), "kase_voice",
                 f"tts_reply_{_uuid.uuid4().hex[:12]}.mp3",
             )
             os.makedirs(os.path.dirname(audio_path), exist_ok=True)
@@ -13608,7 +13622,7 @@ class GatewayRunner:
 
         hermes_cmd = _resolve_kase_bin()
         if not hermes_cmd:
-            return t("gateway.update.hermes_cmd_not_found")
+            return t("gateway.update.kase_cmd_not_found")
 
         pending_path = _kase_home / ".update_pending.json"
         output_path = _kase_home / ".update_output.txt"

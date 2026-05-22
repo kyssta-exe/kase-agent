@@ -307,7 +307,7 @@ gateway:
   update:
     platform_not_messaging:  "✗ /update is only available from messaging platforms. Run `kase update` from the terminal."
     not_git_repo:            "✗ Not a git repository — cannot update."
-    hermes_cmd_not_found:    "✗ Could not locate the `kase` command. Kase is running, but the update command could not find the executable on PATH or via the current Python interpreter. Try running `kase update` manually in your terminal."
+    kase_cmd_not_found:    "✗ Could not locate the `kase` command. Kase is running, but the update command could not find the executable on PATH or via the current Python interpreter. Try running `kase update` manually in your terminal."
     start_failed:            "✗ Failed to start update: {error}"
     starting:                "⚕ Starting Kase update… I'll stream progress here."
 

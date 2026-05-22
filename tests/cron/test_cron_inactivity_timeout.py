@@ -307,8 +307,8 @@ class TestSysPathOrdering:
     def test_kase_time_importable(self):
         """kase_time should be importable when cron.scheduler loads."""
         # This import would fail if sys.path.insert comes after the import
-        from cron.scheduler import _hermes_now
-        assert callable(_hermes_now)
+        from cron.scheduler import _kase_now
+        assert callable(_kase_now)
 
     def test_kase_constants_importable(self):
         """kase_constants should be importable from cron context."""

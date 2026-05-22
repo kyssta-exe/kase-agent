@@ -1091,7 +1091,7 @@ class TestKaseHomeIsolation:
         """The conftest autouse fixture sets KASE_HOME; verify it's active."""
         hermes_home = os.getenv("KASE_HOME")
         assert hermes_home is not None, "KASE_HOME should be set by conftest"
-        assert "hermes_test" in hermes_home, "Should point to test temp dir"
+        assert "kase_test" in hermes_home, "Should point to test temp dir"
 
     def test_get_kase_home_fallback(self):
         """Without KASE_HOME set, falls back to the active OS home."""

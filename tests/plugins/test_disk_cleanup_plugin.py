@@ -52,7 +52,7 @@ def _load_plugin_init():
     plugin_dir = repo_root / "plugins" / "disk-cleanup"
     # Use the PluginManager's module naming convention so relative imports work.
     spec = importlib.util.spec_from_file_location(
-        "hermes_plugins.disk_cleanup",
+        "kase_plugins.disk_cleanup",
         plugin_dir / "__init__.py",
         submodule_search_locations=[str(plugin_dir)],
     )
@@ -63,9 +63,9 @@ def _load_plugin_init():
         ns.__path__ = []
         sys.modules["hermes_plugins"] = ns
     mod = importlib.util.module_from_spec(spec)
-    mod.__package__ = "hermes_plugins.disk_cleanup"
+    mod.__package__ = "kase_plugins.disk_cleanup"
     mod.__path__ = [str(plugin_dir)]
-    sys.modules["hermes_plugins.disk_cleanup"] = mod
+    sys.modules["kase_plugins.disk_cleanup"] = mod
     spec.loader.exec_module(mod)
     return mod
 

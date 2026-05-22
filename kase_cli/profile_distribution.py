@@ -106,7 +106,7 @@ USER_OWNED_EXCLUDE: frozenset = frozenset({
     "response_store.db-shm", "response_store.db-wal",
     "gateway.pid", "gateway_state.json", "processes.json",
     "auth.lock", "active_profile", ".update_check",
-    "errors.log", ".hermes_history",
+    "errors.log", ".kase_history",
     # User data
     "memories", "sessions", "logs", "plans", "workspace", "home",
     "image_cache", "audio_cache", "document_cache",
@@ -481,7 +481,7 @@ def plan_install(
         normalize_profile_name,
         validate_profile_name,
     )
-    from kase_cli import __version__ as hermes_version
+    from kase_cli import __version__ as kase_version
 
     staged, provenance = _stage_source(source, workdir)
     manifest = read_manifest(staged)

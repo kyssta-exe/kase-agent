@@ -23,7 +23,7 @@ def server():
         "sys.modules",
         {
             "kase_constants": MagicMock(
-                get_kase_home=MagicMock(return_value="/tmp/hermes_test_review_summary")
+                get_kase_home=MagicMock(return_value="/tmp/kase_test_review_summary")
             ),
             "kase_cli.env_loader": MagicMock(),
             "kase_cli.banner": MagicMock(),

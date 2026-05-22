@@ -220,7 +220,7 @@ class TestIRCAdapterMessageParsing:
         adapter._writer = writer
 
         await adapter._handle_line(":server 433 * kase :Nickname in use")
-        assert adapter._current_nick == "hermes_"
+        assert adapter._current_nick == "kase_"
         sent = writer.write.call_args[0][0]
         assert b"NICK hermes_" in sent
 
@@ -376,7 +376,7 @@ class TestIRCAdapterMessageParsing:
         adapter._writer = writer
 
         await adapter._handle_line(":server 433 * kase :Nickname in use")
-        assert adapter._current_nick == "hermes_"
+        assert adapter._current_nick == "kase_"
         await adapter._handle_line(":server 433 * hermes_ :Nickname in use")
         assert adapter._current_nick == "hermes_1"
         await adapter._handle_line(":server 433 * hermes_1 :Nickname in use")

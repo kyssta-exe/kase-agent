@@ -46,7 +46,7 @@ def scenario(name):
     """
     def wrap(fn):
         def run():
-            home = tempfile.mkdtemp(prefix=f"hermes_atyp_{name}_")
+            home = tempfile.mkdtemp(prefix=f"kase_atyp_{name}_")
             os.environ["KASE_HOME"] = home
             os.environ["HOME"] = home
             for m in list(sys.modules.keys()):

@@ -1234,11 +1234,11 @@ class PluginManager:
         self._plugins[manifest.key or manifest.name] = loaded
 
     def _load_directory_module(self, manifest: PluginManifest) -> types.ModuleType:
-        """Import a directory-based plugin as ``hermes_plugins.<slug>``.
+        """Import a directory-based plugin as ``kase_plugins.<slug>``.
 
         The module slug is derived from ``manifest.key`` so category-namespaced
         plugins (``image_gen/openai``) import as
-        ``hermes_plugins.image_gen__openai`` without colliding with any
+        ``kase_plugins.image_gen__openai`` without colliding with any
         future ``tts/openai``.
         """
         plugin_dir = Path(manifest.path)  # type: ignore[arg-type]

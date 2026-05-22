@@ -1323,12 +1323,12 @@ def _anthropic_oauth_status() -> Dict[str, Any]:
         from agent.anthropic_adapter import (
             read_hermes_oauth_credentials,
             read_claude_code_credentials,
-            _HERMES_OAUTH_FILE,
+            _KASE_OAUTH_FILE,
         )
     except ImportError:
         read_claude_code_credentials = None  # type: ignore
         read_hermes_oauth_credentials = None  # type: ignore
-        _HERMES_OAUTH_FILE = None  # type: ignore
+        _KASE_OAUTH_FILE = None  # type: ignore
 
     hermes_creds = None
     if read_hermes_oauth_credentials:
@@ -1339,8 +1339,8 @@ def _anthropic_oauth_status() -> Dict[str, Any]:
     if hermes_creds and hermes_creds.get("accessToken"):
         return {
             "logged_in": True,
-            "source": "hermes_pkce",
-            "source_label": f"Kase PKCE ({_HERMES_OAUTH_FILE})",
+            "source": "kase_pkce",
+            "source_label": f"Kase PKCE ({_KASE_OAUTH_FILE})",
             "token_preview": _truncate_token(hermes_creds.get("accessToken")),
             "expires_at": hermes_creds.get("expiresAt"),
             "has_refresh_token": bool(hermes_creds.get("refreshToken")),
@@ -1530,7 +1530,7 @@ async def list_oauth_providers():
         docs_url        external docs/portal link for the "Learn more" link
         status:
           logged_in        bool — currently has usable creds
-          source           short slug ("hermes_pkce", "claude_code", ...)
+          source           short slug ("kase_pkce", "claude_code", ...)
           source_label     human-readable origin (file path, env var name)
           token_preview    last N chars of the token, never the full token
           expires_at       ISO timestamp string or null
@@ -1569,9 +1569,9 @@ async def disconnect_oauth_provider(provider_id: str, request: Request):
     # want to undo a disconnect.
     if provider_id in {"anthropic", "claude-code"}:
         try:
-            from agent.anthropic_adapter import _HERMES_OAUTH_FILE
-            if _HERMES_OAUTH_FILE.exists():
-                _HERMES_OAUTH_FILE.unlink()
+            from agent.anthropic_adapter import _KASE_OAUTH_FILE
+            if _KASE_OAUTH_FILE.exists():
+                _KASE_OAUTH_FILE.unlink()
         except Exception:
             pass
         # Also clear the credential pool entry if present.
@@ -1681,14 +1681,14 @@ def _save_anthropic_oauth_creds(access_token: str, refresh_token: str, expires_a
     Mirrors what auth_commands.add_command does so the dashboard flow leaves
     the system in the same state as ``kase auth add anthropic``.
     """
-    from agent.anthropic_adapter import _HERMES_OAUTH_FILE
+    from agent.anthropic_adapter import _KASE_OAUTH_FILE
     payload = {
         "accessToken": access_token,
         "refreshToken": refresh_token,
         "expiresAt": expires_at_ms,
     }
-    _HERMES_OAUTH_FILE.parent.mkdir(parents=True, exist_ok=True)
-    _HERMES_OAUTH_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    _KASE_OAUTH_FILE.parent.mkdir(parents=True, exist_ok=True)
+    _KASE_OAUTH_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     # Best-effort credential-pool insert. Failure here doesn't invalidate
     # the file write — pool registration only matters for the rotation
     # strategy, not for runtime credential resolution.
@@ -4719,7 +4719,7 @@ def _mount_plugin_api_routes():
             _log.warning("Plugin %s declares api=%s but file not found", plugin["name"], api_file_name)
             continue
         try:
-            module_name = f"hermes_dashboard_plugin_{plugin['name']}"
+            module_name = f"kase_dashboard_plugin_{plugin['name']}"
             spec = importlib.util.spec_from_file_location(module_name, api_path)
             if spec is None or spec.loader is None:
                 continue

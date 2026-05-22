@@ -12,7 +12,7 @@ the host platform.  We also keep a live Winsock smoke test that only runs
 on a real Windows host.
 
 Also covers the companion Windows bug: the sandbox writes
-``hermes_tools.py`` and ``script.py`` into a temp dir, and those files
+``kase_tools.py`` and ``script.py`` into a temp dir, and those files
 must be written as UTF-8 on every platform — the generated stub contains
 em-dash/en-dash characters in docstrings, and the default ``open(path, "w")``
 on Windows uses the system locale (cp1252 typically), corrupting those
@@ -415,7 +415,7 @@ class TestPosixEquivalence:
 # ---------------------------------------------------------------------------
 #
 # The sandbox writes two Python files into a temp dir — the generated
-# ``hermes_tools.py`` stub, and the LLM's ``script.py``.  Both contain
+# ``kase_tools.py`` stub, and the LLM's ``script.py``.  Both contain
 # non-ASCII characters in practice: the stub has em-dashes in docstrings
 # ("``tcp://host:port`` — the parent falls back..."), and user scripts
 # routinely contain non-ASCII strings, comments, or Unicode identifiers.
@@ -439,7 +439,7 @@ class TestSandboxWritesUtf8:
     context — but the code inspection is deterministic and fast."""
 
     def test_stub_and_script_writes_specify_utf8(self):
-        """Both ``hermes_tools.py`` and ``script.py`` writes in
+        """Both ``kase_tools.py`` and ``script.py`` writes in
         ``_execute_local`` must pass ``encoding="utf-8"``."""
         import tools.code_execution_tool as cet
         src = open(cet.__file__, encoding="utf-8").read()

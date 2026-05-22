@@ -1661,6 +1661,20 @@ def cmd_chat(args):
         except Exception:
             pass
 
+    # Background silent auto-updater — reads config, starts daemon thread
+    try:
+        from kase_cli.config import load_config as _load_config_for_auto_update
+        from kase_cli.auto_update import start_auto_updater
+
+        _au_cfg = _load_config_for_auto_update().get("updates", {}).get("auto_update", {})
+        if _au_cfg.get("enabled", True):
+            start_auto_updater(
+                interval_hours=_au_cfg.get("interval_hours", 1),
+                silent=_au_cfg.get("silent", True),
+            )
+    except Exception:
+        pass
+
     # Sync bundled skills on every CLI launch (fast -- skips unchanged skills)
     try:
         _sync_bundled_skills_for_startup()
@@ -10223,7 +10237,7 @@ def cmd_profile(args):
             # Preview: stage the distribution into a scratch dir, show the
             # manifest, then do the real install.  The double-stage avoids
             # any side-effects if the user declines.
-            with tempfile.TemporaryDirectory(prefix="hermes_dist_preview_") as tmp:
+            with tempfile.TemporaryDirectory(prefix="kase_dist_preview_") as tmp:
                 plan = plan_install(
                     args.source,
                     Path(tmp),

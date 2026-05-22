@@ -2294,7 +2294,7 @@ def refresh_systemd_unit_if_needed(system: bool = False) -> bool:
     # The user-scope unit path resolves under ``Path.home()``, which is NOT
     # sandboxed by the test conftest (only KASE_HOME is). If a test
     # exercises ``run_gateway()`` with a pytest-tmp KASE_HOME, the freshly
-    # generated unit bakes that ``/tmp/pytest-of-.../hermes_test`` path into
+    # generated unit bakes that ``/tmp/pytest-of-.../kase_test`` path into
     # ``Environment="KASE_HOME=..."``. Writing that to the developer's
     # real user systemd unit file silently breaks their gateway on the next
     # reboot (systemd loads the polluted env, the gateway looks at an empty
@@ -2306,8 +2306,8 @@ def refresh_systemd_unit_if_needed(system: bool = False) -> bool:
     # still works.
     if not system and (
         "/pytest-of-" in new_unit
-        or "/hermes_test\"" in new_unit
-        or "/hermes_test/" in new_unit
+        or "/kase_test\"" in new_unit
+        or "/kase_test/" in new_unit
     ):
         return False
 
