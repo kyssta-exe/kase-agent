@@ -1,10 +1,10 @@
-# nix/packages.nix — Hermes Agent package built with uv2nix
+# nix/packages.nix — Kase package built with uv2nix
 { inputs, ... }:
 {
   perSystem =
     { pkgs, inputs', ... }:
     let
-      hermesAgent = pkgs.callPackage ./hermes-agent.nix {
+      hermesAgent = pkgs.callPackage ./kase.nix {
         inherit (inputs) uv2nix pyproject-nix pyproject-build-systems;
         npm-lockfile-fix = inputs'.npm-lockfile-fix.packages.default;
         # Only embed clean revs — dirtyRev doesn't represent any upstream

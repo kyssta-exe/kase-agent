@@ -2,7 +2,7 @@
 
 The agent's system prompt is built once per session and reused across all
 turns — only context compression triggers a rebuild.  This keeps the
-upstream prefix cache warm.  See ``hermes-agent-dev``'s
+upstream prefix cache warm.  See ``kase-dev``'s
 ``references/system-prompt-invariant.md`` for the invariants and
 ``references/self-improvement-loop.md`` for how the background-review
 fork inherits the cached prompt verbatim.
@@ -30,7 +30,7 @@ from typing import Any, Dict, List, Optional
 from agent.prompt_builder import (
     DEFAULT_AGENT_IDENTITY,
     GOOGLE_MODEL_OPERATIONAL_GUIDANCE,
-    HERMES_AGENT_HELP_GUIDANCE,
+    KASE_HELP_GUIDANCE,
     KANBAN_GUIDANCE,
     MEMORY_GUIDANCE,
     OPENAI_MODEL_EXECUTION_GUIDANCE,
@@ -46,7 +46,7 @@ def _ra():
     """Lazy reference to the ``run_agent`` module.
 
     Helpers like ``load_soul_md``, ``build_environment_hints``,
-    ``build_context_files_prompt``, ``build_nous_subscription_prompt``,
+    ``build_context_files_prompt``, ``build_kyssta_subscription_prompt``,
     ``build_skills_system_prompt`` and ``get_toolset_for_tool`` are
     imported into ``run_agent``'s namespace.  Many tests
     ``patch("run_agent.load_soul_md", ...)``; if we imported them
@@ -71,7 +71,7 @@ def build_system_prompt_parts(agent: Any, system_message: Optional[str] = None) 
 
     Joined into a single string by :func:`build_system_prompt` and
     cached on ``agent._cached_system_prompt`` for the lifetime of the
-    AIAgent.  Hermes never re-renders parts of this string mid-
+    AIAgent.  Kase never re-renders parts of this string mid-
     session — that's the only way to keep upstream prompt caches
     warm across turns.
     """
@@ -84,7 +84,7 @@ def build_system_prompt_parts(agent: Any, system_message: Optional[str] = None) 
     stable_parts: List[str] = []
 
     # Try SOUL.md as primary identity unless the caller explicitly skipped it.
-    # Some execution modes (cron) still want HERMES_HOME persona while keeping
+    # Some execution modes (cron) still want KASE_HOME persona while keeping
     # cwd project instructions disabled.
     _soul_loaded = False
     if agent.load_soul_identity or not agent.skip_context_files:
@@ -97,8 +97,8 @@ def build_system_prompt_parts(agent: Any, system_message: Optional[str] = None) 
         # Fallback to hardcoded identity
         stable_parts.append(DEFAULT_AGENT_IDENTITY)
 
-    # Pointer to the hermes-agent skill + docs for user questions about Hermes itself.
-    stable_parts.append(HERMES_AGENT_HELP_GUIDANCE)
+    # Pointer to the kase skill + docs for user questions about Kase itself.
+    stable_parts.append(KASE_HELP_GUIDANCE)
 
     # Tool-aware behavioral guidance: only inject when the tools are loaded
     tool_guidance = []
@@ -110,7 +110,7 @@ def build_system_prompt_parts(agent: Any, system_message: Optional[str] = None) 
         tool_guidance.append(SKILLS_GUIDANCE)
     # Kanban worker/orchestrator lifecycle — only present when the
     # dispatcher spawned this process (kanban_show check_fn gates on
-    # HERMES_KANBAN_TASK env var). Normal chat sessions never see
+    # KASE_KANBAN_TASK env var). Normal chat sessions never see
     # this block. Resolved once at __init__ (see _kanban_worker_guidance).
     _kanban_guidance = getattr(agent, "_kanban_worker_guidance", None)
     if _kanban_guidance:
@@ -127,9 +127,9 @@ def build_system_prompt_parts(agent: Any, system_message: Optional[str] = None) 
         from agent.prompt_builder import COMPUTER_USE_GUIDANCE
         stable_parts.append(COMPUTER_USE_GUIDANCE)
 
-    nous_subscription_prompt = _r.build_nous_subscription_prompt(agent.valid_tool_names)
-    if nous_subscription_prompt:
-        stable_parts.append(nous_subscription_prompt)
+    kyssta_subscription_prompt = _r.build_kyssta_subscription_prompt(agent.valid_tool_names)
+    if kyssta_subscription_prompt:
+        stable_parts.append(kyssta_subscription_prompt)
     # Tool-use enforcement: tells the model to actually call tools instead
     # of describing intended actions.  Controlled by config.yaml
     # agent.tool_use_enforcement:
@@ -198,6 +198,15 @@ def build_system_prompt_parts(agent: Any, system_message: Optional[str] = None) 
             f"not on any model name returned by the API."
         )
 
+    # Caveman mode — token-efficient output mode when active
+    try:
+        from agent.caveman_mode import get_instruction
+        _caveman = get_instruction()
+        if _caveman:
+            stable_parts.append(_caveman)
+    except Exception:
+        pass
+
     # Environment hints (WSL, Termux, etc.) — tell the agent about the
     # execution environment so it can translate paths and adapt behavior.
     # Stable for the lifetime of the process.
@@ -228,7 +237,7 @@ def build_system_prompt_parts(agent: Any, system_message: Optional[str] = None) 
 
     if not agent.skip_context_files:
         # Use TERMINAL_CWD for context file discovery when set (gateway
-        # mode).  The gateway process runs from the hermes-agent install
+        # mode).  The gateway process runs from the kase install
         # dir, so os.getcwd() would pick up the repo's AGENTS.md and
         # other dev files — inflating token usage by ~10k for no benefit.
         _context_cwd = os.getenv("TERMINAL_CWD") or None
@@ -260,8 +269,8 @@ def build_system_prompt_parts(agent: Any, system_message: Optional[str] = None) 
         except Exception:
             pass
 
-    from hermes_time import now as _hermes_now
-    now = _hermes_now()
+    from kase_time import now as _kase_now
+    now = _kase_now()
     # Date-only (not minute-precision) so the system prompt is byte-stable
     # for the full day.  Minute-precision changes invalidate prefix-cache KV
     # on every rebuild path (compression boundary, fresh-agent gateway turns,
@@ -295,7 +304,7 @@ def build_system_prompt(agent: Any, system_message: Optional[str] = None) -> str
     Layers are ordered cache-friendly: stable identity/guidance first,
     then session-stable context files, then per-call volatile content
     (memory, USER profile, timestamp).  The whole string is treated as
-    one cached block — Hermes never rebuilds or reinjects parts of it
+    one cached block — Kase never rebuilds or reinjects parts of it
     mid-session, which is the only way to keep upstream prompt caches
     warm across turns.
     """

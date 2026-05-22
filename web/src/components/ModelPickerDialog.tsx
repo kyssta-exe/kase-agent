@@ -1,7 +1,7 @@
-import { Button } from "@nous-research/ui/ui/components/button";
-import { Checkbox } from "@nous-research/ui/ui/components/checkbox";
-import { ListItem } from "@nous-research/ui/ui/components/list-item";
-import { Spinner } from "@nous-research/ui/ui/components/spinner";
+import { Button } from "@kyssta/ui/ui/components/button";
+import { Checkbox } from "@kyssta/ui/ui/components/checkbox";
+import { ListItem } from "@kyssta/ui/ui/components/list-item";
+import { Spinner } from "@kyssta/ui/ui/components/spinner";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import type { GatewayClient } from "@/lib/gatewayClient";

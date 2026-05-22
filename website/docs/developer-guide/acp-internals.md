@@ -6,7 +6,7 @@ description: "How the ACP adapter works: lifecycle, sessions, event bridge, appr
 
 # ACP Internals
 
-The ACP adapter wraps Hermes' synchronous `AIAgent` in an async JSON-RPC stdio server.
+The ACP adapter wraps Kase' synchronous `AIAgent` in an async JSON-RPC stdio server.
 
 Key implementation files:
 
@@ -22,22 +22,22 @@ Key implementation files:
 ## Boot flow
 
 ```text
-hermes acp / hermes-acp / python -m acp_adapter
+kase acp / kase-acp / python -m acp_adapter
   -> acp_adapter.entry.main()
   -> parse --version / --check / --setup before server startup
-  -> load ~/.hermes/.env
+  -> load ~/.kase/.env
   -> configure stderr logging
-  -> construct HermesACPAgent
+  -> construct KaseACPAgent
   -> acp.run_agent(agent, use_unstable_protocol=True)
 ```
 
-The Zed ACP Registry path launches the same adapter through `uvx --from 'hermes-agent[acp]==<version>' hermes-acp`, pointed at the `hermes-agent` PyPI release.
+The Zed ACP Registry path launches the same adapter through `uvx --from 'kase[acp]==<version>' kase-acp`, pointed at the `kase` PyPI release.
 
 Stdout is reserved for ACP JSON-RPC transport. Human-readable logs go to stderr.
 
 ## Major components
 
-### `HermesACPAgent`
+### `KaseACPAgent`
 
 `acp_adapter/server.py` implements the ACP agent protocol.
 
@@ -94,15 +94,15 @@ asyncio.run_coroutine_threadsafe(...)
 
 Mapping:
 
-- `allow_once` -> Hermes `once`
-- `allow_always` -> Hermes `always`
-- reject options -> Hermes `deny`
+- `allow_once` -> Kase `once`
+- `allow_always` -> Kase `always`
+- reject options -> Kase `deny`
 
 Timeouts and bridge failures deny by default.
 
 ### Tool rendering helpers
 
-`acp_adapter/tools.py` maps Hermes tools to ACP tool kinds and builds editor-facing content.
+`acp_adapter/tools.py` maps Kase tools to ACP tool kinds and builds editor-facing content.
 
 Examples:
 
@@ -116,7 +116,7 @@ Examples:
 ```text
 new_session(cwd)
   -> create SessionState
-  -> create AIAgent(platform="acp", enabled_toolsets=["hermes-acp"])
+  -> create AIAgent(platform="acp", enabled_toolsets=["kase-acp"])
   -> bind task_id/session_id to cwd override
 
 prompt(..., session_id)
@@ -144,12 +144,12 @@ prompt(..., session_id)
 
 ACP does not implement its own auth store.
 
-Instead it reuses Hermes' runtime resolver:
+Instead it reuses Kase' runtime resolver:
 
 - `acp_adapter/auth.py`
-- `hermes_cli/runtime_provider.py`
+- `kase_cli/runtime_provider.py`
 
-So ACP advertises and uses the currently configured Hermes provider/credentials. It also always advertises a terminal setup auth method (`hermes-setup`, args `--setup`) so first-run registry clients can open Hermes' interactive model/provider configuration before starting a normal ACP session.
+So ACP advertises and uses the currently configured Kase provider/credentials. It also always advertises a terminal setup auth method (`kase-setup`, args `--setup`) so first-run registry clients can open Kase' interactive model/provider configuration before starting a normal ACP session.
 
 ## Working directory binding
 
@@ -172,13 +172,13 @@ ACP temporarily installs an approval callback on the terminal tool during prompt
 
 ## Current limitations
 
-- ACP sessions are persisted to the shared `~/.hermes/state.db` (SessionDB) and transparently restored across process restarts; they appear in `session_search`
+- ACP sessions are persisted to the shared `~/.kase/state.db` (SessionDB) and transparently restored across process restarts; they appear in `session_search`
 - non-text prompt blocks are currently ignored for request text extraction
 - editor-specific UX varies by ACP client implementation
 
 ## Related files
 
 - `tests/acp/` — ACP test suite
-- `toolsets.py` — `hermes-acp` toolset definition
-- `hermes_cli/main.py` — `hermes acp` CLI subcommand
-- `pyproject.toml` — `[acp]` optional dependency + `hermes-acp` script
+- `toolsets.py` — `kase-acp` toolset definition
+- `kase_cli/main.py` — `kase acp` CLI subcommand
+- `pyproject.toml` — `[acp]` optional dependency + `kase-acp` script

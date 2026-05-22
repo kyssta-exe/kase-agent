@@ -311,8 +311,8 @@ class TestPosixEquivalence:
         "PYTHONPATH": "/opt/lib",
         "VIRTUAL_ENV": "/home/alice/.venv",
         "CONDA_PREFIX": "/opt/conda",
-        "HERMES_HOME": "/home/alice/.hermes",
-        "HERMES_INTERACTIVE": "1",
+        "KASE_HOME": "/home/alice/.kase",
+        "KASE_INTERACTIVE": "1",
         # Secret-substring blocks
         "OPENAI_API_KEY": "sk-xxx",
         "GITHUB_TOKEN": "ghp_xxx",
@@ -570,7 +570,7 @@ class TestSandboxWritesUtf8:
 # ---------------------------------------------------------------------------
 #
 # The third Windows-specific sandbox bug: after the UTF-8 file-write fix
-# let the child import hermes_tools, a user script that printed non-ASCII
+# let the child import kase_tools, a user script that printed non-ASCII
 # to stdout still crashed with:
 #
 #     UnicodeEncodeError: 'charmap' codec can't encode character '\u2192'

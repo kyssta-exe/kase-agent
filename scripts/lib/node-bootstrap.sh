@@ -7,10 +7,10 @@
 #
 # Strategy (first hit wins — respects the user's existing tooling):
 #   1. modern `node` already on PATH
-#   2. ~/.hermes/node/ from a prior Hermes-managed install
+#   2. ~/.kase/node/ from a prior Kase-managed install
 #   3. fnm, proto, nvm (in that order) if the user already uses a version manager
 #   4. Termux `pkg`, macOS Homebrew
-#   5. pinned nodejs.org tarball into ~/.hermes/node/ (always works, zero shell rc edits)
+#   5. pinned nodejs.org tarball into ~/.kase/node/ (always works, zero shell rc edits)
 #
 # Usage:
 #   source scripts/lib/node-bootstrap.sh
@@ -20,12 +20,12 @@
 # Env inputs (set before sourcing to override defaults):
 #   HERMES_NODE_MIN_VERSION   (default: 20)   — accepted on PATH
 #   HERMES_NODE_TARGET_MAJOR  (default: 22)   — installed when we install
-#   HERMES_HOME               (default: $HOME/.hermes)
+#   KASE_HOME               (default: $HOME/.kase)
 # ============================================================================
 
 HERMES_NODE_MIN_VERSION="${HERMES_NODE_MIN_VERSION:-20}"
 HERMES_NODE_TARGET_MAJOR="${HERMES_NODE_TARGET_MAJOR:-22}"
-HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
+KASE_HOME="${KASE_HOME:-$HOME/.kase}"
 HERMES_NODE_AVAILABLE=false
 
 # ---------------------------------------------------------------------------
@@ -167,7 +167,7 @@ _nb_install_bundled_node() {
         _nb_warn "Download failed"; rm -rf "$tmp"; return 1
     }
 
-    _nb_log "Extracting to $HERMES_HOME/node/..."
+    _nb_log "Extracting to $KASE_HOME/node/..."
     if [[ "$tarball" == *.tar.xz ]]; then
         tar xf  "$tmp/$tarball" -C "$tmp" || { rm -rf "$tmp"; return 1; }
     else
@@ -182,19 +182,19 @@ _nb_install_bundled_node() {
         return 1
     fi
 
-    mkdir -p "$HERMES_HOME"
-    rm -rf "$HERMES_HOME/node"
-    mv "$extracted" "$HERMES_HOME/node"
+    mkdir -p "$KASE_HOME"
+    rm -rf "$KASE_HOME/node"
+    mv "$extracted" "$KASE_HOME/node"
     rm -rf "$tmp"
 
     mkdir -p "$HOME/.local/bin"
-    ln -sf "$HERMES_HOME/node/bin/node" "$HOME/.local/bin/node"
-    ln -sf "$HERMES_HOME/node/bin/npm"  "$HOME/.local/bin/npm"
-    ln -sf "$HERMES_HOME/node/bin/npx"  "$HOME/.local/bin/npx"
-    export PATH="$HERMES_HOME/node/bin:$PATH"
+    ln -sf "$KASE_HOME/node/bin/node" "$HOME/.local/bin/node"
+    ln -sf "$KASE_HOME/node/bin/npm"  "$HOME/.local/bin/npm"
+    ln -sf "$KASE_HOME/node/bin/npx"  "$HOME/.local/bin/npx"
+    export PATH="$KASE_HOME/node/bin:$PATH"
 
     _nb_have_modern_node || return 1
-    _nb_ok "Node $(node --version) installed to $HERMES_HOME/node/"
+    _nb_ok "Node $(node --version) installed to $KASE_HOME/node/"
     return 0
 }
 
@@ -211,10 +211,10 @@ ensure_node() {
         return 0
     fi
 
-    if [ -x "$HERMES_HOME/node/bin/node" ]; then
-        export PATH="$HERMES_HOME/node/bin:$PATH"
+    if [ -x "$KASE_HOME/node/bin/node" ]; then
+        export PATH="$KASE_HOME/node/bin:$PATH"
         if _nb_have_modern_node; then
-            _nb_ok "Node $(node --version) found (Hermes-managed)"
+            _nb_ok "Node $(node --version) found (Kase-managed)"
             HERMES_NODE_AVAILABLE=true
             return 0
         fi

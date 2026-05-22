@@ -146,16 +146,16 @@ def _get_firecrawl_gateway_url() -> str:
 def _is_tool_gateway_ready() -> bool:
     """Return True when gateway URL + Nous Subscriber token are available.
 
-    Reads ``read_nous_access_token`` and ``resolve_managed_tool_gateway``
+    Reads ``read_kyssta_access_token`` and ``resolve_managed_tool_gateway``
     via :mod:`tools.web_tools` rather than direct imports, so unit tests
-    that ``patch("tools.web_tools._read_nous_access_token", ...)`` see
+    that ``patch("tools.web_tools._read_kyssta_access_token", ...)`` see
     their patches honored. The names are re-exported on
     :mod:`tools.web_tools` for exactly this reason.
     """
     import tools.web_tools as _wt
 
     return _wt.resolve_managed_tool_gateway(
-        "firecrawl", token_reader=_wt._read_nous_access_token
+        "firecrawl", token_reader=_wt._read_kyssta_access_token
     ) is not None
 
 
@@ -168,7 +168,7 @@ def check_firecrawl_api_key() -> bool:
     """Return True when Firecrawl backend (direct or gateway) is usable.
 
     Re-exported by :mod:`tools.web_tools` for backward compatibility with
-    existing tests and the ``hermes tools`` setup flow.
+    existing tests and the ``kase tools`` setup flow.
     """
     return _has_direct_firecrawl_config() or _is_tool_gateway_ready()
 
@@ -177,7 +177,7 @@ def _firecrawl_backend_help_suffix() -> str:
     """Return optional managed-gateway guidance for Firecrawl help text."""
     import tools.web_tools as _wt
 
-    if not _wt.managed_nous_tools_enabled():
+    if not _wt.managed_kyssta_tools_enabled():
         return ""
     return (
         ", or use the Nous Tool Gateway via your subscription "
@@ -194,10 +194,10 @@ def _raise_web_backend_configuration_error() -> None:
         "Set FIRECRAWL_API_KEY for cloud Firecrawl or set FIRECRAWL_API_URL "
         "for a self-hosted Firecrawl instance."
     )
-    if _wt.managed_nous_tools_enabled():
+    if _wt.managed_kyssta_tools_enabled():
         message += (
             " With your Nous subscription you can also use the Tool Gateway — "
-            "run `hermes tools` and select Nous Subscription as the web provider."
+            "run `kase tools` and select Nous Subscription as the web provider."
         )
     raise ValueError(message)
 
@@ -216,7 +216,7 @@ def _get_firecrawl_client() -> Any:
     this plugin module so that unit tests that reset the cache via
     ``tools.web_tools._firecrawl_client = None`` keep working. Helper
     functions (``prefers_gateway``, ``resolve_managed_tool_gateway``,
-    ``_read_nous_access_token``, ``Firecrawl``) are also looked up via
+    ``_read_kyssta_access_token``, ``Firecrawl``) are also looked up via
     :mod:`tools.web_tools` for the same reason — see
     :func:`_is_tool_gateway_ready`.
     """
@@ -227,7 +227,7 @@ def _get_firecrawl_client() -> Any:
         kwargs, client_config = direct_config
     else:
         managed_gateway = _wt.resolve_managed_tool_gateway(
-            "firecrawl", token_reader=_wt._read_nous_access_token
+            "firecrawl", token_reader=_wt._read_kyssta_access_token
         )
         if managed_gateway is None:
             logger.error(

@@ -1,5 +1,5 @@
-import { Select, SelectOption } from "@nous-research/ui/ui/components/select";
-import { Switch } from "@nous-research/ui/ui/components/switch";
+import { Select, SelectOption } from "@kyssta/ui/ui/components/select";
+import { Switch } from "@kyssta/ui/ui/components/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 

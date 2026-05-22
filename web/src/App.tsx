@@ -43,10 +43,10 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { Button } from "@nous-research/ui/ui/components/button";
-import { ListItem } from "@nous-research/ui/ui/components/list-item";
-import { SelectionSwitcher } from "@nous-research/ui/ui/components/selection-switcher";
-import { Spinner } from "@nous-research/ui/ui/components/spinner";
+import { Button } from "@kyssta/ui/ui/components/button";
+import { ListItem } from "@kyssta/ui/ui/components/list-item";
+import { SelectionSwitcher } from "@kyssta/ui/ui/components/selection-switcher";
+import { Spinner } from "@kyssta/ui/ui/components/spinner";
 import { Typography } from "@/components/NouiTypography";
 import { cn } from "@/lib/utils";
 import { Backdrop } from "@/components/Backdrop";
@@ -501,7 +501,7 @@ export default function App() {
                   className="font-bold text-[1.125rem] leading-[0.95] tracking-[0.0525rem] text-midground"
                   style={{ mixBlendMode: "plus-lighter" }}
                 >
-                  Hermes
+                  Kase
                   <br />
                   Agent
                 </Typography>
@@ -535,7 +535,7 @@ export default function App() {
 
               {sidebarNav.pluginItems.length > 0 && (
                 <div
-                  aria-labelledby="hermes-sidebar-plugin-nav-heading"
+                  aria-labelledby="kase-sidebar-plugin-nav-heading"
                   className="flex flex-col border-t border-current/10 pb-2"
                   role="group"
                 >
@@ -544,7 +544,7 @@ export default function App() {
                       "px-5 pt-2.5 pb-1",
                       "font-mondwest text-[0.6rem] tracking-[0.15em] uppercase opacity-30",
                     )}
-                    id="hermes-sidebar-plugin-nav-heading"
+                    id="kase-sidebar-plugin-nav-heading"
                   >
                     {t.app.pluginNavSection}
                   </span>

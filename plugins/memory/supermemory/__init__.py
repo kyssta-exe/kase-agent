@@ -22,7 +22,7 @@ from tools.registry import tool_error
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_CONTAINER_TAG = "hermes"
+_DEFAULT_CONTAINER_TAG = "kase"
 _DEFAULT_MAX_RECALL_RESULTS = 10
 _DEFAULT_PROFILE_FREQUENCY = 50
 _DEFAULT_CAPTURE_MODE = "all"
@@ -438,7 +438,7 @@ class SupermemoryMemoryProvider(MemoryProvider):
         self._search_mode = _DEFAULT_SEARCH_MODE
         self._entity_context = _DEFAULT_ENTITY_CONTEXT
         self._api_timeout = _DEFAULT_API_TIMEOUT
-        self._hermes_home = ""
+        self._kase_home = ""
         self._write_enabled = True
         self._active = False
         # Multi-container support
@@ -462,8 +462,8 @@ class SupermemoryMemoryProvider(MemoryProvider):
             return False
 
     def get_config_schema(self):
-        # Only prompt for the API key during `hermes memory setup`.
-        # All other options are documented for $HERMES_HOME/supermemory.json
+        # Only prompt for the API key during `kase memory setup`.
+        # All other options are documented for $KASE_HOME/supermemory.json
         # or the SUPERMEMORY_CONTAINER_TAG env var.
         return [
             {"key": "api_key", "description": "Supermemory API key", "secret": True, "required": True, "env_var": "SUPERMEMORY_API_KEY", "url": "https://supermemory.ai"},
@@ -478,11 +478,11 @@ class SupermemoryMemoryProvider(MemoryProvider):
         _save_supermemory_config(sanitized, hermes_home)
 
     def initialize(self, session_id: str, **kwargs) -> None:
-        from hermes_constants import get_hermes_home
-        self._hermes_home = kwargs.get("hermes_home") or str(get_hermes_home())
+        from kase_constants import get_kase_home
+        self._kase_home = kwargs.get("hermes_home") or str(get_kase_home())
         self._session_id = session_id
         self._turn_count = 0
-        self._config = _load_supermemory_config(self._hermes_home)
+        self._config = _load_supermemory_config(self._kase_home)
         self._api_key = os.environ.get("SUPERMEMORY_API_KEY", "")
 
         # Resolve container tag: env var > config > default.
@@ -578,7 +578,7 @@ class SupermemoryMemoryProvider(MemoryProvider):
             f"[role: user]\n{clean_user}\n[user:end]\n\n"
             f"[role: assistant]\n{clean_assistant}\n[assistant:end]"
         )
-        metadata = {"source": "hermes", "type": "conversation_turn"}
+        metadata = {"source": "kase", "type": "conversation_turn"}
 
         def _run():
             try:

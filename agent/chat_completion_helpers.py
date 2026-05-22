@@ -33,7 +33,7 @@ from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse, parse_qs, urlunparse
 
-from hermes_cli.timeouts import get_provider_request_timeout, get_provider_stale_timeout
+from kase_cli.timeouts import get_provider_request_timeout, get_provider_stale_timeout
 from agent.error_classifier import classify_api_error, FailoverReason
 from agent.model_metadata import is_local_endpoint
 from agent.message_sanitization import (
@@ -347,7 +347,7 @@ def build_api_kwargs(agent, api_messages: list) -> dict:
         base_url_host_matches(agent._base_url_lower, "models.github.ai")
         or base_url_host_matches(agent._base_url_lower, "api.githubcopilot.com")
     )
-    _is_nous = "nousresearch" in agent._base_url_lower
+    _is_nous = "kyssta" in agent._base_url_lower
     _is_nvidia = "integrate.api.nvidia.com" in agent._base_url_lower
     _is_kimi = (
         base_url_host_matches(agent.base_url, "api.kimi.com")
@@ -396,7 +396,7 @@ def build_api_kwargs(agent, api_messages: list) -> dict:
     _qwen_meta = None
     if _is_qwen:
         _qwen_meta = {
-            "sessionId": agent.session_id or "hermes",
+            "sessionId": agent.session_id or "kase",
             "promptId": str(uuid.uuid4()),
         }
 
@@ -754,7 +754,7 @@ def try_activate_fallback(agent, reason: "FailoverReason | None" = None) -> bool
         fb_api_key_hint = (fb.get("api_key") or "").strip() or None
         if not fb_api_key_hint:
             # key_env and api_key_env are both documented aliases (see
-            # _normalize_custom_provider_entry in hermes_cli/config.py).
+            # _normalize_custom_provider_entry in kase_cli/config.py).
             fb_key_env = (fb.get("key_env") or fb.get("api_key_env") or "").strip()
             if fb_key_env:
                 fb_api_key_hint = os.getenv(fb_key_env, "").strip() or None
@@ -773,7 +773,7 @@ def try_activate_fallback(agent, reason: "FailoverReason | None" = None) -> bool
                 fb_provider)
             return agent._try_activate_fallback()  # try next in chain
         try:
-            from hermes_cli.model_normalize import normalize_model_for_provider
+            from kase_cli.model_normalize import normalize_model_for_provider
 
             fb_model = normalize_model_for_provider(fb_model, fb_provider)
         except Exception:
@@ -981,7 +981,7 @@ def handle_max_iterations(agent, messages: list, api_call_count: int) -> str:
         )
         _omit_summary_temperature = _raw_summary_temp is _OMIT_TEMP
         _summary_temperature = None if _omit_summary_temperature else _raw_summary_temp
-        _is_nous = "nousresearch" in agent._base_url_lower
+        _is_nous = "kyssta" in agent._base_url_lower
         # LM Studio uses top-level `reasoning_effort` (not extra_body.reasoning).
         # Mirror ChatCompletionsTransport.build_kwargs() so the summary path
         # — which calls chat.completions.create() directly without going
@@ -1003,7 +1003,7 @@ def handle_max_iterations(agent, messages: list, api_call_count: int) -> str:
                     "effort": "medium"
                 }
         if _is_nous:
-            from agent.portal_tags import nous_portal_tags as _portal_tags
+            from agent.portal_tags import kyssta_portal_tags as _portal_tags
             summary_extra_body["tags"] = _portal_tags()
 
         if agent.api_mode == "codex_responses":

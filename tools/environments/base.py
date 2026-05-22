@@ -1,4 +1,4 @@
-"""Base class for all Hermes execution environment backends.
+"""Base class for all Kase execution environment backends.
 
 Unified spawn-per-call model: every command spawns a fresh ``bash -c`` process.
 A session snapshot (env vars, functions, aliases) is captured once at init and
@@ -20,7 +20,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import IO, Callable, Protocol
 
-from hermes_constants import get_hermes_home
+from kase_constants import get_kase_home
 from tools.interrupt import is_interrupted
 
 logger = logging.getLogger(__name__)
@@ -82,13 +82,13 @@ def get_sandbox_dir() -> Path:
     """Return the host-side root for all sandbox storage (Docker workspaces,
     Singularity overlays/SIF cache, etc.).
 
-    Configurable via TERMINAL_SANDBOX_DIR. Defaults to {HERMES_HOME}/sandboxes/.
+    Configurable via TERMINAL_SANDBOX_DIR. Defaults to {KASE_HOME}/sandboxes/.
     """
     custom = os.getenv("TERMINAL_SANDBOX_DIR")
     if custom:
         p = Path(custom)
     else:
-        p = get_hermes_home() / "sandboxes"
+        p = get_kase_home() / "sandboxes"
     p.mkdir(parents=True, exist_ok=True)
     return p
 
@@ -277,7 +277,7 @@ class _ThreadedProcessHandle:
 
 
 def _cwd_marker(session_id: str) -> str:
-    return f"__HERMES_CWD_{session_id}__"
+    return f"__KASE_CWD_{session_id}__"
 
 
 # ---------------------------------------------------------------------------
@@ -286,7 +286,7 @@ def _cwd_marker(session_id: str) -> str:
 
 
 class BaseEnvironment(ABC):
-    """Common interface and unified execution flow for all Hermes backends.
+    """Common interface and unified execution flow for all Kase backends.
 
     Subclasses implement ``_run_bash()`` and ``cleanup()``.  The base class
     provides ``execute()`` with session snapshot sourcing, CWD tracking,
@@ -315,8 +315,8 @@ class BaseEnvironment(ABC):
 
         self._session_id = uuid.uuid4().hex[:12]
         temp_dir = self.get_temp_dir().rstrip("/") or "/"
-        self._snapshot_path = f"{temp_dir}/hermes-snap-{self._session_id}.sh"
-        self._cwd_file = f"{temp_dir}/hermes-cwd-{self._session_id}.txt"
+        self._snapshot_path = f"{temp_dir}/kase-snap-{self._session_id}.sh"
+        self._cwd_file = f"{temp_dir}/kase-cwd-{self._session_id}.txt"
         self._cwd_marker = _cwd_marker(self._session_id)
         self._snapshot_ready = False
 
@@ -364,7 +364,7 @@ class BaseEnvironment(ABC):
         # ``C:/Users/...``-shaped paths without glob-splitting the colon or
         # tripping on drive letters.  On POSIX this is a no-op (no colons /
         # special chars in a /tmp path).  Previously unquoted interpolation
-        # caused ``C:/Users/.../hermes-snap-*.sh: No such file or directory``
+        # caused ``C:/Users/.../kase-snap-*.sh: No such file or directory``
         # errors on Windows, leaking via stderr (merged into stdout on Linux
         # backends) into every terminal-tool response.
         _quoted_snap = shlex.quote(self._snapshot_path)
@@ -733,7 +733,7 @@ class BaseEnvironment(ABC):
         self._extract_cwd_from_output(result)
 
     def _extract_cwd_from_output(self, result: dict):
-        """Parse the __HERMES_CWD_{session}__ marker from stdout output.
+        """Parse the __KASE_CWD_{session}__ marker from stdout output.
 
         Updates self.cwd and strips the marker from result["output"].
         Used by remote backends (Docker, SSH, Modal, Daytona, Singularity).

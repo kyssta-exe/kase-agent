@@ -24,15 +24,15 @@ import { useConfirmDelete } from "@/hooks/useConfirmDelete";
 import { useModalBehavior } from "@/hooks/useModalBehavior";
 import { Toast } from "@/components/Toast";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@nous-research/ui/ui/components/badge";
-import { Button } from "@nous-research/ui/ui/components/button";
+import { Badge } from "@kyssta/ui/ui/components/badge";
+import { Button } from "@kyssta/ui/ui/components/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@nous-research/ui/ui/components/checkbox";
+import { Checkbox } from "@kyssta/ui/ui/components/checkbox";
 import { useI18n } from "@/i18n";
 import { usePageHeader } from "@/contexts/usePageHeader";
 
-// Mirrors hermes_cli/profiles.py::_PROFILE_ID_RE so we can reject obviously
+// Mirrors kase_cli/profiles.py::_PROFILE_ID_RE so we can reject obviously
 // invalid names (uppercase, spaces, …) before round-tripping a doomed POST.
 const PROFILE_NAME_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 

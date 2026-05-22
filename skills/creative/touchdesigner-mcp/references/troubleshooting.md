@@ -133,11 +133,11 @@ n.cook(force=True)
 actual = str(n.width) + 'x' + str(n.height)
 ```
 
-## 5. Hermes Configuration
+## 5. Kase Configuration
 
 ### Config location
 
-`$HERMES_HOME/config.yaml` (defaults to `~/.hermes/config.yaml` when `HERMES_HOME` is unset)
+`$KASE_HOME/config.yaml` (defaults to `~/.kase/config.yaml` when `KASE_HOME` is unset)
 
 ### MCP entry format
 
@@ -150,7 +150,7 @@ mcpServers:
 
 ### After config changes
 
-Restart the Hermes session for changes to take effect. The MCP connection is
+Restart the Kase session for changes to take effect. The MCP connection is
 established at session startup.
 
 ### Verifying MCP tools are available

@@ -15,7 +15,7 @@ Security features (based on OWASP + NIST SP 800-63-4 guidance):
   - File permissions: chmod 0600 on all data files
   - Codes are never logged to stdout
 
-Storage: ~/.hermes/pairing/
+Storage: ~/.kase/pairing/
 """
 
 import hashlib
@@ -28,7 +28,7 @@ import time
 from pathlib import Path
 from typing import Optional
 
-from hermes_constants import get_hermes_dir
+from kase_constants import get_hermes_dir
 from utils import atomic_replace
 
 

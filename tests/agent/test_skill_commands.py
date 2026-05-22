@@ -204,12 +204,12 @@ class TestScanSkillCommands:
             assert "/discord-only" in telegram_again
 
     def test_get_skill_commands_rescans_when_session_platform_changes(self, tmp_path):
-        """``HERMES_SESSION_PLATFORM`` from the gateway session context must
+        """``KASE_SESSION_PLATFORM`` from the gateway session context must
         also trigger a rescan, not just ``HERMES_PLATFORM`` (#14536).
 
         Exercises the real ContextVar path: the gateway sets the active
         adapter via ``set_session_vars(platform=...)`` and the resolver
-        reads it via ``get_session_env``. Setting ``HERMES_SESSION_PLATFORM``
+        reads it via ``get_session_env``. Setting ``KASE_SESSION_PLATFORM``
         in ``os.environ`` would only test ``get_session_env``'s legacy
         env-var fallback — a regression that swapped ``get_session_env``
         for plain ``os.getenv`` would still pass while breaking concurrent
@@ -227,7 +227,7 @@ class TestScanSkillCommands:
         def _disabled_skills():
             platform = (
                 os.getenv("HERMES_PLATFORM")
-                or get_session_env("HERMES_SESSION_PLATFORM")
+                or get_session_env("KASE_SESSION_PLATFORM")
             )
             if platform == "telegram":
                 return {"telegram-only"}
@@ -650,7 +650,7 @@ class TestSkillDirectoryHeader:
 
 
 class TestTemplateVarSubstitution:
-    """``${HERMES_SKILL_DIR}`` and ``${HERMES_SESSION_ID}`` in SKILL.md body
+    """``${HERMES_SKILL_DIR}`` and ``${KASE_SESSION_ID}`` in SKILL.md body
     are replaced before the agent sees the content."""
 
     def test_substitutes_skill_dir(self, tmp_path):
@@ -673,7 +673,7 @@ class TestTemplateVarSubstitution:
             _make_skill(
                 tmp_path,
                 "sess-templated",
-                body="Session: ${HERMES_SESSION_ID}",
+                body="Session: ${KASE_SESSION_ID}",
             )
             scan_skill_commands()
             msg = build_skill_invocation_message(
@@ -688,14 +688,14 @@ class TestTemplateVarSubstitution:
             _make_skill(
                 tmp_path,
                 "sess-missing",
-                body="Session: ${HERMES_SESSION_ID}",
+                body="Session: ${KASE_SESSION_ID}",
             )
             scan_skill_commands()
             msg = build_skill_invocation_message("/sess-missing", task_id=None)
 
         assert msg is not None
         # No session — token left intact so the author can spot it.
-        assert "Session: ${HERMES_SESSION_ID}" in msg
+        assert "Session: ${KASE_SESSION_ID}" in msg
 
     def test_disable_template_vars_via_config(self, tmp_path):
         with (

@@ -42,9 +42,9 @@ def _run_gateway_import(hermes_home: Path, initial_env: dict[str, str]) -> dict[
 
         for k in (
             "HERMES_MAX_ITERATIONS",
-            "HERMES_AGENT_TIMEOUT",
-            "HERMES_AGENT_TIMEOUT_WARNING",
-            "HERMES_GATEWAY_BUSY_INPUT_MODE",
+            "KASE_TIMEOUT",
+            "KASE_TIMEOUT_WARNING",
+            "KASE_GATEWAY_BUSY_INPUT_MODE",
             "HERMES_TIMEZONE",
         ):
             v = os.environ.get(k)
@@ -53,7 +53,7 @@ def _run_gateway_import(hermes_home: Path, initial_env: dict[str, str]) -> dict[
         """
     )
     env = dict(initial_env)
-    env["HERMES_HOME"] = str(hermes_home)
+    env["KASE_HOME"] = str(hermes_home)
     # Keep PATH / PYTHONPATH so venv imports resolve.
     for k in ("PATH", "PYTHONPATH", "VIRTUAL_ENV", "HOME"):
         if k in os.environ and k not in env:
@@ -99,7 +99,7 @@ def _write_env(home: Path, entries: dict[str, str]) -> None:
 
 @pytest.fixture
 def hermes_home(tmp_path: Path) -> Path:
-    home = tmp_path / ".hermes"
+    home = tmp_path / ".kase"
     home.mkdir()
     return home
 
@@ -124,23 +124,23 @@ def test_config_gateway_timeout_wins_over_stale_env(hermes_home: Path) -> None:
         "gateway_timeout_warning": 900,
     })
     _write_env(hermes_home, {
-        "HERMES_AGENT_TIMEOUT": "60",
-        "HERMES_AGENT_TIMEOUT_WARNING": "30",
+        "KASE_TIMEOUT": "60",
+        "KASE_TIMEOUT_WARNING": "30",
     })
 
     env = _run_gateway_import(hermes_home, initial_env={})
 
-    assert env.get("HERMES_AGENT_TIMEOUT") == "1800"
-    assert env.get("HERMES_AGENT_TIMEOUT_WARNING") == "900"
+    assert env.get("KASE_TIMEOUT") == "1800"
+    assert env.get("KASE_TIMEOUT_WARNING") == "900"
 
 
 def test_config_display_busy_input_mode_wins_over_stale_env(hermes_home: Path) -> None:
     _write_config(hermes_home, display_cfg={"busy_input_mode": "interrupt"})
-    _write_env(hermes_home, {"HERMES_GATEWAY_BUSY_INPUT_MODE": "queue"})
+    _write_env(hermes_home, {"KASE_GATEWAY_BUSY_INPUT_MODE": "queue"})
 
     env = _run_gateway_import(hermes_home, initial_env={})
 
-    assert env.get("HERMES_GATEWAY_BUSY_INPUT_MODE") == "interrupt"
+    assert env.get("KASE_GATEWAY_BUSY_INPUT_MODE") == "interrupt"
 
 
 def test_config_timezone_wins_over_stale_env(hermes_home: Path) -> None:

@@ -1,4 +1,4 @@
-# nix/tui.nix — Hermes TUI (Ink/React) compiled with tsc and bundled
+# nix/tui.nix — Kase TUI (Ink/React) compiled with tsc and bundled
 { pkgs, hermesNpmLib, ... }:
 let
   src = ../ui-tui;
@@ -7,13 +7,13 @@ let
     hash = "sha256-F6/MzZOWc0zhW9mIfnaY+PrllPvJcsA/OdFdEM+NpLY=";
   };
 
-  npm = hermesNpmLib.mkNpmPassthru { folder = "ui-tui"; attr = "tui"; pname = "hermes-tui"; };
+  npm = hermesNpmLib.mkNpmPassthru { folder = "ui-tui"; attr = "tui"; pname = "kase-tui"; };
 
   packageJson = builtins.fromJSON (builtins.readFile (src + "/package.json"));
   version = packageJson.version;
 in
 pkgs.buildNpmPackage (npm // {
-  pname = "hermes-tui";
+  pname = "kase-tui";
   inherit src npmDeps version;
 
   doCheck = false;
@@ -22,13 +22,13 @@ pkgs.buildNpmPackage (npm // {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/lib/hermes-tui
+    mkdir -p $out/lib/kase-tui
 
     # Single self-contained bundle built by scripts/build.mjs (esbuild).
-    cp -r dist $out/lib/hermes-tui/dist
+    cp -r dist $out/lib/kase-tui/dist
 
     # package.json kept for "type": "module" resolution on `node dist/entry.js`.
-    cp package.json $out/lib/hermes-tui/
+    cp package.json $out/lib/kase-tui/
 
     runHook postInstall
   '';

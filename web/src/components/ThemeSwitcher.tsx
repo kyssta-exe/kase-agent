@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Palette, Check } from "lucide-react";
-import { Button } from "@nous-research/ui/ui/components/button";
-import { ListItem } from "@nous-research/ui/ui/components/list-item";
+import { Button } from "@kyssta/ui/ui/components/button";
+import { ListItem } from "@kyssta/ui/ui/components/list-item";
 import { BottomPickSheet } from "@/components/BottomPickSheet";
 import { Typography } from "@/components/NouiTypography";
 import { useBelowBreakpoint } from "@/hooks/useBelowBreakpoint";
@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  * Compact theme picker mounted next to the language switcher in the header.
  * Each dropdown row shows a 3-stop swatch (background / midground / warm
  * glow) so users can preview the palette before committing. User-defined
- * themes from `~/.hermes/dashboard-themes/*.yaml` use their API-provided
+ * themes from `~/.kase/dashboard-themes/*.yaml` use their API-provided
  * definitions so they show real palette swatches just like built-ins.
  *
  * When placed at the bottom of a container (e.g. the sidebar rail), pass

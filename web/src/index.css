@@ -1,16 +1,16 @@
 @import 'tailwindcss';
-/* `fonts.css` must come BEFORE `globals.css`: as of @nous-research/ui 0.14.x,
+/* `fonts.css` must come BEFORE `globals.css`: as of @kyssta/ui 0.14.x,
    `globals.css` only declares the `--font-*` CSS variables (Collapse, Rules
    Compressed/Expanded, Mondwest). The `@font-face` registrations live in
    `fonts.css`, so without this import the DS variables resolve to font
    families the browser never loads and components fall back to a system
    stack (Tabs, Segmented, Typography, Buttons, etc. all look unstyled). */
-@import '@nous-research/ui/styles/fonts.css';
-@import '@nous-research/ui/styles/globals.css';
+@import '@kyssta/ui/styles/fonts.css';
+@import '@kyssta/ui/styles/globals.css';
 
 /* Scan the published design-system bundle so its utility classes survive
    Tailwind's JIT purge. */
-@source '../node_modules/@nous-research/ui/dist';
+@source '../node_modules/@kyssta/ui/dist';
 
 /* ------------------------------------------------------------------ */
 /* JetBrains Mono — bundled for the embedded TUI (/chat tab).          */
@@ -43,15 +43,15 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Hermes Agent — Nous DS with the LENS_0 (Hermes teal) lens applied   */
-/* statically. Mirrors nousnet-web/(hermes-agent)/layout.tsx so the    */
-/* canonical Hermes palette is the default — teal canvas + cream      */
+/* Kase — Nous DS with the LENS_0 (Kase teal) lens applied   */
+/* statically. Mirrors nousnet-web/(kase)/layout.tsx so the    */
+/* canonical Kase palette is the default — teal canvas + cream      */
 /* accent — without relying on leva/gsap at runtime.                  */
 /* ------------------------------------------------------------------ */
 
 :root {
   /* LENS_0 — from design-language/src/ui/components/overlays/index.tsx.
-     These are the defaults for the `default` (Hermes Teal) dashboard theme;
+     These are the defaults for the `default` (Kase Teal) dashboard theme;
      ThemeProvider rewrites them as inline styles when a user switches themes. */
   --foreground: color-mix(in srgb, #ffffff 0%, transparent);
   --foreground-base: #ffffff;
@@ -124,7 +124,7 @@ code, kbd, pre, samp, .font-mono, .font-mono-ui {
   overflow: hidden;
 }
 
-/* Nousnet's hermes-agent layout bumps `small` and `code` to readable
+/* Nousnet's kase layout bumps `small` and `code` to readable
    dashboard sizes. Keep in sync. */
 small { font-size: 1.0625rem; }
 code { font-size: 0.875rem; }

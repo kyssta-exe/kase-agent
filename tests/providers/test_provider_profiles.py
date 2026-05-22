@@ -212,12 +212,12 @@ class TestOpenRouterProfile:
         assert tl["extra_headers"]["x-grok-conv-id"] == "sess-123"
 
 
-class TestNousProfile:
+class TestKysstaProfile:
     def test_tags(self):
-        from agent.portal_tags import nous_portal_tags
+        from agent.portal_tags import kyssta_portal_tags
         p = get_provider_profile("nous")
         body = p.build_extra_body()
-        assert body["tags"] == nous_portal_tags()
+        assert body["tags"] == kyssta_portal_tags()
 
     def test_auth_type(self):
         p = get_provider_profile("nous")

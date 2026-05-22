@@ -7,7 +7,7 @@ is now the canonical implementation.
 
 Browser Use is the only browser backend with dual auth: a direct
 ``BROWSER_USE_API_KEY`` for self-billed users, or the managed Nous tool
-gateway (which Hermes uses to bill Browser Use sessions to a Nous
+gateway (which Kase uses to bill Browser Use sessions to a Nous
 subscription). The dispatch order — direct API key first, managed gateway
 second — preserves the pre-migration behaviour in
 ``tools.browser_providers.browser_use.BrowserUseProvider._get_config_or_none``.
@@ -23,7 +23,7 @@ Config keys this provider responds to::
 Auth env vars (one of)::
 
     BROWSER_USE_API_KEY=...           # https://browser-use.com
-    # OR a managed Nous gateway entry (configured via 'hermes setup')
+    # OR a managed Nous gateway entry (configured via 'kase setup')
 """
 
 from __future__ import annotations
@@ -153,14 +153,14 @@ class BrowserUseBrowserProvider(BrowserProvider):
         }
 
     def _get_config(self) -> Dict[str, Any]:
-        from tools.tool_backend_helpers import managed_nous_tools_enabled
+        from tools.tool_backend_helpers import managed_kyssta_tools_enabled
 
         config = self._get_config_or_none()
         if config is None:
             message = (
                 "Browser Use requires a direct BROWSER_USE_API_KEY credential."
             )
-            if managed_nous_tools_enabled():
+            if managed_kyssta_tools_enabled():
                 message = (
                     "Browser Use requires either a direct BROWSER_USE_API_KEY "
                     "credential or a managed Browser Use gateway configuration."
@@ -187,7 +187,7 @@ class BrowserUseBrowserProvider(BrowserProvider):
             headers["X-Idempotency-Key"] = _get_or_create_pending_create_key(task_id)
 
         # Keep gateway-backed sessions short so billing authorization does not
-        # default to a long Browser-Use timeout when Hermes only needs a task-
+        # default to a long Browser-Use timeout when Kase only needs a task-
         # scoped ephemeral browser.
         payload = (
             {

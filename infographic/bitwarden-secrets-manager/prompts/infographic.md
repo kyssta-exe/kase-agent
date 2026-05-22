@@ -65,18 +65,18 @@ PR #30035
 ### HERO CELL (largest, top-center, salmon pink background with thick black border)
 ONE TOKEN, EVERY KEY
 Rotate once in the Bitwarden web app.
-Every Hermes process picks it up on next start.
+Every Kase process picks it up on next start.
 NEW DEFAULT: override_existing = true
 
 ### Cell — LAZY INSTALL (sky blue background)
-~/.hermes/bin/bws
+~/.kase/bin/bws
 bws v2.0.0 PINNED
 SHA-256 VERIFIED
 No apt · no brew · no sudo
 Icon: wrench + downward arrow
 
 ### Cell — CLI SURFACE (mustard yellow background, checkerboard accents)
-$ hermes secrets bitwarden
+$ kase secrets bitwarden
   setup    wizard
   status   diagnose
   sync     fetch
@@ -117,5 +117,5 @@ secrets:
     auto_install: true
 
 ### Footer strip (bottom, black-on-cream)
-PR #30035 · commit 7f9b05668 · NousResearch/hermes-agent
-10 files · +1743 / -1 · agent/secret_sources/ · hermes_cli/secrets_cli.py
+PR #30035 · commit 7f9b05668 · Kyssta/kase
+10 files · +1743 / -1 · agent/secret_sources/ · kase_cli/secrets_cli.py

@@ -515,7 +515,7 @@ def test_invalid_regex_patterns_are_ignored():
 
 
 def test_config_bridges_telegram_group_settings(monkeypatch, tmp_path):
-    hermes_home = tmp_path / ".hermes"
+    hermes_home = tmp_path / ".kase"
     hermes_home.mkdir()
     (hermes_home / "config.yaml").write_text(
         "telegram:\n"
@@ -536,7 +536,7 @@ def test_config_bridges_telegram_group_settings(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("KASE_HOME", str(hermes_home))
     monkeypatch.delenv("TELEGRAM_REQUIRE_MENTION", raising=False)
     monkeypatch.delenv("TELEGRAM_MENTION_PATTERNS", raising=False)
     monkeypatch.delenv("TELEGRAM_EXCLUSIVE_BOT_MENTIONS", raising=False)
@@ -570,7 +570,7 @@ def test_config_bridges_telegram_group_settings(monkeypatch, tmp_path):
 
 
 def test_config_bridges_telegram_user_allowlists(monkeypatch, tmp_path):
-    hermes_home = tmp_path / ".hermes"
+    hermes_home = tmp_path / ".kase"
     hermes_home.mkdir()
     (hermes_home / "config.yaml").write_text(
         "telegram:\n"
@@ -584,7 +584,7 @@ def test_config_bridges_telegram_user_allowlists(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("KASE_HOME", str(hermes_home))
     monkeypatch.delenv("TELEGRAM_ALLOWED_USERS", raising=False)
     monkeypatch.delenv("TELEGRAM_GROUP_ALLOWED_USERS", raising=False)
     monkeypatch.delenv("TELEGRAM_GROUP_ALLOWED_CHATS", raising=False)
@@ -598,7 +598,7 @@ def test_config_bridges_telegram_user_allowlists(monkeypatch, tmp_path):
 
 
 def test_config_env_overrides_telegram_user_allowlists(monkeypatch, tmp_path):
-    hermes_home = tmp_path / ".hermes"
+    hermes_home = tmp_path / ".kase"
     hermes_home.mkdir()
     (hermes_home / "config.yaml").write_text(
         "telegram:\n"
@@ -607,7 +607,7 @@ def test_config_env_overrides_telegram_user_allowlists(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("KASE_HOME", str(hermes_home))
     monkeypatch.setenv("TELEGRAM_ALLOWED_USERS", "999")
     monkeypatch.setenv("TELEGRAM_GROUP_ALLOWED_USERS", "888")
 
@@ -635,7 +635,7 @@ def test_top_level_require_mention_bridges_to_telegram(monkeypatch, tmp_path):
     """require_mention at the config.yaml top level (alongside group_sessions_per_user)
     must behave identically to telegram.require_mention: true (#3979).
     """
-    hermes_home = tmp_path / ".hermes"
+    hermes_home = tmp_path / ".kase"
     hermes_home.mkdir()
     # Intentionally no "telegram:" section — keys are at the top level.
     (hermes_home / "config.yaml").write_text(
@@ -644,7 +644,7 @@ def test_top_level_require_mention_bridges_to_telegram(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("KASE_HOME", str(hermes_home))
     monkeypatch.delenv("TELEGRAM_REQUIRE_MENTION", raising=False)
 
     config = load_gateway_config()
@@ -663,7 +663,7 @@ def test_top_level_require_mention_does_not_override_telegram_section(monkeypatc
     """When telegram.require_mention is explicitly set, top-level require_mention
     must not override it (platform-specific config takes precedence).
     """
-    hermes_home = tmp_path / ".hermes"
+    hermes_home = tmp_path / ".kase"
     hermes_home.mkdir()
     (hermes_home / "config.yaml").write_text(
         "require_mention: true\n"
@@ -672,7 +672,7 @@ def test_top_level_require_mention_does_not_override_telegram_section(monkeypatc
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("KASE_HOME", str(hermes_home))
     monkeypatch.delenv("TELEGRAM_REQUIRE_MENTION", raising=False)
 
     config = load_gateway_config()
@@ -683,7 +683,7 @@ def test_top_level_require_mention_does_not_override_telegram_section(monkeypatc
 
 
 def test_config_bridges_telegram_ignored_threads(monkeypatch, tmp_path):
-    hermes_home = tmp_path / ".hermes"
+    hermes_home = tmp_path / ".kase"
     hermes_home.mkdir()
     (hermes_home / "config.yaml").write_text(
         "telegram:\n"
@@ -693,7 +693,7 @@ def test_config_bridges_telegram_ignored_threads(monkeypatch, tmp_path):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+    monkeypatch.setenv("KASE_HOME", str(hermes_home))
     monkeypatch.delenv("TELEGRAM_IGNORED_THREADS", raising=False)
 
     config = load_gateway_config()

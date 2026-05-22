@@ -1,4 +1,4 @@
-import { Box, Text, useStdout } from '@hermes/ink'
+import { Box, Text, useStdout } from '@kase/ink'
 import { useEffect, useState } from 'react'
 import unicodeSpinners from 'unicode-animations'
 
@@ -53,7 +53,7 @@ export function Banner({ t }: { t: Theme }) {
         </Text>
       )}
 
-      <Text color={t.color.muted}>{t.brand.icon} Nous Research · Messenger of the Digital Gods</Text>
+      <Text color={t.color.muted}>{t.brand.icon} Kyssta · Messenger of the Digital Gods</Text>
     </Box>
   )
 }
@@ -224,7 +224,7 @@ export function SessionPanel({ info, sid, t }: SessionPanelProps) {
 
           <Text color={t.color.accent}>
             {info.model.split('/').pop()}
-            <Text color={t.color.muted}> · Nous Research</Text>
+            <Text color={t.color.muted}> · Kyssta</Text>
           </Text>
 
           <Text color={t.color.muted} wrap="truncate-end">
@@ -320,7 +320,7 @@ export function SessionPanel({ info, sid, t }: SessionPanelProps) {
               - run{' '}
             </Text>
             <Text bold color={t.color.warn}>
-              {info.update_command || 'hermes update'}
+              {info.update_command || 'kase update'}
             </Text>
             <Text bold={false} color={t.color.warn} dimColor>
               {' '}

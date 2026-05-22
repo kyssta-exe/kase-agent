@@ -1,13 +1,13 @@
-import { useGpuTier } from "@nous-research/ui/hooks/use-gpu-tier";
+import { useGpuTier } from "@kyssta/ui/hooks/use-gpu-tier";
 
-import fillerBgUrl from "@nous-research/ui/assets/filler-bg0.webp";
+import fillerBgUrl from "@kyssta/ui/assets/filler-bg0.webp";
 
 /**
  * Replicates the visual layer stack of `<Overlays dark />` from
- * `@nous-research/ui` without pulling in its leva / gsap / three peer deps.
+ * `@kyssta/ui` without pulling in its leva / gsap / three peer deps.
  *
  * See `design-language/src/ui/components/overlays/index.tsx` for the source of
- * truth. Defaults match LENS_0 (the Hermes teal dark preset); the deep canvas
+ * truth. Defaults match LENS_0 (the Kase teal dark preset); the deep canvas
  * and the warm vignette both read theme-switchable CSS custom properties so
  * `ThemeProvider` can repaint the stack without remounting.
  *

@@ -17,7 +17,7 @@ import threading
 import time
 import unicodedata
 from typing import Optional
-from hermes_cli.config import cfg_get
+from kase_cli.config import cfg_get
 
 from utils import env_var_enabled, is_truthy_value
 
@@ -44,7 +44,7 @@ def _fire_approval_hook(hook_name: str, **kwargs) -> None:
     pre_approval_request, post_approval_response.
     """
     try:
-        from hermes_cli.plugins import invoke_hook
+        from kase_cli.plugins import invoke_hook
     except Exception:
         # Plugin system not available in this execution context
         # (e.g. bare tool-only imports, minimal test environments).
@@ -81,7 +81,7 @@ def get_current_session_key(default: str = "default") -> str:
     if session_key:
         return session_key
     from gateway.session_context import get_session_env
-    return get_session_env("HERMES_SESSION_KEY", default)
+    return get_session_env("KASE_SESSION_KEY", default)
 
 
 def _get_session_platform() -> str:
@@ -89,37 +89,37 @@ def _get_session_platform() -> str:
     try:
         from gateway.session_context import get_session_env
 
-        return get_session_env("HERMES_SESSION_PLATFORM", "") or ""
+        return get_session_env("KASE_SESSION_PLATFORM", "") or ""
     except Exception:
-        return os.getenv("HERMES_SESSION_PLATFORM", "") or ""
+        return os.getenv("KASE_SESSION_PLATFORM", "") or ""
 
 
 def _is_gateway_approval_context() -> bool:
     """True when this call is inside a gateway/API session.
 
-    Legacy gateway integrations set HERMES_GATEWAY_SESSION in process env.
-    Newer concurrent gateway paths bind HERMES_SESSION_PLATFORM via
+    Legacy gateway integrations set KASE_GATEWAY_SESSION in process env.
+    Newer concurrent gateway paths bind KASE_SESSION_PLATFORM via
     contextvars so approval mode does not depend on process-global flags.
 
     Cron jobs are NEVER gateway-approval contexts even when they originate
-    from a gateway platform (cron binds HERMES_SESSION_PLATFORM via
+    from a gateway platform (cron binds KASE_SESSION_PLATFORM via
     contextvars for delivery routing). Cron approvals are governed by
     ``approvals.cron_mode`` config, not interactive resolve — letting cron
     fall through to the gateway branch would submit a pending approval
     with no listener and block the job indefinitely.
     """
-    if env_var_enabled("HERMES_CRON_SESSION"):
+    if env_var_enabled("KASE_CRON_SESSION"):
         return False
-    if env_var_enabled("HERMES_GATEWAY_SESSION"):
+    if env_var_enabled("KASE_GATEWAY_SESSION"):
         return True
     return bool(_get_session_platform())
 
 # Sensitive write targets that should trigger approval even when referenced
-# via shell expansions like $HOME or $HERMES_HOME.
+# via shell expansions like $HOME or $KASE_HOME.
 _SSH_SENSITIVE_PATH = r'(?:~|\$home|\$\{home\})/\.ssh(?:/|$)'
-_HERMES_ENV_PATH = (
-    r'(?:~\/\.hermes/|'
-    r'(?:\$home|\$\{home\})/\.hermes/|'
+_KASE_ENV_PATH = (
+    r'(?:~\/\.kase/|'
+    r'(?:\$home|\$\{home\})/\.kase/|'
     r'(?:\$hermes_home|\$\{hermes_home\})/)'
     r'\.env\b'
 )
@@ -147,7 +147,7 @@ _SYSTEM_CONFIG_PATH = (
 _SENSITIVE_WRITE_TARGET = (
     rf'(?:{_SYSTEM_CONFIG_PATH}|/dev/sd|'
     rf'{_SSH_SENSITIVE_PATH}|'
-    rf'{_HERMES_ENV_PATH}|'
+    rf'{_KASE_ENV_PATH}|'
     rf'{_SHELL_RC_FILES}|'
     rf'{_CREDENTIAL_FILES})'
 )
@@ -360,16 +360,16 @@ DANGEROUS_PATTERNS = [
     # Gateway lifecycle protection: prevent the agent from killing its own
     # gateway process.  These commands trigger a gateway restart/stop that
     # terminates all running agents mid-work.
-    (r'\bhermes\s+gateway\s+(stop|restart)\b', "stop/restart hermes gateway (kills running agents)"),
-    (r'\bhermes\s+update\b', "hermes update (restarts gateway, kills running agents)"),
+    (r'\bhermes\s+gateway\s+(stop|restart)\b', "stop/restart kase gateway (kills running agents)"),
+    (r'\bhermes\s+update\b', "kase update (restarts gateway, kills running agents)"),
     # Gateway protection: never start gateway outside systemd management
-    (r'gateway\s+run\b.*(&\s*$|&\s*;|\bdisown\b|\bsetsid\b)', "start gateway outside systemd (use 'systemctl --user restart hermes-gateway')"),
-    (r'\bnohup\b.*gateway\s+run\b', "start gateway outside systemd (use 'systemctl --user restart hermes-gateway')"),
+    (r'gateway\s+run\b.*(&\s*$|&\s*;|\bdisown\b|\bsetsid\b)', "start gateway outside systemd (use 'systemctl --user restart kase-gateway')"),
+    (r'\bnohup\b.*gateway\s+run\b', "start gateway outside systemd (use 'systemctl --user restart kase-gateway')"),
     # Self-termination protection: prevent agent from killing its own process
-    (r'\b(pkill|killall)\b.*\b(hermes|gateway|cli\.py)\b', "kill hermes/gateway process (self-termination)"),
+    (r'\b(pkill|killall)\b.*\b(kase|gateway|cli\.py)\b', "kill kase/gateway process (self-termination)"),
     # Self-termination via kill + command substitution (pgrep/pidof).
-    # The name-based pattern above catches `pkill hermes` but not
-    # `kill -9 $(pgrep -f hermes)` because the substitution is opaque
+    # The name-based pattern above catches `pkill kase` but not
+    # `kill -9 $(pgrep -f kase)` because the substitution is opaque
     # to regex at detection time. Catch the structural pattern instead.
     (r'\bkill\b.*\$\(\s*pgrep\b', "kill process via pgrep expansion (self-termination)"),
     (r'\bkill\b.*`\s*pgrep\b', "kill process via backtick pgrep expansion (self-termination)"),
@@ -669,7 +669,7 @@ def load_permanent_allowlist() -> set:
     patterns added via 'always' in a previous session.
     """
     try:
-        from hermes_cli.config import load_config
+        from kase_cli.config import load_config
         config = load_config()
         patterns = set(config.get("command_allowlist", []) or [])
         if patterns:
@@ -683,7 +683,7 @@ def load_permanent_allowlist() -> set:
 def save_permanent_allowlist(patterns: set):
     """Save permanently allowed command patterns to config."""
     try:
-        from hermes_cli.config import load_config, save_config
+        from kase_cli.config import load_config, save_config
         config = load_config()
         config["command_allowlist"] = list(patterns)
         save_config(config)
@@ -828,7 +828,7 @@ def _normalize_approval_mode(mode) -> str:
 def _get_approval_config() -> dict:
     """Read the approvals config block. Returns a dict with 'mode', 'timeout', etc."""
     try:
-        from hermes_cli.config import load_config
+        from kase_cli.config import load_config
         config = load_config()
         return config.get("approvals", {}) or {}
     except Exception as e:
@@ -853,7 +853,7 @@ def _get_approval_timeout() -> int:
 def _get_cron_approval_mode() -> str:
     """Read the cron approval mode from config. Returns 'deny' or 'approve'."""
     try:
-        from hermes_cli.config import load_config
+        from kase_cli.config import load_config
         config = load_config()
         mode = str(cfg_get(config, "approvals", "cron_mode", default="deny")).lower().strip()
         if mode in {"approve", "off", "allow", "yes"}:
@@ -940,7 +940,7 @@ def check_dangerous_command(command: str, env_type: str,
 
     # --yolo: bypass all approval prompts. Gateway /yolo is session-scoped;
     # CLI --yolo remains process-scoped via the env var for local use.
-    if is_truthy_value(os.getenv("HERMES_YOLO_MODE")) or is_current_session_yolo_enabled():
+    if is_truthy_value(os.getenv("KASE_YOLO_MODE")) or is_current_session_yolo_enabled():
         return {"approved": True, "message": None}
 
     is_dangerous, pattern_key, description = detect_dangerous_command(command)
@@ -951,12 +951,12 @@ def check_dangerous_command(command: str, env_type: str,
     if is_approved(session_key, pattern_key):
         return {"approved": True, "message": None}
 
-    is_cli = env_var_enabled("HERMES_INTERACTIVE")
+    is_cli = env_var_enabled("KASE_INTERACTIVE")
     is_gateway = _is_gateway_approval_context()
 
     if not is_cli and not is_gateway:
         # Cron sessions: respect cron_mode config
-        if env_var_enabled("HERMES_CRON_SESSION"):
+        if env_var_enabled("KASE_CRON_SESSION"):
             if _get_cron_approval_mode() == "deny":
                 return {
                     "approved": False,
@@ -1076,10 +1076,10 @@ def check_all_command_guards(command: str, env_type: str,
     # --yolo or approvals.mode=off: bypass all approval prompts.
     # Gateway /yolo is session-scoped; CLI --yolo remains process-scoped.
     approval_mode = _get_approval_mode()
-    if is_truthy_value(os.getenv("HERMES_YOLO_MODE")) or is_current_session_yolo_enabled() or approval_mode == "off":
+    if is_truthy_value(os.getenv("KASE_YOLO_MODE")) or is_current_session_yolo_enabled() or approval_mode == "off":
         return {"approved": True, "message": None}
 
-    is_cli = env_var_enabled("HERMES_INTERACTIVE")
+    is_cli = env_var_enabled("KASE_INTERACTIVE")
     is_gateway = _is_gateway_approval_context()
     is_ask = env_var_enabled("HERMES_EXEC_ASK")
 
@@ -1087,7 +1087,7 @@ def check_all_command_guards(command: str, env_type: str,
     # flows, we do not block on approvals and we skip external guard work.
     if not is_cli and not is_gateway and not is_ask:
         # Cron sessions: respect cron_mode config
-        if env_var_enabled("HERMES_CRON_SESSION"):
+        if env_var_enabled("KASE_CRON_SESSION"):
             if _get_cron_approval_mode() == "deny":
                 # Run detection to get a description for the block message
                 is_dangerous, _pk, description = detect_dangerous_command(command)

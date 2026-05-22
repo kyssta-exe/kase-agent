@@ -7,7 +7,7 @@ sidebar_position: 9
 
 # Credential Pools
 
-Credential pools let you register multiple API keys or OAuth tokens for the same provider. When one key hits a rate limit or billing quota, Hermes automatically rotates to the next healthy key — keeping your session alive without switching providers.
+Credential pools let you register multiple API keys or OAuth tokens for the same provider. When one key hits a rate limit or billing quota, Kase automatically rotates to the next healthy key — keeping your session alive without switching providers.
 
 This is different from [fallback providers](./fallback-providers.md), which switch to a *different* provider entirely. Credential pools are same-provider rotation; fallback providers are cross-provider failover. Pools are tried first — if all pool keys are exhausted, *then* the fallback provider activates.
 
@@ -31,24 +31,24 @@ Your request
 
 ## Quick Start
 
-If you already have an API key set in `.env`, Hermes auto-discovers it as a 1-key pool. To benefit from pooling, add more keys:
+If you already have an API key set in `.env`, Kase auto-discovers it as a 1-key pool. To benefit from pooling, add more keys:
 
 ```bash
 # Add a second OpenRouter key
-hermes auth add openrouter --api-key sk-or-v1-your-second-key
+kase auth add openrouter --api-key sk-or-v1-your-second-key
 
 # Add a second Anthropic key
-hermes auth add anthropic --type api-key --api-key sk-ant-api03-your-second-key
+kase auth add anthropic --type api-key --api-key sk-ant-api03-your-second-key
 
 # Add an Anthropic OAuth credential (requires Claude Max plan + extra usage credits)
-hermes auth add anthropic --type oauth
+kase auth add anthropic --type oauth
 # Opens browser for OAuth login
 ```
 
 Check your pools:
 
 ```bash
-hermes auth list
+kase auth list
 ```
 
 Output:
@@ -67,10 +67,10 @@ The `←` marks the currently selected credential.
 
 ## Interactive Management
 
-Run `hermes auth` with no subcommand for an interactive wizard:
+Run `kase auth` with no subcommand for an interactive wizard:
 
 ```bash
-hermes auth
+kase auth
 ```
 
 This shows your full pool status and offers a menu:
@@ -97,18 +97,18 @@ Type [1/2]:
 
 | Command | Description |
 |---------|-------------|
-| `hermes auth` | Interactive pool management wizard |
-| `hermes auth list` | Show all pools and credentials |
-| `hermes auth list <provider>` | Show a specific provider's pool |
-| `hermes auth add <provider>` | Add a credential (prompts for type and key) |
-| `hermes auth add <provider> --type api-key --api-key <key>` | Add an API key non-interactively |
-| `hermes auth add <provider> --type oauth` | Add an OAuth credential via browser login |
-| `hermes auth remove <provider> <index>` | Remove credential by 1-based index |
-| `hermes auth reset <provider>` | Clear all cooldowns/exhaustion status |
+| `kase auth` | Interactive pool management wizard |
+| `kase auth list` | Show all pools and credentials |
+| `kase auth list <provider>` | Show a specific provider's pool |
+| `kase auth add <provider>` | Add a credential (prompts for type and key) |
+| `kase auth add <provider> --type api-key --api-key <key>` | Add an API key non-interactively |
+| `kase auth add <provider> --type oauth` | Add an OAuth credential via browser login |
+| `kase auth remove <provider> <index>` | Remove credential by 1-based index |
+| `kase auth reset <provider>` | Clear all cooldowns/exhaustion status |
 
 ## Rotation Strategies
 
-Configure via `hermes auth` → "Set rotation strategy" or in `config.yaml`:
+Configure via `kase auth` → "Set rotation strategy" or in `config.yaml`:
 
 ```yaml
 credential_pool_strategies:
@@ -140,17 +140,17 @@ The `has_retried_429` flag resets on every successful API call, so a single tran
 
 Custom OpenAI-compatible endpoints (Together.ai, RunPod, local servers) get their own pools, keyed by the endpoint name from `custom_providers` in config.yaml.
 
-When you set up a custom endpoint via `hermes model`, it auto-generates a name like "Together.ai" or "Local (localhost:8080)". This name becomes the pool key.
+When you set up a custom endpoint via `kase model`, it auto-generates a name like "Together.ai" or "Local (localhost:8080)". This name becomes the pool key.
 
 ```bash
-# After setting up a custom endpoint via hermes model:
-hermes auth list
+# After setting up a custom endpoint via kase model:
+kase auth list
 # Shows:
 #   Together.ai (1 credential):
 #     #1  config key    api_key config:Together.ai ←
 
 # Add a second key for the same endpoint:
-hermes auth add Together.ai --api-key sk-together-second-key
+kase auth add Together.ai --api-key sk-together-second-key
 ```
 
 Custom endpoint pools are stored in `auth.json` under `credential_pool` with a `custom:` prefix:
@@ -166,18 +166,18 @@ Custom endpoint pools are stored in `auth.json` under `credential_pool` with a `
 
 ## Auto-Discovery
 
-Hermes automatically discovers credentials from multiple sources and seeds the pool on startup:
+Kase automatically discovers credentials from multiple sources and seeds the pool on startup:
 
 | Source | Example | Auto-seeded? |
 |--------|---------|-------------|
 | Environment variables | `OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY` | Yes |
 | OAuth tokens (auth.json) | Codex device code, Nous device code | Yes |
 | Claude Code credentials | `~/.claude/.credentials.json` | Yes (Anthropic) |
-| Hermes PKCE OAuth | `~/.hermes/auth.json` | Yes (Anthropic) |
+| Kase PKCE OAuth | `~/.kase/auth.json` | Yes (Anthropic) |
 | Custom endpoint config | `model.api_key` in config.yaml | Yes (custom endpoints) |
-| Manual entries | Added via `hermes auth add` | Persisted in auth.json |
+| Manual entries | Added via `kase auth add` | Persisted in auth.json |
 
-Auto-seeded entries are updated on each pool load — if you remove an env var, its pool entry is automatically pruned. Manual entries (added via `hermes auth add`) are never auto-pruned.
+Auto-seeded entries are updated on each pool load — if you remove an env var, its pool entry is automatically pruned. Manual entries (added via `kase auth add`) are never auto-pruned.
 
 ## Delegation & Subagent Sharing
 
@@ -200,13 +200,13 @@ For the full data flow diagram, see [`docs/credential-pool-flow.excalidraw`](htt
 The credential pool integrates at the provider resolution layer:
 
 1. **`agent/credential_pool.py`** — Pool manager: storage, selection, rotation, cooldowns
-2. **`hermes_cli/auth_commands.py`** — CLI commands and interactive wizard
-3. **`hermes_cli/runtime_provider.py`** — Pool-aware credential resolution
+2. **`kase_cli/auth_commands.py`** — CLI commands and interactive wizard
+3. **`kase_cli/runtime_provider.py`** — Pool-aware credential resolution
 4. **`run_agent.py`** — Error recovery: 429/402/401 → pool rotation → fallback
 
 ## Storage
 
-Pool state is stored in `~/.hermes/auth.json` under the `credential_pool` key:
+Pool state is stored in `~/.kase/auth.json` under the `credential_pool` key:
 
 ```json
 {

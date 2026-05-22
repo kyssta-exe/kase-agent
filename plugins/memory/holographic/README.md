@@ -9,21 +9,21 @@ None — uses SQLite (always available). NumPy optional for HRR algebra.
 ## Setup
 
 ```bash
-hermes memory setup    # select "holographic"
+kase memory setup    # select "holographic"
 ```
 
 Or manually:
 ```bash
-hermes config set memory.provider holographic
+kase config set memory.provider holographic
 ```
 
 ## Config
 
-Config in `config.yaml` under `plugins.hermes-memory-store`:
+Config in `config.yaml` under `plugins.kase-memory-store`:
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `db_path` | `$HERMES_HOME/memory_store.db` | SQLite database path |
+| `db_path` | `$KASE_HOME/memory_store.db` | SQLite database path |
 | `auto_extract` | `false` | Auto-extract facts at session end |
 | `default_trust` | `0.5` | Default trust score for new facts |
 | `hrr_dim` | `1024` | HRR vector dimensions |

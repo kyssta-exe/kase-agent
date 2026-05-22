@@ -7,27 +7,27 @@ from pathlib import Path
 from typing import Optional
 
 
-def _hermes_home_path() -> Path:
-    """Resolve the active HERMES_HOME (profile-aware) without circular imports."""
+def _kase_home_path() -> Path:
+    """Resolve the active KASE_HOME (profile-aware) without circular imports."""
     try:
-        from hermes_constants import get_hermes_home  # local import to avoid cycles
-        return get_hermes_home()
+        from kase_constants import get_kase_home  # local import to avoid cycles
+        return get_kase_home()
     except Exception:
-        return Path(os.path.expanduser("~/.hermes"))
+        return Path(os.path.expanduser("~/.kase"))
 
 
 def _hermes_root_path() -> Path:
-    """Resolve the Hermes root dir (always the parent of any profile, never per-profile)."""
+    """Resolve the Kase root dir (always the parent of any profile, never per-profile)."""
     try:
-        from hermes_constants import get_default_hermes_root  # local import to avoid cycles
+        from kase_constants import get_default_hermes_root  # local import to avoid cycles
         return get_default_hermes_root()
     except Exception:
-        return Path(os.path.expanduser("~/.hermes"))
+        return Path(os.path.expanduser("~/.kase"))
 
 
 def build_write_denied_paths(home: str) -> set[str]:
     """Return exact sensitive paths that must never be written."""
-    hermes_home = _hermes_home_path()
+    hermes_home = _kase_home_path()
     hermes_root = _hermes_root_path()
     return {
         os.path.realpath(p)
@@ -105,9 +105,9 @@ def is_write_denied(path: str) -> bool:
 
 
 def get_read_block_error(path: str) -> Optional[str]:
-    """Return an error message when a read targets internal Hermes cache files."""
+    """Return an error message when a read targets internal Kase cache files."""
     resolved = Path(path).expanduser().resolve()
-    hermes_home = _hermes_home_path().resolve()
+    hermes_home = _kase_home_path().resolve()
     blocked_dirs = [
         hermes_home / "skills" / ".hub" / "index-cache",
         hermes_home / "skills" / ".hub",
@@ -118,7 +118,7 @@ def get_read_block_error(path: str) -> Optional[str]:
         except ValueError:
             continue
         return (
-            f"Access denied: {path} is an internal Hermes cache file "
+            f"Access denied: {path} is an internal Kase cache file "
             "and cannot be read directly to prevent prompt injection. "
             "Use the skills_list or skill_view tools instead."
         )

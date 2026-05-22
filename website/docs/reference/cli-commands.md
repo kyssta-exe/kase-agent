@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 title: "CLI Commands Reference"
-description: "Authoritative reference for Hermes terminal commands and command families"
+description: "Authoritative reference for Kase terminal commands and command families"
 ---
 
 # CLI Commands Reference
@@ -13,7 +13,7 @@ For in-chat slash commands, see [Slash Commands Reference](./slash-commands.md).
 ## Global entrypoint
 
 ```bash
-hermes [global-options] <command> [subcommand/options]
+kase [global-options] <command> [subcommand/options]
 ```
 
 ### Global options
@@ -21,69 +21,69 @@ hermes [global-options] <command> [subcommand/options]
 | Option | Description |
 |--------|-------------|
 | `--version`, `-V` | Show version and exit. |
-| `--profile <name>`, `-p <name>` | Select which Hermes profile to use for this invocation. Overrides the sticky default set by `hermes profile use`. |
+| `--profile <name>`, `-p <name>` | Select which Kase profile to use for this invocation. Overrides the sticky default set by `kase profile use`. |
 | `--resume <session>`, `-r <session>` | Resume a previous session by ID or title. |
 | `--continue [name]`, `-c [name]` | Resume the most recent session, or the most recent session matching a title. |
 | `--worktree`, `-w` | Start in an isolated git worktree for parallel-agent workflows. |
 | `--yolo` | Bypass dangerous-command approval prompts. |
 | `--pass-session-id` | Include the session ID in the agent's system prompt. |
-| `--ignore-user-config` | Ignore `~/.hermes/config.yaml` and fall back to built-in defaults. Credentials in `.env` are still loaded. |
+| `--ignore-user-config` | Ignore `~/.kase/config.yaml` and fall back to built-in defaults. Credentials in `.env` are still loaded. |
 | `--ignore-rules` | Skip auto-injection of `AGENTS.md`, `SOUL.md`, `.cursorrules`, memory, and preloaded skills. |
-| `--tui` | Launch the [TUI](../user-guide/tui.md) instead of the classic CLI. Equivalent to `HERMES_TUI=1`. |
+| `--tui` | Launch the [TUI](../user-guide/tui.md) instead of the classic CLI. Equivalent to `KASE_TUI=1`. |
 | `--dev` | With `--tui`: run the TypeScript sources directly via `tsx` instead of the prebuilt bundle (for TUI contributors). |
 
 ## Top-level commands
 
 | Command | Purpose |
 |---------|---------|
-| `hermes chat` | Interactive or one-shot chat with the agent. |
-| `hermes model` | Interactively choose the default provider and model. |
-| `hermes fallback` | Manage fallback providers tried when the primary model errors. |
-| `hermes gateway` | Run or manage the messaging gateway service. |
-| `hermes proxy` | Local OpenAI-compatible proxy that attaches OAuth provider credentials. See [Subscription Proxy](../user-guide/features/subscription-proxy.md). |
-| `hermes lsp` | Manage Language Server Protocol integration (semantic diagnostics for write_file/patch). |
-| `hermes setup` | Interactive setup wizard for all or part of the configuration. |
-| `hermes whatsapp` | Configure and pair the WhatsApp bridge. |
-| `hermes slack` | Slack helpers (currently: generate the app manifest with every command as a native slash). |
-| `hermes auth` | Manage credentials — add, list, remove, reset, set strategy. Handles OAuth flows for Codex/Nous/Anthropic. |
-| `hermes login` / `logout` | **Deprecated** — use `hermes auth` instead. |
-| `hermes status` | Show agent, auth, and platform status. |
-| `hermes cron` | Inspect and tick the cron scheduler. |
-| `hermes kanban` | Multi-profile collaboration board (tasks, links, dispatcher). |
-| `hermes webhook` | Manage dynamic webhook subscriptions for event-driven activation. |
-| `hermes hooks` | Inspect, approve, or remove shell-script hooks declared in `config.yaml`. |
-| `hermes doctor` | Diagnose config and dependency issues. |
-| `hermes dump` | Copy-pasteable setup summary for support/debugging. |
-| `hermes debug` | Debug tools — upload logs and system info for support. |
-| `hermes backup` | Back up Hermes home directory to a zip file. |
-| `hermes checkpoints` | Inspect / prune / clear `~/.hermes/checkpoints/` (the shadow store used by `/rollback`). Run with no args for a status overview. |
-| `hermes import` | Restore a Hermes backup from a zip file. |
-| `hermes logs` | View, tail, and filter agent/gateway/error log files. |
-| `hermes config` | Show, edit, migrate, and query configuration files. |
-| `hermes pairing` | Approve or revoke messaging pairing codes. |
-| `hermes skills` | Browse, install, publish, audit, and configure skills. |
-| `hermes bundles` | Group several skills under a single `/<name>` slash command. See [Skill Bundles](../user-guide/features/skills.md#skill-bundles). |
-| `hermes curator` | Background skill maintenance — status, run, pause, pin. See [Curator](../user-guide/features/curator.md). |
-| `hermes memory` | Configure external memory provider. Plugin-specific subcommands (e.g. `hermes honcho`) register automatically when their provider is active. |
-| `hermes acp` | Run Hermes as an ACP server for editor integration. |
-| `hermes mcp` | Manage MCP server configurations and run Hermes as an MCP server. |
-| `hermes plugins` | Manage Hermes Agent plugins (install, enable, disable, remove). |
-| `hermes tools` | Configure enabled tools per platform. |
-| `hermes computer-use` | Install or check the cua-driver backend (macOS Computer Use). |
-| `hermes sessions` | Browse, export, prune, rename, and delete sessions. |
-| `hermes insights` | Show token/cost/activity analytics. |
-| `hermes claw` | OpenClaw migration helpers. |
-| `hermes dashboard` | Launch the web dashboard for managing config, API keys, and sessions. |
-| `hermes profile` | Manage profiles — multiple isolated Hermes instances. |
-| `hermes completion` | Print shell completion scripts (bash/zsh/fish). |
-| `hermes version` | Show version information. |
-| `hermes update` | Pull latest code and reinstall dependencies (git installs), or check PyPI and `pip install --upgrade` (pip installs). `--check` previews without installing; `--backup` takes a pre-pull `HERMES_HOME` snapshot. |
-| `hermes uninstall` | Remove Hermes from the system. |
+| `kase chat` | Interactive or one-shot chat with the agent. |
+| `kase model` | Interactively choose the default provider and model. |
+| `kase fallback` | Manage fallback providers tried when the primary model errors. |
+| `kase gateway` | Run or manage the messaging gateway service. |
+| `kase proxy` | Local OpenAI-compatible proxy that attaches OAuth provider credentials. See [Subscription Proxy](../user-guide/features/subscription-proxy.md). |
+| `kase lsp` | Manage Language Server Protocol integration (semantic diagnostics for write_file/patch). |
+| `kase setup` | Interactive setup wizard for all or part of the configuration. |
+| `kase whatsapp` | Configure and pair the WhatsApp bridge. |
+| `kase slack` | Slack helpers (currently: generate the app manifest with every command as a native slash). |
+| `kase auth` | Manage credentials — add, list, remove, reset, set strategy. Handles OAuth flows for Codex/Nous/Anthropic. |
+| `kase login` / `logout` | **Deprecated** — use `kase auth` instead. |
+| `kase status` | Show agent, auth, and platform status. |
+| `kase cron` | Inspect and tick the cron scheduler. |
+| `kase kanban` | Multi-profile collaboration board (tasks, links, dispatcher). |
+| `kase webhook` | Manage dynamic webhook subscriptions for event-driven activation. |
+| `kase hooks` | Inspect, approve, or remove shell-script hooks declared in `config.yaml`. |
+| `kase doctor` | Diagnose config and dependency issues. |
+| `kase dump` | Copy-pasteable setup summary for support/debugging. |
+| `kase debug` | Debug tools — upload logs and system info for support. |
+| `kase backup` | Back up Kase home directory to a zip file. |
+| `kase checkpoints` | Inspect / prune / clear `~/.kase/checkpoints/` (the shadow store used by `/rollback`). Run with no args for a status overview. |
+| `kase import` | Restore a Kase backup from a zip file. |
+| `kase logs` | View, tail, and filter agent/gateway/error log files. |
+| `kase config` | Show, edit, migrate, and query configuration files. |
+| `kase pairing` | Approve or revoke messaging pairing codes. |
+| `kase skills` | Browse, install, publish, audit, and configure skills. |
+| `kase bundles` | Group several skills under a single `/<name>` slash command. See [Skill Bundles](../user-guide/features/skills.md#skill-bundles). |
+| `kase curator` | Background skill maintenance — status, run, pause, pin. See [Curator](../user-guide/features/curator.md). |
+| `kase memory` | Configure external memory provider. Plugin-specific subcommands (e.g. `kase honcho`) register automatically when their provider is active. |
+| `kase acp` | Run Kase as an ACP server for editor integration. |
+| `kase mcp` | Manage MCP server configurations and run Kase as an MCP server. |
+| `kase plugins` | Manage Kase plugins (install, enable, disable, remove). |
+| `kase tools` | Configure enabled tools per platform. |
+| `kase computer-use` | Install or check the cua-driver backend (macOS Computer Use). |
+| `kase sessions` | Browse, export, prune, rename, and delete sessions. |
+| `kase insights` | Show token/cost/activity analytics. |
+| `kase claw` | OpenClaw migration helpers. |
+| `kase dashboard` | Launch the web dashboard for managing config, API keys, and sessions. |
+| `kase profile` | Manage profiles — multiple isolated Kase instances. |
+| `kase completion` | Print shell completion scripts (bash/zsh/fish). |
+| `kase version` | Show version information. |
+| `kase update` | Pull latest code and reinstall dependencies (git installs), or check PyPI and `pip install --upgrade` (pip installs). `--check` previews without installing; `--backup` takes a pre-pull `KASE_HOME` snapshot. |
+| `kase uninstall` | Remove Kase from the system. |
 
-## `hermes chat`
+## `kase chat`
 
 ```bash
-hermes chat [options]
+kase chat [options]
 ```
 
 Common options:
@@ -103,7 +103,7 @@ Common options:
 | `--checkpoints` | Enable filesystem checkpoints before destructive file changes. |
 | `--yolo` | Skip approval prompts. |
 | `--pass-session-id` | Pass the session ID into the system prompt. |
-| `--ignore-user-config` | Ignore `~/.hermes/config.yaml` and use built-in defaults. Credentials in `.env` are still loaded. Useful for isolated CI runs, reproducible bug reports, and third-party integrations. |
+| `--ignore-user-config` | Ignore `~/.kase/config.yaml` and use built-in defaults. Credentials in `.env` are still loaded. Useful for isolated CI runs, reproducible bug reports, and third-party integrations. |
 | `--ignore-rules` | Skip auto-injection of `AGENTS.md`, `SOUL.md`, `.cursorrules`, persistent memory, and preloaded skills. Combine with `--ignore-user-config` for a fully isolated run. |
 | `--source <tag>` | Session source tag for filtering (default: `cli`). Use `tool` for third-party integrations that should not appear in user session lists. |
 | `--max-turns <N>` | Maximum tool-calling iterations per conversation turn (default: 90, or `agent.max_turns` in config). |
@@ -111,28 +111,28 @@ Common options:
 Examples:
 
 ```bash
-hermes
-hermes chat -q "Summarize the latest PRs"
-hermes chat --provider openrouter --model anthropic/claude-sonnet-4.6
-hermes chat --toolsets web,terminal,skills
-hermes chat --quiet -q "Return only JSON"
-hermes chat --worktree -q "Review this repo and open a PR"
-hermes chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"
+kase
+kase chat -q "Summarize the latest PRs"
+kase chat --provider openrouter --model anthropic/claude-sonnet-4.6
+kase chat --toolsets web,terminal,skills
+kase chat --quiet -q "Return only JSON"
+kase chat --worktree -q "Review this repo and open a PR"
+kase chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"
 ```
 
-### `hermes -z <prompt>` — scripted one-shot
+### `kase -z <prompt>` — scripted one-shot
 
-For programmatic callers (shell scripts, CI, cron, parent processes piping in a prompt), `hermes -z` is the purest one-shot entry point: **single prompt in, final response text out, nothing else on stdout or stderr.** No banner, no spinner, no tool previews, no `Session:` line — just the agent's final reply as plain text.
+For programmatic callers (shell scripts, CI, cron, parent processes piping in a prompt), `kase -z` is the purest one-shot entry point: **single prompt in, final response text out, nothing else on stdout or stderr.** No banner, no spinner, no tool previews, no `Session:` line — just the agent's final reply as plain text.
 
 ```bash
-hermes -z "What's the capital of France?"
+kase -z "What's the capital of France?"
 # → Paris.
 
 # Parent scripts can cleanly capture the response:
-answer=$(hermes -z "summarize this" < /path/to/file.txt)
+answer=$(kase -z "summarize this" < /path/to/file.txt)
 ```
 
-Per-run overrides (no mutation to `~/.hermes/config.yaml`):
+Per-run overrides (no mutation to `~/.kase/config.yaml`):
 
 | Flag | Equivalent env var | Purpose |
 |---|---|---|
@@ -140,19 +140,19 @@ Per-run overrides (no mutation to `~/.hermes/config.yaml`):
 | `--provider <provider>` | `HERMES_INFERENCE_PROVIDER` | Override the provider for this run |
 
 ```bash
-hermes -z "…" --provider openrouter --model openai/gpt-5.5
+kase -z "…" --provider openrouter --model openai/gpt-5.5
 # or:
-HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
+HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 kase -z "…"
 ```
 
-Same agent, same tools, same skills — just strips every interactive / cosmetic layer. If you need tool output in the transcript too, use `hermes chat -q` instead; `-z` is explicitly for "I only want the final answer".
+Same agent, same tools, same skills — just strips every interactive / cosmetic layer. If you need tool output in the transcript too, use `kase chat -q` instead; `-z` is explicitly for "I only want the final answer".
 
-## `hermes model`
+## `kase model`
 
-Interactive provider + model selector. **This is the command for adding new providers, setting up API keys, and running OAuth flows.** Run it from your terminal — not from inside an active Hermes chat session.
+Interactive provider + model selector. **This is the command for adding new providers, setting up API keys, and running OAuth flows.** Run it from your terminal — not from inside an active Kase chat session.
 
 ```bash
-hermes model
+kase model
 ```
 
 Use this when you want to:
@@ -163,12 +163,12 @@ Use this when you want to:
 - configure a custom/self-hosted endpoint
 - save the new default into config
 
-:::warning hermes model vs /model — know the difference
-**`hermes model`** (run from your terminal, outside any Hermes session) is the **full provider setup wizard**. It can add new providers, run OAuth flows, prompt for API keys, and configure endpoints.
+:::warning kase model vs /model — know the difference
+**`kase model`** (run from your terminal, outside any Kase session) is the **full provider setup wizard**. It can add new providers, run OAuth flows, prompt for API keys, and configure endpoints.
 
-**`/model`** (typed inside an active Hermes chat session) can only **switch between providers and models you've already set up**. It cannot add new providers, run OAuth, or prompt for API keys.
+**`/model`** (typed inside an active Kase chat session) can only **switch between providers and models you've already set up**. It cannot add new providers, run OAuth, or prompt for API keys.
 
-**If you need to add a new provider:** Exit your Hermes session first (`Ctrl+C` or `/quit`), then run `hermes model` from your terminal prompt.
+**If you need to add a new provider:** Exit your Kase session first (`Ctrl+C` or `/quit`), then run `kase model` from your terminal prompt.
 :::
 
 ### `/model` slash command (mid-session)
@@ -192,15 +192,15 @@ By default, `/model` changes apply **to the current session only**. Add `--globa
 ```
 
 :::info What if I only see OpenRouter models?
-If you've only configured OpenRouter, `/model` will only show OpenRouter models. To add another provider (Anthropic, DeepSeek, Copilot, etc.), exit your session and run `hermes model` from the terminal.
+If you've only configured OpenRouter, `/model` will only show OpenRouter models. To add another provider (Anthropic, DeepSeek, Copilot, etc.), exit your session and run `kase model` from the terminal.
 :::
 
 Provider and base URL changes are persisted to `config.yaml` automatically. When switching away from a custom endpoint, the stale base URL is cleared to prevent it leaking into other providers.
 
-## `hermes gateway`
+## `kase gateway`
 
 ```bash
-hermes gateway <subcommand>
+kase gateway <subcommand>
 ```
 
 Subcommands:
@@ -221,16 +221,16 @@ Options:
 
 | Option | Description |
 |--------|-------------|
-| `--all` | On `start` / `restart` / `stop`: act on **every profile's** gateway, not just the active `HERMES_HOME`. Useful if you run multiple profiles side-by-side and want to restart them all after `hermes update`. |
+| `--all` | On `start` / `restart` / `stop`: act on **every profile's** gateway, not just the active `KASE_HOME`. Useful if you run multiple profiles side-by-side and want to restart them all after `kase update`. |
 
 :::tip WSL users
-Use `hermes gateway run` instead of `hermes gateway start` — WSL's systemd support is unreliable. Wrap it in tmux for persistence: `tmux new -s hermes 'hermes gateway run'`. See [WSL FAQ](/docs/reference/faq#wsl-gateway-keeps-disconnecting-or-hermes-gateway-start-fails) for details.
+Use `kase gateway run` instead of `kase gateway start` — WSL's systemd support is unreliable. Wrap it in tmux for persistence: `tmux new -s kase 'kase gateway run'`. See [WSL FAQ](/docs/reference/faq#wsl-gateway-keeps-disconnecting-or-kase-gateway-start-fails) for details.
 :::
 
-## `hermes lsp`
+## `kase lsp`
 
 ```bash
-hermes lsp <subcommand>
+kase lsp <subcommand>
 ```
 
 Manage the Language Server Protocol integration. LSP runs real
@@ -254,10 +254,10 @@ Subcommands:
 See [LSP — Semantic Diagnostics](/docs/user-guide/features/lsp) for
 the full guide, supported languages, and configuration knobs.
 
-## `hermes setup`
+## `kase setup`
 
 ```bash
-hermes setup [model|tts|terminal|gateway|tools|agent] [--non-interactive] [--reset] [--quick] [--reconfigure]
+kase setup [model|tts|terminal|gateway|tools|agent] [--non-interactive] [--reset] [--quick] [--reconfigure]
 ```
 
 **First run:** launches the first-time wizard.
@@ -281,22 +281,22 @@ Options:
 | `--quick` | On returning-user runs: only prompt for items that are missing or unset. Skip items you already have configured. |
 | `--non-interactive` | Use defaults / environment values without prompts. |
 | `--reset` | Reset configuration to defaults before setup. |
-| `--reconfigure` | Backwards-compat alias — bare `hermes setup` on an existing install now does this by default. |
+| `--reconfigure` | Backwards-compat alias — bare `kase setup` on an existing install now does this by default. |
 
-## `hermes whatsapp`
+## `kase whatsapp`
 
 ```bash
-hermes whatsapp
+kase whatsapp
 ```
 
 Runs the WhatsApp pairing/setup flow, including mode selection and QR-code pairing.
 
-## `hermes slack`
+## `kase slack`
 
 ```bash
-hermes slack manifest              # print manifest to stdout
-hermes slack manifest --write      # write to ~/.hermes/slack-manifest.json
-hermes slack manifest --slashes-only  # just the features.slash_commands array
+kase slack manifest              # print manifest to stdout
+kase slack manifest --write      # write to ~/.kase/slack-manifest.json
+kase slack manifest --slashes-only  # just the features.slash_commands array
 ```
 
 Generates a Slack app manifest that registers every gateway command in
@@ -309,44 +309,44 @@ reinstall if scopes or slash commands changed.
 
 | Flag | Default | Purpose |
 |------|---------|---------|
-| `--write [PATH]` | stdout | Write to a file instead of stdout. Bare `--write` writes `$HERMES_HOME/slack-manifest.json`. |
-| `--name NAME` | `Hermes` | Bot display name in Slack. |
+| `--write [PATH]` | stdout | Write to a file instead of stdout. Bare `--write` writes `$KASE_HOME/slack-manifest.json`. |
+| `--name NAME` | `Kase` | Bot display name in Slack. |
 | `--description DESC` | default blurb | Bot description shown in the Slack app directory. |
 | `--slashes-only` | off | Emit only `features.slash_commands` for merging into a manually-maintained manifest. |
 
-Run `hermes slack manifest --write` again after `hermes update` to pick
+Run `kase slack manifest --write` again after `kase update` to pick
 up any new commands.
 
 
-## `hermes login` / `hermes logout` *(Deprecated)*
+## `kase login` / `kase logout` *(Deprecated)*
 
 :::caution
-`hermes login` has been removed. Use `hermes auth` to manage OAuth credentials, `hermes model` to select a provider, or `hermes setup` for full interactive setup.
+`kase login` has been removed. Use `kase auth` to manage OAuth credentials, `kase model` to select a provider, or `kase setup` for full interactive setup.
 :::
 
-## `hermes auth`
+## `kase auth`
 
 Manage credential pools for same-provider key rotation. See [Credential Pools](/docs/user-guide/features/credential-pools) for full documentation.
 
 ```bash
-hermes auth                                              # Interactive wizard
-hermes auth list                                         # Show all pools
-hermes auth list openrouter                              # Show specific provider
-hermes auth add openrouter --api-key sk-or-v1-xxx        # Add API key
-hermes auth add anthropic --type oauth                   # Add OAuth credential
-hermes auth remove openrouter 2                          # Remove by index
-hermes auth reset openrouter                             # Clear cooldowns
-hermes auth status anthropic                             # Show auth status for a provider
-hermes auth logout anthropic                             # Log out and clear stored auth state
-hermes auth spotify                                      # Authenticate Hermes with Spotify via PKCE
+kase auth                                              # Interactive wizard
+kase auth list                                         # Show all pools
+kase auth list openrouter                              # Show specific provider
+kase auth add openrouter --api-key sk-or-v1-xxx        # Add API key
+kase auth add anthropic --type oauth                   # Add OAuth credential
+kase auth remove openrouter 2                          # Remove by index
+kase auth reset openrouter                             # Clear cooldowns
+kase auth status anthropic                             # Show auth status for a provider
+kase auth logout anthropic                             # Log out and clear stored auth state
+kase auth spotify                                      # Authenticate Kase with Spotify via PKCE
 ```
 
 Subcommands: `add`, `list`, `remove`, `reset`, `status`, `logout`, `spotify`. When called with no subcommand, launches the interactive management wizard.
 
-## `hermes status`
+## `kase status`
 
 ```bash
-hermes status [--all] [--deep]
+kase status [--all] [--deep]
 ```
 
 | Option | Description |
@@ -354,10 +354,10 @@ hermes status [--all] [--deep]
 | `--all` | Show all details in a shareable redacted format. |
 | `--deep` | Run deeper checks that may take longer. |
 
-## `hermes cron`
+## `kase cron`
 
 ```bash
-hermes cron <list|create|edit|pause|resume|run|remove|status|tick>
+kase cron <list|create|edit|pause|resume|run|remove|status|tick>
 ```
 
 | Subcommand | Description |
@@ -372,28 +372,28 @@ hermes cron <list|create|edit|pause|resume|run|remove|status|tick>
 | `status` | Check whether the cron scheduler is running. |
 | `tick` | Run due jobs once and exit. |
 
-## `hermes kanban`
+## `kase kanban`
 
 ```bash
-hermes kanban [--board <slug>] <action> [options]
+kase kanban [--board <slug>] <action> [options]
 ```
 
-Multi-profile, multi-project collaboration board. Each install can host many boards (one per project, repo, or domain); each board is a standalone queue with its own SQLite DB and dispatcher scope. New installs start with one board called `default`, whose DB is `~/.hermes/kanban.db` for back-compat; additional boards live at `~/.hermes/kanban/boards/<slug>/kanban.db`. The gateway-embedded dispatcher sweeps every board per tick.
+Multi-profile, multi-project collaboration board. Each install can host many boards (one per project, repo, or domain); each board is a standalone queue with its own SQLite DB and dispatcher scope. New installs start with one board called `default`, whose DB is `~/.kase/kanban.db` for back-compat; additional boards live at `~/.kase/kanban/boards/<slug>/kanban.db`. The gateway-embedded dispatcher sweeps every board per tick.
 
 **Global flags (apply to every action below):**
 
 | Flag | Purpose |
 |------|---------|
-| `--board <slug>` | Operate on a specific board. Defaults to the current board (set via `hermes kanban boards switch`, the `HERMES_KANBAN_BOARD` env var, or `default`). |
+| `--board <slug>` | Operate on a specific board. Defaults to the current board (set via `kase kanban boards switch`, the `KASE_KANBAN_BOARD` env var, or `default`). |
 
-**This is the human / scripting surface.** Agent workers spawned by the dispatcher drive the board through a dedicated `kanban_*` [toolset](/docs/user-guide/features/kanban#how-workers-interact-with-the-board) (`kanban_show`, `kanban_complete`, `kanban_block`, `kanban_create`, `kanban_link`, `kanban_comment`, `kanban_heartbeat`; orchestrator profiles also get `kanban_list` and `kanban_unblock`) instead of shelling to `hermes kanban`. Workers have `HERMES_KANBAN_BOARD` pinned in their env so they physically cannot see other boards.
+**This is the human / scripting surface.** Agent workers spawned by the dispatcher drive the board through a dedicated `kanban_*` [toolset](/docs/user-guide/features/kanban#how-workers-interact-with-the-board) (`kanban_show`, `kanban_complete`, `kanban_block`, `kanban_create`, `kanban_link`, `kanban_comment`, `kanban_heartbeat`; orchestrator profiles also get `kanban_list` and `kanban_unblock`) instead of shelling to `kase kanban`. Workers have `KASE_KANBAN_BOARD` pinned in their env so they physically cannot see other boards.
 
 | Action | Purpose |
 |--------|---------|
 | `init` | Create `kanban.db` if missing. Idempotent. |
 | `boards list` / `boards ls` | List all boards with task counts. `--json`, `--all` (include archived). |
 | `boards create <slug>` | Create a new board. Flags: `--name`, `--description`, `--icon`, `--color`, `--switch` (make active). Slug is kebab-case, auto-downcased. |
-| `boards switch <slug>` / `boards use` | Persist `<slug>` as the active board (writes `~/.hermes/kanban/current`). |
+| `boards switch <slug>` / `boards use` | Persist `<slug>` as the active board (writes `~/.kase/kanban/current`). |
 | `boards show` / `boards current` | Print the currently-active board's name, DB path, and task counts. |
 | `boards rename <slug> "<name>"` | Change a board's display name. Slug is immutable. |
 | `boards rm <slug>` | Archive (default) or hard-delete a board. `--delete` skips the archive step. Archived boards move to `boards/_archived/<slug>-<ts>/`. Refused for `default`. |
@@ -421,28 +421,28 @@ Examples:
 
 ```bash
 # Create a second board and put a task on it without switching away.
-hermes kanban boards create atm10-server --name "ATM10 Server" --icon 🎮
-hermes kanban --board atm10-server create "Restart server" --assignee ops
+kase kanban boards create atm10-server --name "ATM10 Server" --icon 🎮
+kase kanban --board atm10-server create "Restart server" --assignee ops
 
 # Switch the active board for subsequent calls.
-hermes kanban boards switch atm10-server
-hermes kanban list                  # shows atm10-server tasks
+kase kanban boards switch atm10-server
+kase kanban list                  # shows atm10-server tasks
 
 # Archive a board (recoverable) or hard-delete it.
-hermes kanban boards rm atm10-server
-hermes kanban boards rm atm10-server --delete
+kase kanban boards rm atm10-server
+kase kanban boards rm atm10-server --delete
 ```
 
-Board resolution order (highest precedence first): `--board <slug>` flag → `HERMES_KANBAN_BOARD` env var → `~/.hermes/kanban/current` file → `default`.
+Board resolution order (highest precedence first): `--board <slug>` flag → `KASE_KANBAN_BOARD` env var → `~/.kase/kanban/current` file → `default`.
 
 All actions are also available as a slash command in the gateway (`/kanban …`), with the same argument surface — including `boards` subcommands and the `--board` flag.
 
-For the full design — comparison with Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise, eight collaboration patterns, four user stories, concurrency correctness proof — see `docs/hermes-kanban-v1-spec.pdf` in the repository or the [Kanban user guide](/docs/user-guide/features/kanban).
+For the full design — comparison with Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise, eight collaboration patterns, four user stories, concurrency correctness proof — see `docs/kase-kanban-v1-spec.pdf` in the repository or the [Kanban user guide](/docs/user-guide/features/kanban).
 
-## `hermes webhook`
+## `kase webhook`
 
 ```bash
-hermes webhook <subscribe|list|remove|test>
+kase webhook <subscribe|list|remove|test>
 ```
 
 Manage dynamic webhook subscriptions for event-driven agent activation. Requires the webhook platform to be enabled in config — if not configured, prints setup instructions.
@@ -454,10 +454,10 @@ Manage dynamic webhook subscriptions for event-driven agent activation. Requires
 | `remove` / `rm` | Delete a dynamic subscription. Static routes from config.yaml are not affected. |
 | `test` | Send a test POST to verify a subscription is working. |
 
-### `hermes webhook subscribe`
+### `kase webhook subscribe`
 
 ```bash
-hermes webhook subscribe <name> [options]
+kase webhook subscribe <name> [options]
 ```
 
 | Option | Description |
@@ -471,25 +471,25 @@ hermes webhook subscribe <name> [options]
 | `--secret` | Custom HMAC secret. Auto-generated if omitted. |
 | `--deliver-only` | Skip the agent — deliver the rendered `--prompt` as the literal message. Zero LLM cost, sub-second delivery. Requires `--deliver` to be a real target (not `log`). |
 
-Subscriptions persist to `~/.hermes/webhook_subscriptions.json` and are hot-reloaded by the webhook adapter without a gateway restart.
+Subscriptions persist to `~/.kase/webhook_subscriptions.json` and are hot-reloaded by the webhook adapter without a gateway restart.
 
-## `hermes doctor`
+## `kase doctor`
 
 ```bash
-hermes doctor [--fix]
+kase doctor [--fix]
 ```
 
 | Option | Description |
 |--------|-------------|
 | `--fix` | Attempt automatic repairs where possible. |
 
-## `hermes dump`
+## `kase dump`
 
 ```bash
-hermes dump [--show-keys]
+kase dump [--show-keys]
 ```
 
-Outputs a compact, plain-text summary of your entire Hermes setup. Designed to be copy-pasted into Discord, GitHub issues, or Telegram when asking for support — no ANSI colors, no special formatting, just data.
+Outputs a compact, plain-text summary of your entire Kase setup. Designed to be copy-pasted into Discord, GitHub issues, or Telegram when asking for support — no ANSI colors, no special formatting, just data.
 
 | Option | Description |
 |--------|-------------|
@@ -499,9 +499,9 @@ Outputs a compact, plain-text summary of your entire Hermes setup. Designed to b
 
 | Section | Details |
 |---------|---------|
-| **Header** | Hermes version, release date, git commit hash |
+| **Header** | Kase version, release date, git commit hash |
 | **Environment** | OS, Python version, OpenAI SDK version |
-| **Identity** | Active profile name, HERMES_HOME path |
+| **Identity** | Active profile name, KASE_HOME path |
 | **Model** | Configured default model and provider |
 | **Terminal** | Backend type (local, docker, ssh, etc.) |
 | **API keys** | Presence check for all 22 provider/tool API keys |
@@ -513,13 +513,13 @@ Outputs a compact, plain-text summary of your entire Hermes setup. Designed to b
 ### Example output
 
 ```
---- hermes dump ---
+--- kase dump ---
 version:          0.8.0 (2026.4.8) [af4abd2f]
 os:               Linux 6.14.0-37-generic x86_64
 python:           3.11.14
 openai_sdk:       2.24.0
 profile:          default
-hermes_home:      ~/.hermes
+hermes_home:      ~/.kase
 model:            anthropic/claude-opus-4.6
 provider:         openrouter
 terminal:         local
@@ -556,13 +556,13 @@ config_overrides:
 - Quick sanity check when something isn't working
 
 :::tip
-`hermes dump` is specifically designed for sharing. For interactive diagnostics, use `hermes doctor`. For a visual overview, use `hermes status`.
+`kase dump` is specifically designed for sharing. For interactive diagnostics, use `kase doctor`. For a visual overview, use `kase status`.
 :::
 
-## `hermes debug`
+## `kase debug`
 
 ```bash
-hermes debug share [options]
+kase debug share [options]
 ```
 
 Upload a debug report (system info + recent logs) to a paste service and get a shareable URL. Useful for quick support requests — includes everything a helper needs to diagnose your issue.
@@ -573,61 +573,61 @@ Upload a debug report (system info + recent logs) to a paste service and get a s
 | `--expire <days>` | Paste expiry in days (default: 7). |
 | `--local` | Print the report locally instead of uploading. |
 
-The report includes system info (OS, Python version, Hermes version), recent agent and gateway logs (512 KB limit per file), and redacted API key status. Keys are always redacted — no secrets are uploaded.
+The report includes system info (OS, Python version, Kase version), recent agent and gateway logs (512 KB limit per file), and redacted API key status. Keys are always redacted — no secrets are uploaded.
 
 Paste services tried in order: paste.rs, dpaste.com.
 
 ### Examples
 
 ```bash
-hermes debug share              # Upload debug report, print URL
-hermes debug share --lines 500  # Include more log lines
-hermes debug share --expire 30  # Keep paste for 30 days
-hermes debug share --local      # Print report to terminal (no upload)
+kase debug share              # Upload debug report, print URL
+kase debug share --lines 500  # Include more log lines
+kase debug share --expire 30  # Keep paste for 30 days
+kase debug share --local      # Print report to terminal (no upload)
 ```
 
-## `hermes backup`
+## `kase backup`
 
 ```bash
-hermes backup [options]
+kase backup [options]
 ```
 
-Create a zip archive of your Hermes configuration, skills, sessions, and data. The backup excludes the hermes-agent codebase itself.
+Create a zip archive of your Kase configuration, skills, sessions, and data. The backup excludes the kase codebase itself.
 
 | Option | Description |
 |--------|-------------|
-| `-o`, `--output <path>` | Output path for the zip file (default: `~/hermes-backup-<timestamp>.zip`). |
+| `-o`, `--output <path>` | Output path for the zip file (default: `~/kase-backup-<timestamp>.zip`). |
 | `-q`, `--quick` | Quick snapshot: only critical state files (config.yaml, state.db, .env, auth, cron jobs). Much faster than a full backup. |
 | `-l`, `--label <name>` | Label for the snapshot (only used with `--quick`). |
 
-The backup uses SQLite's `backup()` API for safe copying, so it works correctly even when Hermes is running (WAL-mode safe).
+The backup uses SQLite's `backup()` API for safe copying, so it works correctly even when Kase is running (WAL-mode safe).
 
 **What's excluded from the zip:**
 
 - `*.db-wal`, `*.db-shm`, `*.db-journal` — SQLite's WAL / shared-memory / journal sidecars. The `*.db` file already got a consistent snapshot via `sqlite3.backup()`; shipping the live sidecars alongside it would let a restore see a half-committed state.
 - `checkpoints/` — per-session trajectory caches. Hash-keyed and regenerated per session; wouldn't port cleanly to another install anyway.
-- The `hermes-agent` code itself (this is a user-data backup, not a repo snapshot).
+- The `kase` code itself (this is a user-data backup, not a repo snapshot).
 
 ### Examples
 
 ```bash
-hermes backup                           # Full backup to ~/hermes-backup-*.zip
-hermes backup -o /tmp/hermes.zip        # Full backup to specific path
-hermes backup --quick                   # Quick state-only snapshot
-hermes backup --quick --label "pre-upgrade"  # Quick snapshot with label
+kase backup                           # Full backup to ~/kase-backup-*.zip
+kase backup -o /tmp/kase.zip        # Full backup to specific path
+kase backup --quick                   # Quick state-only snapshot
+kase backup --quick --label "pre-upgrade"  # Quick snapshot with label
 ```
 
-## `hermes checkpoints`
+## `kase checkpoints`
 
 ```bash
-hermes checkpoints [COMMAND]
+kase checkpoints [COMMAND]
 ```
 
-Inspect and manage the shadow git store at `~/.hermes/checkpoints/` — the storage layer behind the in-session `/rollback` command. Safe to run any time; does not require the agent to be running.
+Inspect and manage the shadow git store at `~/.kase/checkpoints/` — the storage layer behind the in-session `/rollback` command. Safe to run any time; does not require the agent to be running.
 
 | Subcommand | Description |
 |------------|-------------|
-| `status` (default) | Show total size, project count, and per-project breakdown. Bare `hermes checkpoints` is equivalent. |
+| `status` (default) | Show total size, project count, and per-project breakdown. Bare `kase checkpoints` is equivalent. |
 | `list` | Alias for `status`. |
 | `prune` | Force a cleanup sweep — delete orphan and stale projects, GC the store, enforce the size cap. Ignores the 24h idempotency marker. |
 | `clear` | Delete the entire checkpoint base. Irreversible; asks for confirmation unless `-f`. |
@@ -646,22 +646,22 @@ Inspect and manage the shadow git store at `~/.hermes/checkpoints/` — the stor
 ### Examples
 
 ```bash
-hermes checkpoints                                  # status overview
-hermes checkpoints prune --retention-days 3         # aggressive cleanup
-hermes checkpoints prune --max-size-mb 200          # tighten size cap once
-hermes checkpoints clear-legacy -f                  # drop v1 archive dirs
-hermes checkpoints clear -f                         # wipe everything
+kase checkpoints                                  # status overview
+kase checkpoints prune --retention-days 3         # aggressive cleanup
+kase checkpoints prune --max-size-mb 200          # tighten size cap once
+kase checkpoints clear-legacy -f                  # drop v1 archive dirs
+kase checkpoints clear -f                         # wipe everything
 ```
 
 See [Checkpoints and `/rollback`](../user-guide/checkpoints-and-rollback.md) for the full architecture and the in-session commands.
 
-## `hermes import`
+## `kase import`
 
 ```bash
-hermes import <zipfile> [options]
+kase import <zipfile> [options]
 ```
 
-Restore a previously created Hermes backup into your Hermes home directory. All files in the archive overwrite existing files in your Hermes home; `--force` only skips the confirmation prompt that fires when the target already has a Hermes installation.
+Restore a previously created Kase backup into your Kase home directory. All files in the archive overwrite existing files in your Kase home; `--force` only skips the confirmation prompt that fires when the target already has a Kase installation.
 
 | Option | Description |
 |--------|-------------|
@@ -673,17 +673,17 @@ Stop the gateway before importing to avoid conflicts with running processes.
 
 ### Examples
 ```bash
-hermes import ~/hermes-backup-20260423.zip           # Prompts before overwriting existing config
-hermes import ~/hermes-backup-20260423.zip --force   # Overwrite without prompting
+kase import ~/kase-backup-20260423.zip           # Prompts before overwriting existing config
+kase import ~/kase-backup-20260423.zip --force   # Overwrite without prompting
 ```
 
-## `hermes logs`
+## `kase logs`
 
 ```bash
-hermes logs [log_name] [options]
+kase logs [log_name] [options]
 ```
 
-View, tail, and filter Hermes log files. All logs are stored in `~/.hermes/logs/` (or `<profile>/logs/` for non-default profiles).
+View, tail, and filter Kase log files. All logs are stored in `~/.kase/logs/` (or `<profile>/logs/` for non-default profiles).
 
 ### Log files
 
@@ -709,25 +709,25 @@ View, tail, and filter Hermes log files. All logs are stored in `~/.hermes/logs/
 
 ```bash
 # View the last 50 lines of agent.log (default)
-hermes logs
+kase logs
 
 # Follow agent.log in real time
-hermes logs -f
+kase logs -f
 
 # View the last 100 lines of gateway.log
-hermes logs gateway -n 100
+kase logs gateway -n 100
 
 # Show only warnings and errors from the last hour
-hermes logs --level WARNING --since 1h
+kase logs --level WARNING --since 1h
 
 # Filter by a specific session
-hermes logs --session abc123
+kase logs --session abc123
 
 # Follow errors.log, starting from 30 minutes ago
-hermes logs errors --since 30m -f
+kase logs errors --since 30m -f
 
 # List all log files with their sizes
-hermes logs list
+kase logs list
 ```
 
 ### Filtering
@@ -736,19 +736,19 @@ Filters can be combined. When multiple filters are active, a log line must pass 
 
 ```bash
 # WARNING+ lines from the last 2 hours containing session "tg-12345"
-hermes logs --level WARNING --since 2h --session tg-12345
+kase logs --level WARNING --since 2h --session tg-12345
 ```
 
 Lines without a parseable timestamp are included when `--since` is active (they may be continuation lines from a multi-line log entry). Lines without a detectable level are included when `--level` is active.
 
 ### Log rotation
 
-Hermes uses Python's `RotatingFileHandler`. Old logs are rotated automatically — look for `agent.log.1`, `agent.log.2`, etc. The `hermes logs list` subcommand shows all log files including rotated ones.
+Kase uses Python's `RotatingFileHandler`. Old logs are rotated automatically — look for `agent.log.1`, `agent.log.2`, etc. The `kase logs list` subcommand shows all log files including rotated ones.
 
-## `hermes config`
+## `kase config`
 
 ```bash
-hermes config <subcommand>
+kase config <subcommand>
 ```
 
 Subcommands:
@@ -763,10 +763,10 @@ Subcommands:
 | `check` | Check for missing or stale config. |
 | `migrate` | Add newly introduced options interactively. |
 
-## `hermes pairing`
+## `kase pairing`
 
 ```bash
-hermes pairing <list|approve|revoke|clear-pending>
+kase pairing <list|approve|revoke|clear-pending>
 ```
 
 | Subcommand | Description |
@@ -776,10 +776,10 @@ hermes pairing <list|approve|revoke|clear-pending>
 | `revoke <platform> <user-id>` | Revoke a user's access. |
 | `clear-pending` | Clear pending pairing codes. |
 
-## `hermes skills`
+## `kase skills`
 
 ```bash
-hermes skills <subcommand>
+kase skills <subcommand>
 ```
 
 Subcommands:
@@ -804,38 +804,38 @@ Subcommands:
 Common examples:
 
 ```bash
-hermes skills browse
-hermes skills browse --source official
-hermes skills search react --source skills-sh
-hermes skills search https://mintlify.com/docs --source well-known
-hermes skills inspect official/security/1password
-hermes skills inspect skills-sh/vercel-labs/json-render/json-render-react
-hermes skills install official/migration/openclaw-migration
-hermes skills install skills-sh/anthropics/skills/pdf --force
-hermes skills install https://sharethis.chat/SKILL.md                     # Direct URL (single-file SKILL.md)
-hermes skills install https://example.com/SKILL.md --name my-skill        # Override name when frontmatter has none
-hermes skills check
-hermes skills update
-hermes skills config
-hermes skills reset google-workspace
-hermes skills reset google-workspace --restore --yes
+kase skills browse
+kase skills browse --source official
+kase skills search react --source skills-sh
+kase skills search https://mintlify.com/docs --source well-known
+kase skills inspect official/security/1password
+kase skills inspect skills-sh/vercel-labs/json-render/json-render-react
+kase skills install official/migration/openclaw-migration
+kase skills install skills-sh/anthropics/skills/pdf --force
+kase skills install https://sharethis.chat/SKILL.md                     # Direct URL (single-file SKILL.md)
+kase skills install https://example.com/SKILL.md --name my-skill        # Override name when frontmatter has none
+kase skills check
+kase skills update
+kase skills config
+kase skills reset google-workspace
+kase skills reset google-workspace --restore --yes
 ```
 
 Notes:
 - `--force` can override non-dangerous policy blocks for third-party/community skills.
 - `--force` does not override a `dangerous` scan verdict.
 - `--source skills-sh` searches the public `skills.sh` directory.
-- `--source well-known` lets you point Hermes at a site exposing `/.well-known/skills/index.json`.
+- `--source well-known` lets you point Kase at a site exposing `/.well-known/skills/index.json`.
 - `--source browse-sh` searches [browse.sh](https://browse.sh)'s catalog of 200+ site-specific browser-automation skills. Identifiers look like `browse-sh/airbnb.com/search-listings-ddgioa`.
 - Passing an `http(s)://…/*.md` URL installs a single-file SKILL.md directly. When frontmatter has no `name:` and the URL slug isn't a valid identifier, an interactive terminal prompts for a name; non-interactive surfaces (`/skills install` inside the TUI, gateway platforms) require `--name <x>` instead.
 
-## `hermes bundles`
+## `kase bundles`
 
 ```bash
-hermes bundles <subcommand>
+kase bundles <subcommand>
 ```
 
-Skill bundles group several skills under one `/<bundle-name>` slash command. Invoking the bundle loads every referenced skill into a single combined user message. Storage: `~/.hermes/skill-bundles/<slug>.yaml`. See [Skill Bundles](../user-guide/features/skills.md#skill-bundles) for the YAML schema and behavior.
+Skill bundles group several skills under one `/<bundle-name>` slash command. Invoking the bundle loads every referenced skill into a single combined user message. Storage: `~/.kase/skill-bundles/<slug>.yaml`. See [Skill Bundles](../user-guide/features/skills.md#skill-bundles) for the YAML schema and behavior.
 
 Subcommands:
 
@@ -845,28 +845,28 @@ Subcommands:
 | `show <name>` | Show one bundle's name, description, skills, and file path |
 | `create <name>` | Create a new bundle. Pass `--skill <id>` (repeat) or omit for interactive entry. `--description`, `--instruction`, `--force` available. |
 | `delete <name>` | Remove a bundle file |
-| `reload` | Re-scan `~/.hermes/skill-bundles/` and report added/removed bundles |
+| `reload` | Re-scan `~/.kase/skill-bundles/` and report added/removed bundles |
 
 Examples:
 
 ```bash
-hermes bundles create backend-dev \
+kase bundles create backend-dev \
   --skill github-code-review \
   --skill test-driven-development \
   --skill github-pr-workflow \
   -d "Backend feature work"
 
-hermes bundles list
-hermes bundles show backend-dev
-hermes bundles delete backend-dev
+kase bundles list
+kase bundles show backend-dev
+kase bundles delete backend-dev
 ```
 
 In a chat session, `/bundles` lists installed bundles and `/<bundle-name>` loads one.
 
-## `hermes curator`
+## `kase curator`
 
 ```bash
-hermes curator <subcommand>
+kase curator <subcommand>
 ```
 
 The curator is an auxiliary-model background task that periodically reviews agent-created skills, prunes stale ones, consolidates overlaps, and archives obsolete skills. Bundled and hub-installed skills are never touched. Archives are recoverable; auto-deletion never happens.
@@ -877,8 +877,8 @@ The curator is an auxiliary-model background task that periodically reviews agen
 | `run` | Trigger a curator review now (blocks until the LLM pass finishes) |
 | `run --background` | Start the LLM pass in a background thread and return immediately |
 | `run --dry-run` | Preview only — produce the review report with no mutations |
-| `backup` | Take a manual tar.gz snapshot of `~/.hermes/skills/` (curator also snapshots automatically before every real run) |
-| `rollback` | Restore `~/.hermes/skills/` from a snapshot (defaults to newest) |
+| `backup` | Take a manual tar.gz snapshot of `~/.kase/skills/` (curator also snapshots automatically before every real run) |
+| `rollback` | Restore `~/.kase/skills/` from a snapshot (defaults to newest) |
 | `rollback --list` | List available snapshots |
 | `rollback --id <ts>` | Restore a specific snapshot by id |
 | `rollback -y` | Skip the confirmation prompt |
@@ -891,14 +891,14 @@ The curator is an auxiliary-model background task that periodically reviews agen
 | `prune` | Manually prune skills the curator would normally clean up |
 | `list-archived` | List archived skills (recoverable via `restore`) |
 
-On a fresh install the first scheduled pass is deferred by one full `interval_hours` (7 days by default) — the gateway will not curate immediately on the first tick after `hermes update`. Use `hermes curator run --dry-run` to preview before that happens.
+On a fresh install the first scheduled pass is deferred by one full `interval_hours` (7 days by default) — the gateway will not curate immediately on the first tick after `kase update`. Use `kase curator run --dry-run` to preview before that happens.
 
 See [Curator](../user-guide/features/curator.md) for behavior and config.
 
-## `hermes fallback`
+## `kase fallback`
 
 ```bash
-hermes fallback <subcommand>
+kase fallback <subcommand>
 ```
 
 Manage the fallback provider chain. Fallback providers are tried in order when the primary model fails with rate-limit, overload, or connection errors.
@@ -906,19 +906,19 @@ Manage the fallback provider chain. Fallback providers are tried in order when t
 | Subcommand | Description |
 |------------|-------------|
 | `list` (alias: `ls`) | Show the current fallback chain (default when no subcommand) |
-| `add` | Pick a provider + model (same picker as `hermes model`) and append to the chain |
+| `add` | Pick a provider + model (same picker as `kase model`) and append to the chain |
 | `remove` (alias: `rm`) | Pick an entry to delete from the chain |
 | `clear` | Remove all fallback entries |
 
 See [Fallback Providers](../user-guide/features/fallback-providers.md).
 
-## `hermes hooks`
+## `kase hooks`
 
 ```bash
-hermes hooks <subcommand>
+kase hooks <subcommand>
 ```
 
-Inspect shell-script hooks declared in `~/.hermes/config.yaml`, test them against synthetic payloads, and manage the first-use consent allowlist at `~/.hermes/shell-hooks-allowlist.json`.
+Inspect shell-script hooks declared in `~/.kase/config.yaml`, test them against synthetic payloads, and manage the first-use consent allowlist at `~/.kase/shell-hooks-allowlist.json`.
 
 | Subcommand | Description |
 |------------|-------------|
@@ -929,10 +929,10 @@ Inspect shell-script hooks declared in `~/.hermes/config.yaml`, test them agains
 
 See [Hooks](../user-guide/features/hooks.md) for event signatures and payload shapes.
 
-## `hermes memory`
+## `kase memory`
 
 ```bash
-hermes memory <subcommand>
+kase memory <subcommand>
 ```
 
 Set up and manage external memory provider plugins. Available providers: honcho, openviking, mem0, hindsight, holographic, retaindb, byterover, supermemory. Only one external provider can be active at a time. Built-in memory (MEMORY.md/USER.md) is always active.
@@ -946,21 +946,21 @@ Subcommands:
 | `off` | Disable external provider (built-in only). |
 
 :::info Provider-specific subcommands
-When an external memory provider is active, it may register its own top-level `hermes <provider>` command for provider-specific management (e.g. `hermes honcho` when Honcho is active). Inactive providers do not expose their subcommands. Run `hermes --help` to see what's currently wired in.
+When an external memory provider is active, it may register its own top-level `kase <provider>` command for provider-specific management (e.g. `kase honcho` when Honcho is active). Inactive providers do not expose their subcommands. Run `kase --help` to see what's currently wired in.
 :::
 
-## `hermes acp`
+## `kase acp`
 
 ```bash
-hermes acp
+kase acp
 ```
 
-Starts Hermes as an ACP (Agent Client Protocol) stdio server for editor integration.
+Starts Kase as an ACP (Agent Client Protocol) stdio server for editor integration.
 
 Related entrypoints:
 
 ```bash
-hermes-acp
+kase-acp
 python -m acp_adapter
 ```
 
@@ -972,17 +972,17 @@ pip install -e '.[acp]'
 
 See [ACP Editor Integration](../user-guide/features/acp.md) and [ACP Internals](../developer-guide/acp-internals.md).
 
-## `hermes mcp`
+## `kase mcp`
 
 ```bash
-hermes mcp <subcommand>
+kase mcp <subcommand>
 ```
 
-Manage MCP (Model Context Protocol) server configurations and run Hermes as an MCP server.
+Manage MCP (Model Context Protocol) server configurations and run Kase as an MCP server.
 
 | Subcommand | Description |
 |------------|-------------|
-| `serve [-v\|--verbose]` | Run Hermes as an MCP server — expose conversations to other agents. |
+| `serve [-v\|--verbose]` | Run Kase as an MCP server — expose conversations to other agents. |
 | `add <name> [--url URL] [--command CMD] [--args ...] [--auth oauth\|header]` | Add an MCP server with automatic tool discovery. |
 | `remove <name>` (alias: `rm`) | Remove an MCP server from config. |
 | `list` (alias: `ls`) | List configured MCP servers. |
@@ -990,15 +990,15 @@ Manage MCP (Model Context Protocol) server configurations and run Hermes as an M
 | `configure <name>` (alias: `config`) | Toggle tool selection for a server. |
 | `login <name>` | Force re-authentication for an OAuth-based MCP server. |
 
-See [MCP Config Reference](./mcp-config-reference.md), [Use MCP with Hermes](../guides/use-mcp-with-hermes.md), and [MCP Server Mode](../user-guide/features/mcp.md#running-hermes-as-an-mcp-server).
+See [MCP Config Reference](./mcp-config-reference.md), [Use MCP with Kase](../guides/use-mcp-with-kase.md), and [MCP Server Mode](../user-guide/features/mcp.md#running-kase-as-an-mcp-server).
 
-## `hermes plugins`
+## `kase plugins`
 
 ```bash
-hermes plugins [subcommand]
+kase plugins [subcommand]
 ```
 
-Unified plugin management — general plugins, memory providers, and context engines in one place. Running `hermes plugins` with no subcommand opens a composite interactive screen with two sections:
+Unified plugin management — general plugins, memory providers, and context engines in one place. Running `kase plugins` with no subcommand opens a composite interactive screen with two sections:
 
 - **General Plugins** — multi-select checkboxes to enable/disable installed plugins
 - **Provider Plugins** — single-select configuration for Memory Provider and Context Engine. Press ENTER on a category to open a radio picker.
@@ -1019,12 +1019,12 @@ Provider plugin selections are saved to `config.yaml`:
 
 General plugin disabled list is stored in `config.yaml` under `plugins.disabled`.
 
-See [Plugins](../user-guide/features/plugins.md) and [Build a Hermes Plugin](../guides/build-a-hermes-plugin.md).
+See [Plugins](../user-guide/features/plugins.md) and [Build a Kase Plugin](../guides/build-a-kase-plugin.md).
 
-## `hermes tools`
+## `kase tools`
 
 ```bash
-hermes tools [--summary]
+kase tools [--summary]
 ```
 
 | Option | Description |
@@ -1033,10 +1033,10 @@ hermes tools [--summary]
 
 Without `--summary`, this launches the interactive per-platform tool configuration UI.
 
-## `hermes computer-use`
+## `kase computer-use`
 
 ```bash
-hermes computer-use <subcommand>
+kase computer-use <subcommand>
 ```
 
 Subcommands:
@@ -1047,22 +1047,22 @@ Subcommands:
 | `install --upgrade` | Re-run the installer even if cua-driver is already on PATH. The upstream script always pulls the latest release, so this performs an in-place upgrade. |
 | `status` | Print whether `cua-driver` is on `$PATH` and which version is installed. |
 
-`hermes computer-use install` is the stable entry point for installing the
+`kase computer-use install` is the stable entry point for installing the
 [cua-driver](https://github.com/trycua/cua) binary used by the
 `computer_use` toolset. It runs the same upstream installer that
-`hermes tools` invokes when you first enable Computer Use, so it's safe
+`kase tools` invokes when you first enable Computer Use, so it's safe
 to use for re-running the install if the toolset toggle didn't trigger
 it (for example, on returning-user setups).
 
-`hermes update` automatically re-runs the upstream installer at the end
+`kase update` automatically re-runs the upstream installer at the end
 of the update if cua-driver is on PATH, so most users will not need to
 call `--upgrade` manually. Use it when upstream ships a fix you want
-right now without waiting for the next Hermes update.
+right now without waiting for the next Kase update.
 
-## `hermes sessions`
+## `kase sessions`
 
 ```bash
-hermes sessions <subcommand>
+kase sessions <subcommand>
 ```
 
 Subcommands:
@@ -1077,10 +1077,10 @@ Subcommands:
 | `stats` | Show session-store statistics. |
 | `rename <session-id> <title>` | Set or change a session title. |
 
-## `hermes insights`
+## `kase insights`
 
 ```bash
-hermes insights [--days N] [--source platform]
+kase insights [--days N] [--source platform]
 ```
 
 | Option | Description |
@@ -1088,21 +1088,21 @@ hermes insights [--days N] [--source platform]
 | `--days <n>` | Analyze the last `n` days (default: 30). |
 | `--source <platform>` | Filter by source such as `cli`, `telegram`, or `discord`. |
 
-## `hermes claw`
+## `kase claw`
 
 ```bash
-hermes claw migrate [options]
+kase claw migrate [options]
 ```
 
-Migrate your OpenClaw setup to Hermes. Reads from `~/.openclaw` (or a custom path) and writes to `~/.hermes`. Automatically detects legacy directory names (`~/.clawdbot`, `~/.moltbot`) and config filenames (`clawdbot.json`, `moltbot.json`).
+Migrate your OpenClaw setup to Kase. Reads from `~/.openclaw` (or a custom path) and writes to `~/.kase`. Automatically detects legacy directory names (`~/.clawdbot`, `~/.moltbot`) and config filenames (`clawdbot.json`, `moltbot.json`).
 
 | Option | Description |
 |--------|-------------|
 | `--dry-run` | Preview what would be migrated without writing anything. |
 | `--preset <name>` | Migration preset: `full` (all compatible settings) or `user-data` (excludes infrastructure config). Neither preset imports secrets — pass `--migrate-secrets` explicitly. |
-| `--overwrite` | Overwrite existing Hermes files on conflicts (default: refuse to apply when the plan has conflicts). |
+| `--overwrite` | Overwrite existing Kase files on conflicts (default: refuse to apply when the plan has conflicts). |
 | `--migrate-secrets` | Include API keys in migration. Required even under `--preset full`. |
-| `--no-backup` | Skip the pre-migration zip snapshot of `~/.hermes/` (by default a single restore-point archive is written to `~/.hermes/backups/pre-migration-*.zip` before apply; restorable with `hermes import`). |
+| `--no-backup` | Skip the pre-migration zip snapshot of `~/.kase/` (by default a single restore-point archive is written to `~/.kase/backups/pre-migration-*.zip` before apply; restorable with `kase import`). |
 | `--source <path>` | Custom OpenClaw directory (default: `~/.openclaw`). |
 | `--workspace-target <path>` | Target directory for workspace instructions (AGENTS.md). |
 | `--skill-conflict <mode>` | Handle skill name collisions: `skip` (default), `overwrite`, or `rename`. |
@@ -1110,7 +1110,7 @@ Migrate your OpenClaw setup to Hermes. Reads from `~/.openclaw` (or a custom pat
 
 ### What gets migrated
 
-The migration covers 30+ categories across persona, memory, skills, model providers, messaging platforms, agent behavior, session policies, MCP servers, TTS, and more. Items are either **directly imported** into Hermes equivalents or **archived** for manual review.
+The migration covers 30+ categories across persona, memory, skills, model providers, messaging platforms, agent behavior, session policies, MCP servers, TTS, and more. Items are either **directly imported** into Kase equivalents or **archived** for manual review.
 
 **Directly imported:** SOUL.md, MEMORY.md, USER.md, AGENTS.md, skills (4 source directories), default model, custom providers, MCP servers, messaging platform tokens and allowlists (Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Mattermost), agent defaults (reasoning effort, compression, human delay, timezone, sandbox), session reset policies, approval rules, TTS config, browser settings, tool settings, exec timeout, command allowlist, gateway config, and API keys from 3 sources.
 
@@ -1124,57 +1124,57 @@ For the complete config key mapping, SecretRef handling details, and post-migrat
 
 ```bash
 # Preview what would be migrated
-hermes claw migrate --dry-run
+kase claw migrate --dry-run
 
 # Full migration (all compatible settings, no secrets)
-hermes claw migrate --preset full
+kase claw migrate --preset full
 
 # Full migration including API keys
-hermes claw migrate --preset full --migrate-secrets
+kase claw migrate --preset full --migrate-secrets
 
 # Migrate user data only (no secrets), overwrite conflicts
-hermes claw migrate --preset user-data --overwrite
+kase claw migrate --preset user-data --overwrite
 
 # Migrate from a custom OpenClaw path
-hermes claw migrate --source /home/user/old-openclaw
+kase claw migrate --source /home/user/old-openclaw
 ```
 
-## `hermes dashboard`
+## `kase dashboard`
 
 ```bash
-hermes dashboard [options]
+kase dashboard [options]
 ```
 
-Launch the web dashboard — a browser-based UI for managing configuration, API keys, and monitoring sessions. Requires `pip install hermes-agent[web]` (FastAPI + Uvicorn). The embedded browser Chat tab requires `--tui` plus the `pty` extra. See [Web Dashboard](/docs/user-guide/features/web-dashboard) for full documentation.
+Launch the web dashboard — a browser-based UI for managing configuration, API keys, and monitoring sessions. Requires `pip install kase[web]` (FastAPI + Uvicorn). The embedded browser Chat tab requires `--tui` plus the `pty` extra. See [Web Dashboard](/docs/user-guide/features/web-dashboard) for full documentation.
 
 | Option | Default | Description |
 |--------|---------|-------------|
 | `--port` | `9119` | Port to run the web server on |
 | `--host` | `127.0.0.1` | Bind address |
 | `--no-open` | — | Don't auto-open the browser |
-| `--tui` | off | Enable the in-browser Chat tab by running `hermes --tui` behind a PTY/WebSocket bridge. Requires `pip install 'hermes-agent[web,pty]'` and a POSIX PTY environment such as Linux, macOS, or WSL2. |
+| `--tui` | off | Enable the in-browser Chat tab by running `kase --tui` behind a PTY/WebSocket bridge. Requires `pip install 'kase[web,pty]'` and a POSIX PTY environment such as Linux, macOS, or WSL2. |
 | `--insecure` | off | Allow binding to non-localhost hosts. Exposes dashboard credentials on the network; use only behind trusted network controls. |
-| `--stop` | — | Stop running `hermes dashboard` processes and exit. |
-| `--status` | — | List running `hermes dashboard` processes and exit. |
+| `--stop` | — | Stop running `kase dashboard` processes and exit. |
+| `--status` | — | List running `kase dashboard` processes and exit. |
 
 ```bash
 # Default — opens browser to http://127.0.0.1:9119
-hermes dashboard
+kase dashboard
 
 # Custom port, no browser
-hermes dashboard --port 8080 --no-open
+kase dashboard --port 8080 --no-open
 
 # Enable the browser Chat tab
-hermes dashboard --tui
+kase dashboard --tui
 ```
 
-## `hermes profile`
+## `kase profile`
 
 ```bash
-hermes profile <subcommand>
+kase profile <subcommand>
 ```
 
-Manage profiles — multiple isolated Hermes instances, each with its own config, sessions, skills, and home directory.
+Manage profiles — multiple isolated Kase instances, each with its own config, sessions, skills, and home directory.
 
 | Subcommand | Description |
 |------------|-------------|
@@ -1194,67 +1194,67 @@ Manage profiles — multiple isolated Hermes instances, each with its own config
 Examples:
 
 ```bash
-hermes profile list
-hermes profile create work --clone
-hermes profile use work
-hermes profile alias work --name h-work
-hermes profile export work -o work-backup.tar.gz
-hermes profile import work-backup.tar.gz --name restored
-hermes profile install github.com/user/my-distro --alias
-hermes profile update work
-hermes -p work chat -q "Hello from work profile"
+kase profile list
+kase profile create work --clone
+kase profile use work
+kase profile alias work --name h-work
+kase profile export work -o work-backup.tar.gz
+kase profile import work-backup.tar.gz --name restored
+kase profile install github.com/user/my-distro --alias
+kase profile update work
+kase -p work chat -q "Hello from work profile"
 ```
 
-## `hermes completion`
+## `kase completion`
 
 ```bash
-hermes completion [bash|zsh|fish]
+kase completion [bash|zsh|fish]
 ```
 
-Print a shell completion script to stdout. Source the output in your shell profile for tab-completion of Hermes commands, subcommands, and profile names.
+Print a shell completion script to stdout. Source the output in your shell profile for tab-completion of Kase commands, subcommands, and profile names.
 
 Examples:
 
 ```bash
 # Bash
-hermes completion bash >> ~/.bashrc
+kase completion bash >> ~/.bashrc
 
 # Zsh
-hermes completion zsh >> ~/.zshrc
+kase completion zsh >> ~/.zshrc
 
 # Fish
-hermes completion fish > ~/.config/fish/completions/hermes.fish
+kase completion fish > ~/.config/fish/completions/kase.fish
 ```
 
-## `hermes update`
+## `kase update`
 
 ```bash
-hermes update [--check] [--backup] [--restart-gateway]
+kase update [--check] [--backup] [--restart-gateway]
 ```
 
-Pulls the latest `hermes-agent` code and reinstalls dependencies in your venv, then re-runs the post-install hooks (MCP servers, skills sync, completion install). Safe to run on a live install.
+Pulls the latest `kase` code and reinstalls dependencies in your venv, then re-runs the post-install hooks (MCP servers, skills sync, completion install). Safe to run on a live install.
 
-**pip installs:** `hermes update` detects pip-based installations automatically — it queries PyPI for the latest release and runs `pip install --upgrade hermes-agent` instead of `git pull`. PyPI releases track tagged versions (major/minor releases), not every commit on `main`. Use `--check` to see if a newer PyPI release is available without installing.
+**pip installs:** `kase update` detects pip-based installations automatically — it queries PyPI for the latest release and runs `pip install --upgrade kase` instead of `git pull`. PyPI releases track tagged versions (major/minor releases), not every commit on `main`. Use `--check` to see if a newer PyPI release is available without installing.
 
 | Option | Description |
 |--------|-------------|
 | `--check` | Print the current commit and the latest `origin/main` commit side by side, and exit 0 if in sync or 1 if behind. Does not pull, install, or restart anything. |
-| `--backup` | Create a labeled pre-update snapshot of `HERMES_HOME` (config, auth, sessions, skills, pairing data) before pulling. Default is **off** — the previous always-backup behavior was adding minutes to every update on large homes. Flip it on permanently via `update.backup: true` in `config.yaml`. |
+| `--backup` | Create a labeled pre-update snapshot of `KASE_HOME` (config, auth, sessions, skills, pairing data) before pulling. Default is **off** — the previous always-backup behavior was adding minutes to every update on large homes. Flip it on permanently via `update.backup: true` in `config.yaml`. |
 | `--restart-gateway` | After a successful update, restart the running gateway service. Implies `--all` semantics if multiple profiles are installed. |
 
 Additional behavior:
 
-- **Pairing data snapshot.** Even when `--backup` is off, `hermes update` takes a lightweight snapshot of `~/.hermes/pairing/` and the Feishu comment rules before `git pull`. You can roll it back with `hermes backup restore --state pre-update` if a pull rewrites a file you were editing.
-- **Legacy `hermes.service` warning.** If Hermes detects a pre-rename `hermes.service` systemd unit (instead of the current `hermes-gateway.service`), it prints a one-time migration hint so you can avoid flap-loop issues.
+- **Pairing data snapshot.** Even when `--backup` is off, `kase update` takes a lightweight snapshot of `~/.kase/pairing/` and the Feishu comment rules before `git pull`. You can roll it back with `kase backup restore --state pre-update` if a pull rewrites a file you were editing.
+- **Legacy `kase.service` warning.** If Kase detects a pre-rename `kase.service` systemd unit (instead of the current `kase-gateway.service`), it prints a one-time migration hint so you can avoid flap-loop issues.
 - **Exit codes.** `0` on success, `1` on pull/install/post-install errors, `2` on unexpected working-tree changes that block `git pull`.
 
 ## Maintenance commands
 
 | Command | Description |
 |---------|-------------|
-| `hermes version` | Print version information. |
-| `hermes update` | Pull latest changes and reinstall dependencies. |
-| `hermes uninstall [--full] [--yes]` | Remove Hermes, optionally deleting all config/data. |
+| `kase version` | Print version information. |
+| `kase update` | Pull latest changes and reinstall dependencies. |
+| `kase uninstall [--full] [--yes]` | Remove Kase, optionally deleting all config/data. |
 
 ## See also
 

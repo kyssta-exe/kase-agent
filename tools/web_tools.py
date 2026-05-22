@@ -3,8 +3,8 @@
 Standalone Web Tools Module
 
 This module provides generic web tools that work with multiple backend providers.
-Backend is selected during ``hermes tools`` setup (web.backend in config.yaml).
-When available, Hermes can route Firecrawl calls through a Nous-hosted tool-gateway
+Backend is selected during ``kase tools`` setup (web.backend in config.yaml).
+When available, Kase can route Firecrawl calls through a Nous-hosted tool-gateway
 for Nous Subscribers only.
 
 Available tools:
@@ -107,10 +107,10 @@ from tools.debug_helpers import DebugSession
 # tools.web_tools (the firecrawl plugin reads them via its own import chain).
 from tools.managed_tool_gateway import (  # noqa: F401 — backward-compat names for tests
     build_vendor_gateway_url,
-    read_nous_access_token as _read_nous_access_token,
+    read_kyssta_access_token as _read_kyssta_access_token,
     resolve_managed_tool_gateway,
 )
-from tools.tool_backend_helpers import managed_nous_tools_enabled, prefers_gateway  # noqa: F401
+from tools.tool_backend_helpers import managed_kyssta_tools_enabled, prefers_gateway  # noqa: F401
 from tools.url_safety import is_safe_url
 from tools.website_policy import check_website_access
 import sys
@@ -125,9 +125,9 @@ def _has_env(name: str) -> bool:
     return bool(val and val.strip())
 
 def _load_web_config() -> dict:
-    """Load the ``web:`` section from ~/.hermes/config.yaml."""
+    """Load the ``web:`` section from ~/.kase/config.yaml."""
     try:
-        from hermes_cli.config import load_config
+        from kase_cli.config import load_config
         return load_config().get("web", {})
     except (ImportError, Exception):
         return {}
@@ -135,7 +135,7 @@ def _load_web_config() -> dict:
 def _get_backend() -> str:
     """Determine which web backend to use (shared fallback).
 
-    Reads ``web.backend`` from config.yaml (set by ``hermes tools``).
+    Reads ``web.backend`` from config.yaml (set by ``kase tools``).
     Falls back to whichever API key is present for users who configured
     keys manually without running setup.
     """
@@ -222,7 +222,7 @@ def _is_backend_available(backend: str) -> bool:
         # Cheap probe — env var OR auth.json has OAuth tokens. Must not
         # call resolve_xai_http_credentials() here because the OAuth path
         # can trigger a network token refresh, and _is_backend_available
-        # runs on every web_search dispatch + every `hermes tools` repaint.
+        # runs on every web_search dispatch + every `kase tools` repaint.
         try:
             from tools.xai_http import has_xai_credentials
             return has_xai_credentials()
@@ -260,7 +260,7 @@ def _web_requires_env() -> list[str]:
 
     The gateway env vars are always reported — they're metadata strings
     used by the tool registry to light up the tool when the variable is
-    set.  Gating them on ``managed_nous_tools_enabled()`` only saved
+    set.  Gating them on ``managed_kyssta_tools_enabled()`` only saved
     string noise in the metadata list, but cost a synchronous HTTP
     refresh against the Nous portal on every CLI startup (invoked at
     tool-registration time).  The behavioral contract is: if the env var
@@ -295,13 +295,13 @@ def _web_requires_env() -> list[str]:
 
 DEFAULT_MIN_LENGTH_FOR_SUMMARIZATION = 5000
 
-def _is_nous_auxiliary_client(client: Any) -> bool:
+def _is_kyssta_auxiliary_client(client: Any) -> bool:
     """Return True when the resolved auxiliary backend is Nous Portal."""
     from urllib.parse import urlparse
 
     base_url = str(getattr(client, "base_url", "") or "")
     host = (urlparse(base_url).hostname or "").lower()
-    return host == "nousresearch.com" or host.endswith(".nousresearch.com")
+    return host == "kyssta.com" or host.endswith(".kyssta.com")
 
 
 def _resolve_web_extract_auxiliary(model: Optional[str] = None) -> tuple[Optional[Any], Optional[str], Dict[str, Any]]:
@@ -311,10 +311,10 @@ def _resolve_web_extract_auxiliary(model: Optional[str] = None) -> tuple[Optiona
     effective_model = model or configured_model or default_model
 
     extra_body: Dict[str, Any] = {}
-    if client is not None and _is_nous_auxiliary_client(client):
+    if client is not None and _is_kyssta_auxiliary_client(client):
         from agent.auxiliary_client import get_auxiliary_extra_body
-        from agent.portal_tags import nous_portal_tags
-        extra_body = get_auxiliary_extra_body() or {"tags": nous_portal_tags()}
+        from agent.portal_tags import kyssta_portal_tags
+        extra_body = get_auxiliary_extra_body() or {"tags": kyssta_portal_tags()}
 
     return client, effective_model, extra_body
 
@@ -821,7 +821,7 @@ def web_search_tool(query: str, limit: int = 5) -> str:
                 "success": False,
                 "error": (
                     "No web search provider configured. "
-                    "Run `hermes tools` to set one up."
+                    "Run `kase tools` to set one up."
                 ),
             }
         else:

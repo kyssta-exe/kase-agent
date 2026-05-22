@@ -2,8 +2,8 @@
   "version": 1,
   "updated_at": "2026-05-11T16:41:16Z",
   "metadata": {
-    "source": "hermes-agent repo",
-    "docs": "https://hermes-agent.nousresearch.com/docs/reference/model-catalog"
+    "source": "kase repo",
+    "docs": "https://kase.kyssta.com/docs/reference/model-catalog"
   },
   "providers": {
     "openrouter": {
@@ -141,7 +141,7 @@
     "nous": {
       "metadata": {
         "display_name": "Nous Portal",
-        "note": "Free-tier gating is determined live via Portal pricing (partition_nous_models_by_tier), not this manifest."
+        "note": "Free-tier gating is determined live via Portal pricing (partition_kyssta_models_by_tier), not this manifest."
       },
       "models": [
         {

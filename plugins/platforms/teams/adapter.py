@@ -1,5 +1,5 @@
 """
-Microsoft Teams platform adapter for Hermes Agent.
+Microsoft Teams platform adapter for Kase.
 
 Uses the microsoft-teams-apps SDK for authentication and activity processing.
 Runs an aiohttp webhook server to receive messages from Teams.
@@ -505,8 +505,8 @@ async def _standalone_send(
     """Acquire a Bot Framework bearer token and POST a single message activity.
 
     Used by ``tools/send_message_tool._send_via_adapter`` when the gateway
-    runner is not in this process (e.g. ``hermes cron`` running as a
-    separate process from ``hermes gateway``).  Without this hook,
+    runner is not in this process (e.g. ``kase cron`` running as a
+    separate process from ``kase gateway``).  Without this hook,
     ``deliver=teams`` cron jobs fail with ``No live adapter for platform``.
 
     Configuration: requires ``TEAMS_CLIENT_ID``, ``TEAMS_CLIENT_SECRET``,
@@ -675,7 +675,7 @@ class TeamsAdapter(BasePlatformAdapter):
                 client_secret=self._client_secret,
                 tenant_id=self._tenant_id,
                 http_server_adapter=_AiohttpBridgeAdapter(aiohttp_app),
-                client=ClientOptions(headers={"User-Agent": "Hermes"}),
+                client=ClientOptions(headers={"User-Agent": "Kase"}),
             )
 
             # Register message handler before initialize()
@@ -1084,11 +1084,11 @@ class TeamsAdapter(BasePlatformAdapter):
 
 def interactive_setup() -> None:
     """Guide the user through Teams setup using the Teams CLI."""
-    from hermes_cli.config import (
+    from kase_cli.config import (
         get_env_value,
         save_env_value,
     )
-    from hermes_cli.cli_output import (
+    from kase_cli.cli_output import (
         prompt,
         prompt_yes_no,
         print_info,
@@ -1108,7 +1108,7 @@ def interactive_setup() -> None:
     print()
     print_info("Then expose port 3978 publicly (devtunnel / ngrok / cloudflared),")
     print_info("and create your bot:")
-    print_info("  teams app create --name \"Hermes\" --endpoint \"https://<tunnel>/api/messages\"")
+    print_info("  teams app create --name \"Kase\" --endpoint \"https://<tunnel>/api/messages\"")
     print()
     print_info("The CLI will print CLIENT_ID, CLIENT_SECRET, and TENANT_ID. Paste them below.")
     print()
@@ -1148,15 +1148,15 @@ def interactive_setup() -> None:
         print_warning("⚠️  Open access — anyone who can message the bot can command it.")
 
     print()
-    print_success("Teams configuration saved to ~/.hermes/.env")
+    print_success("Teams configuration saved to ~/.kase/.env")
     print_info("Install the app in Teams:  teams app install --id <teamsAppId>")
-    print_info("Restart the gateway:       hermes gateway restart")
+    print_info("Restart the gateway:       kase gateway restart")
 
 
 # ── Plugin entry point ────────────────────────────────────────────────────────
 
 def register(ctx) -> None:
-    """Plugin entry point — called by the Hermes plugin system."""
+    """Plugin entry point — called by the Kase plugin system."""
     ctx.register_platform(
         name="teams",
         label="Microsoft Teams",

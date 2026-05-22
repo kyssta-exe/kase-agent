@@ -10,23 +10,23 @@ Server-side LLM fact extraction with semantic search, reranking, and automatic d
 ## Setup
 
 ```bash
-hermes memory setup    # select "mem0"
+kase memory setup    # select "mem0"
 ```
 
 Or manually:
 ```bash
-hermes config set memory.provider mem0
-echo "MEM0_API_KEY=your-key" >> ~/.hermes/.env
+kase config set memory.provider mem0
+echo "MEM0_API_KEY=your-key" >> ~/.kase/.env
 ```
 
 ## Config
 
-Config file: `$HERMES_HOME/mem0.json`
+Config file: `$KASE_HOME/mem0.json`
 
 | Key | Default | Description |
 |-----|---------|-------------|
-| `user_id` | `hermes-user` | User identifier on Mem0 |
-| `agent_id` | `hermes` | Agent identifier |
+| `user_id` | `kase-user` | User identifier on Mem0 |
+| `agent_id` | `kase` | Agent identifier |
 | `rerank` | `true` | Enable reranking for recall |
 
 ## Tools

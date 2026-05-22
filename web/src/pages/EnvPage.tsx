@@ -21,9 +21,9 @@ import { Toast } from "@/components/Toast";
 import { useConfirmDelete } from "@/hooks/useConfirmDelete";
 import { useToast } from "@/hooks/useToast";
 import { OAuthProvidersCard } from "@/components/OAuthProvidersCard";
-import { Button } from "@nous-research/ui/ui/components/button";
-import { ListItem } from "@nous-research/ui/ui/components/list-item";
-import { Spinner } from "@nous-research/ui/ui/components/spinner";
+import { Button } from "@kyssta/ui/ui/components/button";
+import { ListItem } from "@kyssta/ui/ui/components/list-item";
+import { Spinner } from "@kyssta/ui/ui/components/spinner";
 import {
   Card,
   CardContent,
@@ -31,7 +31,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@nous-research/ui/ui/components/badge";
+import { Badge } from "@kyssta/ui/ui/components/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useI18n } from "@/i18n";
@@ -743,7 +743,7 @@ export default function EnvPage() {
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-muted-foreground">
-            {t.env.description} <code>~/.hermes/.env</code>
+            {t.env.description} <code>~/.kase/.env</code>
           </p>
           <p className="text-[0.7rem] text-muted-foreground/70">
             {t.env.changesNote}

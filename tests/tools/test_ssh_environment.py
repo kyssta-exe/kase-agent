@@ -109,7 +109,7 @@ class TestControlSocketPath:
 
         env = SSHEnvironment(
             host="9373:9b91:4480:558d:708e:e601:24e8:d8d0",
-            user="hermes",
+            user="kase",
             port=22,
         )
 
@@ -231,8 +231,8 @@ class TestOneShotSSH:
         assert r["exit_code"] == 42
 
     def test_state_does_not_persist(self):
-        _run("export HERMES_ONESHOT_TEST=yes")
-        r = _run("echo $HERMES_ONESHOT_TEST")
+        _run("export KASE_ONESHOT_TEST=yes")
+        r = _run("echo $KASE_ONESHOT_TEST")
         assert r["output"].strip() == ""
 
 

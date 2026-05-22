@@ -23,7 +23,7 @@ from utils import normalize_proxy_url
 
 logger = logging.getLogger(__name__)
 
-# Audio file extensions Hermes recognizes for native audio delivery.
+# Audio file extensions Kase recognizes for native audio delivery.
 # Kept in sync with tools/send_message_tool.py and cron/scheduler.py via
 # should_send_media_as_audio() below.
 _AUDIO_EXTS = frozenset({'.ogg', '.opus', '.mp3', '.wav', '.m4a', '.flac'})
@@ -44,7 +44,7 @@ def _thread_metadata_for_source(source, reply_to_message_id: str | None = None) 
     """Build platform-aware thread metadata for adapter sends.
 
     Most platforms route threaded sends with a generic ``thread_id`` metadata
-    value. Telegram private-chat topics created through Hermes' DM-topic helper
+    value. Telegram private-chat topics created through Kase' DM-topic helper
     are exposed in updates as ``message_thread_id`` plus a reply anchor. Live
     user-message replies route with ``message_thread_id`` + ``reply_to_message_id``;
     synthetic/resumed sends that have no reply anchor fall back to Telegram's
@@ -69,7 +69,7 @@ def _reply_anchor_for_event(event) -> str | None:
     """Return reply_to id for platforms that need reply semantics.
 
     Telegram forum/supergroup topics should be routed by topic metadata, not by
-    replying to the triggering message. Hermes-created Telegram private-chat
+    replying to the triggering message. Kase-created Telegram private-chat
     topic lanes prefer replying to the triggering user message so the answer
     stays attached to the active lane; synthetic/resumed sends fall back to
     ``direct_messages_topic_id`` metadata when no message id is available.
@@ -472,12 +472,12 @@ sys.path.insert(0, str(_Path(__file__).resolve().parents[2]))
 
 from gateway.config import Platform, PlatformConfig
 from gateway.session import SessionSource, build_session_key
-from hermes_constants import get_hermes_dir
+from kase_constants import get_hermes_dir
 
 
 GATEWAY_SECRET_CAPTURE_UNSUPPORTED_MESSAGE = (
     "Secure secret entry is not supported over messaging. "
-    "Load this skill in the local CLI to be prompted, or add the key to ~/.hermes/.env manually."
+    "Load this skill in the local CLI to be prompted, or add the key to ~/.kase/.env manually."
 )
 
 
@@ -544,7 +544,7 @@ async def _ssrf_redirect_guard(response):
 # (e.g. Telegram file URLs expire after ~1 hour).
 # ---------------------------------------------------------------------------
 
-# Default location: {HERMES_HOME}/cache/images/ (legacy: image_cache/)
+# Default location: {KASE_HOME}/cache/images/ (legacy: image_cache/)
 IMAGE_CACHE_DIR = get_hermes_dir("cache/images", "image_cache")
 
 
@@ -634,7 +634,7 @@ async def cache_image_from_url(url: str, ext: str = ".jpg", retries: int = 2) ->
                 response = await client.get(
                     url,
                     headers={
-                        "User-Agent": "Mozilla/5.0 (compatible; HermesAgent/1.0)",
+                        "User-Agent": "Mozilla/5.0 (compatible; Kase/1.0)",
                         "Accept": "image/*,*/*;q=0.8",
                     },
                 )
@@ -748,7 +748,7 @@ async def cache_audio_from_url(url: str, ext: str = ".ogg", retries: int = 2) ->
                 response = await client.get(
                     url,
                     headers={
-                        "User-Agent": "Mozilla/5.0 (compatible; HermesAgent/1.0)",
+                        "User-Agent": "Mozilla/5.0 (compatible; Kase/1.0)",
                         "Accept": "audio/*,*/*;q=0.8",
                     },
                 )
@@ -1025,8 +1025,8 @@ class MessageEvent:
 
 _PLAINTEXT_GATEWAY_RESTART_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^(?:please\s+)?restart\s+(?:the\s+)?gateway[.!?\s]*$", re.IGNORECASE),
-    re.compile(r"^(?:please\s+)?restart\s+(?:the\s+)?hermes\s+gateway[.!?\s]*$", re.IGNORECASE),
-    re.compile(r"^(?:please\s+)?restart\s+hermes[.!?\s]*$", re.IGNORECASE),
+    re.compile(r"^(?:please\s+)?restart\s+(?:the\s+)?kase\s+gateway[.!?\s]*$", re.IGNORECASE),
+    re.compile(r"^(?:please\s+)?restart\s+kase[.!?\s]*$", re.IGNORECASE),
 )
 
 
@@ -1689,7 +1689,7 @@ class BasePlatformAdapter(ABC):
         auto-deletion.  Non-fatal if config is unreadable.
         """
         try:
-            from hermes_cli.config import load_config as _load_config
+            from kase_cli.config import load_config as _load_config
         except Exception:
             return 0
         try:
@@ -2903,7 +2903,7 @@ class BasePlatformAdapter(ABC):
             # session lifecycle and its cleanup races with the running task
             # (see PR #4926).
             cmd = event.get_command()
-            from hermes_cli.commands import should_bypass_active_session
+            from kase_cli.commands import should_bypass_active_session
 
             if should_bypass_active_session(cmd):
                 # /stop, /new, /reset must cancel the in-flight adapter task

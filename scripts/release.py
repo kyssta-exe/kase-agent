@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hermes Agent Release Script
+"""Kase Release Script
 
 Generates changelogs and creates GitHub releases with CalVer tags.
 
@@ -31,7 +31,7 @@ from datetime import datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-VERSION_FILE = REPO_ROOT / "hermes_cli" / "__init__.py"
+VERSION_FILE = REPO_ROOT / "kase_cli" / "__init__.py"
 PYPROJECT_FILE = REPO_ROOT / "pyproject.toml"
 
 # ACP Registry manifest must stay version-locked with pyproject.toml.
@@ -56,7 +56,7 @@ AUTHOR_MAP = {
     "anadi.jaggia@gmail.com": "Jaggia",
     "32201324+simpolism@users.noreply.github.com": "simpolism",
     "simpolism@gmail.com": "simpolism",
-    "jake@nousresearch.com": "simpolism",
+    "jake@kyssta.com": "simpolism",
     "mgongzai@gmail.com": "vKongv",
     "0x.badfriend@gmail.com": "discodirector",
     "altriatree@gmail.com": "TruaShamu",
@@ -83,7 +83,7 @@ AUTHOR_MAP = {
     "buraysandro9@gmail.com": "ygd58",
     "108427749+buntingszn@users.noreply.github.com": "buntingszn",
     "yanglongwei06@gmail.com": "Alex-yang00",
-    "teknium@nousresearch.com": "teknium1",
+    "teknium@kyssta.com": "teknium1",
     "markuscontasul@gmail.com": "Glucksberg",
     "piyushvp1@gmail.com": "thelumiereguy",
     "dskwelmcy@163.com": "dskwe",
@@ -300,7 +300,7 @@ AUTHOR_MAP = {
     # Temporary tool-progress cleanup salvage (May 2026)
     "Mrcharlesiv@gmail.com": "mrcharlesiv",
     "nbot@liizfq.top": "liizfq",
-    "274096618+hermes-agent-dhabibi@users.noreply.github.com": "dhabibi",
+    "274096618+kase-dhabibi@users.noreply.github.com": "dhabibi",
     "dejie.guo@gmail.com": "JayGwod",
     "133716830+0xKingBack@users.noreply.github.com": "0xKingBack",
     "daixin1204@gmail.com": "SimbaKingjoe",
@@ -499,7 +499,7 @@ AUTHOR_MAP = {
     "samherring99@gmail.com": "samherring99",
     "desaiaum08@gmail.com": "Aum08Desai",
     "shannon.sands.1979@gmail.com": "shannonsands",
-    "shannon@nousresearch.com": "shannonsands",
+    "shannon@kyssta.com": "shannonsands",
     "abdi.moya@gmail.com": "AxDSan",
     "eri@plasticlabs.ai": "Erosika",
     "hjcpuro@gmail.com": "hjc-puro",
@@ -604,13 +604,13 @@ AUTHOR_MAP = {
     "shokatalishaikh95@gmail.com": "areu01or00",
     "bryan@intertwinesys.com": "bryanyoung",
     "christo.mitov@gmail.com": "christomitov",
-    "hermes@nousresearch.com": "NousResearch",
+    "kase@kyssta.com": "Kyssta",
     "reginaldasr@gmail.com": "ReginaldasR",
     "ntconguit@gmail.com": "0xharryriddle",
     "agent@wildcat.local": "ericnicolaides",
     "georgex8001@gmail.com": "georgex8001",
     "stefan@dimagents.ai": "dimitrovi",
-    "hermes@noushq.ai": "benbarclay",
+    "kase@noushq.ai": "benbarclay",
     "chinmingcock@gmail.com": "ChimingLiu",
     "allard.quek@singtel.com": "AllardQuek",
     "openclaw@sparklab.ai": "openclaw",
@@ -659,7 +659,7 @@ AUTHOR_MAP = {
     "angelos@oikos.lan.home.malaiwah.com": "angelos",
     "aptx4561@gmail.com": "cokemine",
     "arilotter@gmail.com": "ethernet8023",
-    "ben@nousresearch.com": "benbarclay",
+    "ben@kyssta.com": "benbarclay",
     "birdiegyal@gmail.com": "yyovil",
     "boschi1997@gmail.com": "nicoloboschi",
     "chef.ya@gmail.com": "cherifya",
@@ -676,7 +676,7 @@ AUTHOR_MAP = {
     "dylan.socolobsky@lambdaclass.com": "dsocolobsky",
     "ignacio.avecilla@lambdaclass.com": "IAvecilla",
     "duerzy@gmail.com": "duerzy",
-    "emozilla@nousresearch.com": "emozilla",
+    "emozilla@kyssta.com": "emozilla",
     "fancydirty@gmail.com": "fancydirty",
     "farion1231@gmail.com": "farion1231",
     "floptopbot33@gmail.com": "flobo3",
@@ -692,8 +692,8 @@ AUTHOR_MAP = {
     "hmbown@gmail.com": "Hmbown",
     "iacobs@m0n5t3r.info": "m0n5t3r",
     "jiayuw794@gmail.com": "JiayuuWang",
-    "jonny@nousresearch.com": "yoniebans",
-    "jake@nousresearch.com": "simpolism",
+    "jonny@kyssta.com": "yoniebans",
+    "jake@kyssta.com": "simpolism",
     "juan.ovalle@mistral.ai": "jjovalle99",
     "julien.talbot@ergonomia.re": "Julientalbot",
     "kagura.chen28@gmail.com": "kagura-agent",
@@ -782,7 +782,7 @@ AUTHOR_MAP = {
     "7093928+0xyg3n@users.noreply.github.com": "0xyg3n",
     "nftpoetrist@gmail.com": "nftpoetrist",  # PR #18982
     "millerc79@users.noreply.github.com": "millerc79",  # PR #19033
-    "hermes@example.com": "shellybotmoyer",  # PR #18915 (bot-committed)
+    "kase@example.com": "shellybotmoyer",  # PR #18915 (bot-committed)
     "exx@example.com": "exxmen",  # PR #19555
     "hypnosis.mda@gmail.com": "Hypn0sis",
     "ywt000818@gmail.com": "OwenYWT",
@@ -933,7 +933,7 @@ AUTHOR_MAP = {
     "aleksandr.pasevin@openzeppelin.com": "pasevin",
     "ubuntu@localhost.localdomain": "holynn-q",
     "holynn@placeholder.local": "holynn-q",
-    "agent@hermes.local": "jacdevos",
+    "agent@kase.local": "jacdevos",
     "sunsky.lau@gmail.com": "liuhao1024",
     "fabianoeq@gmail.com": "rodrigoeqnit",
     "178342791+sgtworkman@users.noreply.github.com": "sgtworkman",
@@ -1065,7 +1065,7 @@ AUTHOR_MAP = {
     "me+github7604@versun.org": "Versun",  # co-author only
     "my.vesper.nine@gmail.com": "kevin-ho",  # salvage: PR #15488 author @kevin-ho
     "noreply@paperclip.ing": "Paperclip",  # co-author only
-    "teknium@hermes-agent": "teknium1",
+    "teknium@kase": "teknium1",
     "web3blind@gmail.com": "web3blind",
     "ztzheng@163.com": "chengoak",  # PR #17467
     "24110240104@m.fudan.edu.cn": "YuShu",  # co-author only
@@ -1103,10 +1103,10 @@ AUTHOR_MAP = {
     "ayman.a.kamal@hotmail.com": "A-kamal",  # PR #18678 (xAI image resolution fix)
     # Kanban bug-fix batch salvage (May 2026)
     "frowte3k@gmail.com": "Frowtek",  # salvage of #23206 (gateway --board auto-subscribe)
-    "sylw3st3rr@gmail.com": "Sylw3ster",  # salvage of #23252 (HERMES_KANBAN_BOARD restore)
+    "sylw3st3rr@gmail.com": "Sylw3ster",  # salvage of #23252 (KASE_KANBAN_BOARD restore)
     "hello@dominikh.com": "dmnkhorvath",  # salvage of #23358 (kanban worker send_message)
     "413011+smwbev@users.noreply.github.com": "smwbev",  # salvage of #23659 (aria-label colLabel)
-    "58116817+TurgutKural@users.noreply.github.com": "TurgutKural",  # salvage of #23356 (HERMES_HOME inject)
+    "58116817+TurgutKural@users.noreply.github.com": "TurgutKural",  # salvage of #23356 (KASE_HOME inject)
     "openclaw@agent.local": "29206394",  # PR #22194 salvage (sudo -S brute-force guard, #9590)
     "freedemon@gmail.com": "fr33d3m0n",  # PR #21128 salvage (sudo stdin/askpass DANGEROUS, #17873 cat 4)
     "zhaowh3613@outlook.com": "VinceZcrikl",  # PR #23647 salvage (npm UTF-8 decode on GBK Windows)
@@ -1141,7 +1141,7 @@ AUTHOR_MAP = {
     "pol.kuijken@gmail.com": "polkn",  # PR #6136 salvage (skill_view collision refusal)
     "robin@soal.org": "rewbs",
     # batch salvage (May 2026 LHF run)
-    "sauravsejal40@gmail.com": "Saurav0989",  # PR #27071 (docs: hermes-eval community link)
+    "sauravsejal40@gmail.com": "Saurav0989",  # PR #27071 (docs: kase-eval community link)
     "220110965+Saurav0989@users.noreply.github.com": "Saurav0989",
     "aviarchi1994@gmail.com": "avifenesh",  # PR #25902 (docs: computer-use-linux MCP)
     "55848801+avifenesh@users.noreply.github.com": "avifenesh",
@@ -1178,7 +1178,7 @@ AUTHOR_MAP = {
     "al.bellemare@gmail.com": "Grogger",  # PR #27061 (windows console flash suppress)
     "7065068+Grogger@users.noreply.github.com": "Grogger",
     "18091625+Grogger@users.noreply.github.com": "Grogger",  # stale salvage commit alias (PR #28330)
-    "clement@nousresearch.com": "lemassykoi",  # PR #27042 (model-switch probe keyless providers)
+    "clement@kyssta.com": "lemassykoi",  # PR #27042 (model-switch probe keyless providers)
     "16377344+lemassykoi@users.noreply.github.com": "lemassykoi",
     "draplater@icloud.com": "draplater",  # PR #26707 (goal judge current time)
     "6349758+draplater@users.noreply.github.com": "draplater",
@@ -1210,7 +1210,7 @@ AUTHOR_MAP = {
     "6108320+wesleysimplicio@users.noreply.github.com": "wesleysimplicio",
     "carryzuo00@gmail.com": "Carry00",  # PR #26851 (doctor SSH env vars)
     "alaamohanad169-ship-it@users.noreply.github.com": "alaamohanad169-ship-it",  # PR #26036 (telegram typing after send)
-    "vigo@hermes": "hawknewton",  # PR #26294 (bedrock boto3 lazy_deps)
+    "vigo@kase": "hawknewton",  # PR #26294 (bedrock boto3 lazy_deps)
     "211668+hawknewton@users.noreply.github.com": "hawknewton",
     "quenvix00@gmail.com": "QuenVix",  # PR #26761/26772 salvage
     "164776164+QuenVix@users.noreply.github.com": "QuenVix",
@@ -1229,7 +1229,7 @@ AUTHOR_MAP = {
     "1743117+burjorjee@users.noreply.github.com": "burjorjee",  # PR #28201 salvage (inline-shell timeout guard)
     "keki@MacBookPro.attlocal.net": "burjorjee",
     "264690993+oseftg@users.noreply.github.com": "oseftg",  # PR #28168 salvage (natural ending emoji/caret)
-    "hex.hermes@agentmail.to": "oseftg",
+    "hex.kase@agentmail.to": "oseftg",
     "236912655+rudi193-cmd@users.noreply.github.com": "rudi193-cmd",  # PR #28241 salvage (empty credential pool)
     "rudi193@gmail.com": "rudi193-cmd",
     "86684667+sadiksaifi@users.noreply.github.com": "sadiksaifi",  # PR #27982 salvage (kanban horiz scroll)
@@ -1388,7 +1388,7 @@ def _update_acp_registry_versions(semver: str) -> None:
         manifest["version"] = semver
         uvx = manifest.get("distribution", {}).get("uvx", {})
         if "package" in uvx:
-            uvx["package"] = f"hermes-agent[acp]=={semver}"
+            uvx["package"] = f"kase[acp]=={semver}"
         # Preserve trailing newline + 2-space indent the file already uses.
         ACP_REGISTRY_MANIFEST.write_text(
             json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
@@ -1513,7 +1513,7 @@ def parse_coauthors(body: str) -> list:
         return []
     # AI/bot emails to ignore in co-author trailers
     _ignored_emails = {"noreply@anthropic.com", "noreply@github.com",
-                       "cursoragent@cursor.com", "hermes@nousresearch.com"}
+                       "cursoragent@cursor.com", "kase@kyssta.com"}
     _ignored_names = re.compile(r"^(Claude|Copilot|Cursor Agent|GitHub Actions?|dependabot|renovate)", re.IGNORECASE)
     pattern = re.compile(r"Co-authored-by:\s*(.+?)\s*<([^>]+)>", re.IGNORECASE)
     results = []
@@ -1585,7 +1585,7 @@ def get_pr_number(subject: str) -> str | None:
     return None
 
 
-def generate_changelog(commits, tag_name, semver, repo_url="https://github.com/NousResearch/hermes-agent",
+def generate_changelog(commits, tag_name, semver, repo_url="https://github.com/Kyssta/kase",
                        prev_tag=None, first_release=False):
     """Generate markdown changelog from categorized commits."""
     lines = []
@@ -1593,14 +1593,14 @@ def generate_changelog(commits, tag_name, semver, repo_url="https://github.com/N
     # Header
     now = datetime.now()
     date_str = now.strftime("%B %d, %Y")
-    lines.append(f"# Hermes Agent v{semver} ({tag_name})")
+    lines.append(f"# Kase v{semver} ({tag_name})")
     lines.append("")
     lines.append(f"**Release Date:** {date_str}")
     lines.append("")
 
     if first_release:
         lines.append("> 🎉 **First official release!** This marks the beginning of regular weekly releases")
-        lines.append("> for Hermes Agent. See below for everything included in this initial release.")
+        lines.append("> for Kase. See below for everything included in this initial release.")
         lines.append("")
 
     # Group commits by category
@@ -1690,7 +1690,7 @@ def generate_changelog(commits, tag_name, semver, repo_url="https://github.com/N
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Hermes Agent Release Tool")
+    parser = argparse.ArgumentParser(description="Kase Release Tool")
     parser.add_argument("--bump", choices=["major", "minor", "patch"],
                         help="Which semver component to bump")
     parser.add_argument("--publish", action="store_true",
@@ -1738,7 +1738,7 @@ def main():
             return
 
     print(f"{'='*60}")
-    print(f"  Hermes Agent Release Preview")
+    print(f"  Kase Release Preview")
     print(f"{'='*60}")
     print(f"  CalVer tag:      {tag_name}")
     print(f"  SemVer:          v{current_version} → v{new_version}")
@@ -1792,7 +1792,7 @@ def main():
         # Create annotated tag
         tag_result = git_result(
             "tag", "-a", tag_name, "-m",
-            f"Hermes Agent v{new_version} ({calver_date})\n\nWeekly release"
+            f"Kase v{new_version} ({calver_date})\n\nWeekly release"
         )
         if tag_result.returncode != 0:
             print(f"  ✗ Failed to create tag {tag_name}: {tag_result.stderr.strip()}")
@@ -1822,7 +1822,7 @@ def main():
 
         gh_cmd = [
             "gh", "release", "create", tag_name,
-            "--title", f"Hermes Agent v{new_version} ({calver_date})",
+            "--title", f"Kase v{new_version} ({calver_date})",
             "--notes-file", str(changelog_file),
         ]
         gh_cmd.extend(str(path) for path in artifacts)
@@ -1849,7 +1849,7 @@ def main():
             print(f"    Release notes kept at: {changelog_file}")
             print(f"    Tag was created locally. Create the release manually:")
             print(
-                f"    gh release create {tag_name} --title 'Hermes Agent v{new_version} ({calver_date})' "
+                f"    gh release create {tag_name} --title 'Kase v{new_version} ({calver_date})' "
                 f"--notes-file .release_notes.md {' '.join(str(path) for path in artifacts)}"
             )
             print(f"\n  ✓ Release artifacts prepared for manual publish: v{new_version} ({tag_name})")

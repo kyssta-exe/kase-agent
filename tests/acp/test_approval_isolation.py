@@ -145,7 +145,7 @@ class TestThreadLocalApprovalCallback:
         """ACP's ThreadPoolExecutor reuses threads. Two ACP sessions that land
         on the same reused thread must not share the interactive sudo password
         cache. The fix wraps each session in contextvars.copy_context() and
-        binds HERMES_SESSION_KEY per session, so the cache scope key differs
+        binds KASE_SESSION_KEY per session, so the cache scope key differs
         across sessions even when the underlying thread is identical.
         """
         import contextvars
@@ -196,7 +196,7 @@ class TestThreadLocalApprovalCallback:
 
 
 class TestAcpExecAskGate:
-    """GHSA-96vc-wcxf-jjff: ACP's _run_agent must set HERMES_INTERACTIVE so
+    """GHSA-96vc-wcxf-jjff: ACP's _run_agent must set KASE_INTERACTIVE so
     that tools.approval.check_all_command_guards takes the CLI-interactive
     path (consults the registered callback via prompt_dangerous_approval)
     instead of the non-interactive auto-approve shortcut.
@@ -206,13 +206,13 @@ class TestAcpExecAskGate:
     which uses a direct callback shape.)"""
 
     def test_interactive_env_var_routes_to_callback(self, monkeypatch):
-        """When HERMES_INTERACTIVE is set and an approval callback is
+        """When KASE_INTERACTIVE is set and an approval callback is
         registered, a dangerous command must route through the callback."""
         # Clean env
-        monkeypatch.delenv("HERMES_INTERACTIVE", raising=False)
-        monkeypatch.delenv("HERMES_GATEWAY_SESSION", raising=False)
+        monkeypatch.delenv("KASE_INTERACTIVE", raising=False)
+        monkeypatch.delenv("KASE_GATEWAY_SESSION", raising=False)
         monkeypatch.delenv("HERMES_EXEC_ASK", raising=False)
-        monkeypatch.delenv("HERMES_YOLO_MODE", raising=False)
+        monkeypatch.delenv("KASE_YOLO_MODE", raising=False)
 
         from tools.approval import check_all_command_guards
 
@@ -222,24 +222,24 @@ class TestAcpExecAskGate:
             called_with.append((command, description))
             return "once"
 
-        # Without HERMES_INTERACTIVE: takes auto-approve path, callback NOT called
+        # Without KASE_INTERACTIVE: takes auto-approve path, callback NOT called
         result = check_all_command_guards(
             "rm -rf /tmp/test-exec-ask", "local", approval_callback=fake_cb,
         )
         assert result["approved"] is True
         assert called_with == [], (
-            "without HERMES_INTERACTIVE the non-interactive auto-approve "
+            "without KASE_INTERACTIVE the non-interactive auto-approve "
             "path should fire without consulting the callback"
         )
 
-        # With HERMES_INTERACTIVE: callback IS called, approval flows through it
-        monkeypatch.setenv("HERMES_INTERACTIVE", "1")
+        # With KASE_INTERACTIVE: callback IS called, approval flows through it
+        monkeypatch.setenv("KASE_INTERACTIVE", "1")
         called_with.clear()
         result = check_all_command_guards(
             "rm -rf /tmp/test-exec-ask", "local", approval_callback=fake_cb,
         )
         assert called_with, (
-            "with HERMES_INTERACTIVE the approval path should consult the "
+            "with KASE_INTERACTIVE the approval path should consult the "
             "registered callback — this was the ACP bypass in "
             "GHSA-96vc-wcxf-jjff"
         )

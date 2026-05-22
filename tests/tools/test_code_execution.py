@@ -202,14 +202,14 @@ class TestExecuteCode(unittest.TestCase):
 
     def test_repo_root_modules_are_importable(self):
         """Sandboxed scripts can import modules that live at the repo root."""
-        result = self._run('import hermes_constants; print(hermes_constants.__file__)')
+        result = self._run('import kase_constants; print(kase_constants.__file__)')
         self.assertEqual(result["status"], "success")
-        self.assertIn("hermes_constants.py", result["output"])
+        self.assertIn("kase_constants.py", result["output"])
 
     def test_single_tool_call(self):
         """Script calls terminal and prints the result."""
         code = """
-from hermes_tools import terminal
+from kase_tools import terminal
 result = terminal("echo hello")
 print(result.get("output", ""))
 """
@@ -221,7 +221,7 @@ print(result.get("output", ""))
     def test_multi_tool_chain(self):
         """Script calls multiple tools sequentially."""
         code = """
-from hermes_tools import terminal, read_file
+from kase_tools import terminal, read_file
 r1 = terminal("ls")
 r2 = read_file("test.py")
 print(f"terminal: {r1['output'][:20]}")
@@ -259,7 +259,7 @@ print(f"file lines: {r2['total_lines']}")
         code = '''
 import threading
 from concurrent.futures import ThreadPoolExecutor
-from hermes_tools import terminal
+from kase_tools import terminal
 
 N = 10
 
@@ -303,7 +303,7 @@ else:
     def test_excluded_tool_returns_error(self):
         """Script calling a tool not in the allow-list gets an error from RPC."""
         code = """
-from hermes_tools import terminal
+from kase_tools import terminal
 result = terminal("echo hi")
 print(result)
 """
@@ -361,7 +361,7 @@ raise RuntimeError("deliberate crash")
     def test_web_search_tool(self):
         """Script calls web_search and processes results."""
         code = """
-from hermes_tools import web_search
+from kase_tools import web_search
 results = web_search("test query")
 print(f"Found {len(results.get('results', []))} results")
 """
@@ -372,7 +372,7 @@ print(f"Found {len(results.get('results', []))} results")
     def test_json_parse_helper(self):
         """json_parse handles control characters that json.loads(strict=True) rejects."""
         code = r"""
-from hermes_tools import json_parse
+from kase_tools import json_parse
 # This JSON has a literal tab character which strict mode rejects
 text = '{"body": "line1\tline2\nline3"}'
 result = json_parse(text)
@@ -385,7 +385,7 @@ print(result["body"])
     def test_shell_quote_helper(self):
         """shell_quote properly escapes dangerous characters."""
         code = """
-from hermes_tools import shell_quote
+from kase_tools import shell_quote
 # String with backticks, quotes, and special chars
 dangerous = '`rm -rf /` && $(whoami) "hello"'
 escaped = shell_quote(dangerous)
@@ -400,7 +400,7 @@ assert escaped.startswith("'")
     def test_retry_helper_success(self):
         """retry returns on first success."""
         code = """
-from hermes_tools import retry
+from kase_tools import retry
 counter = [0]
 def flaky():
     counter[0] += 1
@@ -415,7 +415,7 @@ print(result)
     def test_retry_helper_eventual_success(self):
         """retry retries on failure and succeeds eventually."""
         code = """
-from hermes_tools import retry
+from kase_tools import retry
 counter = [0]
 def flaky():
     counter[0] += 1
@@ -432,7 +432,7 @@ print(result)
     def test_retry_helper_all_fail(self):
         """retry raises the last error when all attempts fail."""
         code = """
-from hermes_tools import retry
+from kase_tools import retry
 def always_fail():
     raise ValueError("nope")
 try:
@@ -605,7 +605,7 @@ class TestBuildExecuteCodeSchema(unittest.TestCase):
     def test_real_scenario_all_sandbox_tools_disabled(self):
         """Reproduce the exact code path from model_tools.py:231-234.
 
-        Scenario: user runs `hermes tools code_execution` (only code_execution
+        Scenario: user runs `kase tools code_execution` (only code_execution
         toolset enabled). tools_to_include = {"execute_code"}.
 
         model_tools.py does:
@@ -630,7 +630,7 @@ class TestBuildExecuteCodeSchema(unittest.TestCase):
                          "Bug: broken import syntax sent to the model")
 
     def test_real_scenario_only_vision_enabled(self):
-        """Another real path: user runs `hermes tools code_execution,vision`.
+        """Another real path: user runs `kase tools code_execution,vision`.
 
         tools_to_include = {"execute_code", "vision_analyze"}
         SANDBOX_ALLOWED_TOOLS has neither, so intersection is empty.
@@ -795,7 +795,7 @@ class TestExecuteCodeEdgeCases(unittest.TestCase):
     def test_none_enabled_tools_uses_all(self):
         """When enabled_tools is None, all sandbox tools should be available."""
         code = (
-            "from hermes_tools import terminal, web_search, read_file\n"
+            "from kase_tools import terminal, web_search, read_file\n"
             "print('all imports ok')\n"
         )
         with patch("model_tools.handle_function_call",
@@ -809,7 +809,7 @@ class TestExecuteCodeEdgeCases(unittest.TestCase):
     def test_empty_enabled_tools_uses_all(self):
         """When enabled_tools is [] (empty), all sandbox tools should be available."""
         code = (
-            "from hermes_tools import terminal, web_search\n"
+            "from kase_tools import terminal, web_search\n"
             "print('imports ok')\n"
         )
         with patch("model_tools.handle_function_call",
@@ -824,7 +824,7 @@ class TestExecuteCodeEdgeCases(unittest.TestCase):
         """When enabled_tools has no overlap with SANDBOX_ALLOWED_TOOLS,
         should fall back to all allowed tools."""
         code = (
-            "from hermes_tools import terminal\n"
+            "from kase_tools import terminal\n"
             "print('fallback ok')\n"
         )
         with patch("model_tools.handle_function_call",
@@ -850,7 +850,7 @@ class TestLoadConfig(unittest.TestCase):
 
     def test_returns_code_execution_section(self):
         from tools.code_execution_tool import _load_config
-        with patch("hermes_cli.config.read_raw_config",
+        with patch("kase_cli.config.read_raw_config",
                    return_value={"code_execution": {"timeout": 120, "max_tool_calls": 10}}):
             result = _load_config()
         self.assertEqual(result, {"timeout": 120, "max_tool_calls": 10})
@@ -860,7 +860,7 @@ class TestLoadConfig(unittest.TestCase):
         mock_cli = MagicMock()
         mock_cli.CLI_CONFIG = {"code_execution": {"timeout": 999}}
         with patch.dict("sys.modules", {"cli": mock_cli}), \
-             patch("hermes_cli.config.read_raw_config", return_value={}):
+             patch("kase_cli.config.read_raw_config", return_value={}):
             result = _load_config()
         self.assertEqual(result, {})
 

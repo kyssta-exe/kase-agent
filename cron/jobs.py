@@ -1,8 +1,8 @@
 """
 Cron job storage and management.
 
-Jobs are stored in ~/.hermes/cron/jobs.json
-Output is saved to ~/.hermes/cron/output/{job_id}/{timestamp}.md
+Jobs are stored in ~/.kase/cron/jobs.json
+Output is saved to ~/.kase/cron/output/{job_id}/{timestamp}.md
 """
 
 import copy
@@ -16,12 +16,12 @@ import re
 import uuid
 from datetime import datetime, timedelta
 from pathlib import Path
-from hermes_constants import get_hermes_home
+from kase_constants import get_kase_home
 from typing import Optional, Dict, List, Any, Union
 
 logger = logging.getLogger(__name__)
 
-from hermes_time import now as _hermes_now
+from kase_time import now as _hermes_now
 from utils import atomic_replace
 
 try:
@@ -34,7 +34,7 @@ except ImportError:
 # Configuration
 # =============================================================================
 
-HERMES_DIR = get_hermes_home().resolve()
+HERMES_DIR = get_kase_home().resolve()
 CRON_DIR = HERMES_DIR / "cron"
 JOBS_FILE = CRON_DIR / "jobs.json"
 
@@ -274,13 +274,13 @@ def parse_schedule(schedule: str) -> Dict[str, Any]:
 
 
 def _ensure_aware(dt: datetime) -> datetime:
-    """Return a timezone-aware datetime in Hermes configured timezone.
+    """Return a timezone-aware datetime in Kase configured timezone.
 
     Backward compatibility:
     - Older stored timestamps may be naive.
     - Naive values are interpreted as *system-local wall time* (the timezone
       `datetime.now()` used when they were created), then converted to the
-      configured Hermes timezone.
+      configured Kase timezone.
 
     This preserves relative ordering for legacy naive timestamps across
     timezone changes and avoids false not-due results.
@@ -378,7 +378,7 @@ def compute_next_run(schedule: Dict[str, Any], last_run_at: Optional[str] = None
             logger.warning(
                 "Cannot compute next run for cron schedule %r: 'croniter' is "
                 "not installed. croniter is a core dependency as of v0.9.x; "
-                "reinstall hermes-agent or run 'pip install croniter' in your "
+                "reinstall kase or run 'pip install croniter' in your "
                 "runtime env.",
                 schedule.get("expr"),
             )
@@ -486,7 +486,7 @@ def _normalize_profile(profile: Optional[str]) -> Optional[str]:
     """Normalize and validate an optional cron job profile name.
 
     Empty / None disables per-job profile selection. Otherwise the profile name
-    is canonicalized with the same rules as ``hermes -p`` and must refer to an
+    is canonicalized with the same rules as ``kase -p`` and must refer to an
     existing profile at create/update time. ``default`` is the built-in root
     profile and is always valid.
     """
@@ -496,12 +496,12 @@ def _normalize_profile(profile: Optional[str]) -> Optional[str]:
     if not raw:
         return None
 
-    from hermes_cli.profiles import normalize_profile_name, resolve_profile_env
+    from kase_cli.profiles import normalize_profile_name, resolve_profile_env
 
     normalized = normalize_profile_name(raw)
     # resolve_profile_env validates the canonical name and checks that named
     # profiles exist. Store only the stable profile id, not the filesystem path,
-    # so profile directories can move with the Hermes root.
+    # so profile directories can move with the Kase root.
     resolve_profile_env(normalized)
     return normalized
 
@@ -546,7 +546,7 @@ def create_job(
                 delivered verbatim. Without ``no_agent``, its stdout is
                 injected into the agent's prompt as context (data-collection /
                 change-detection pattern). Paths resolve under
-                ~/.hermes/scripts/; ``.sh`` / ``.bash`` files run via bash,
+                ~/.kase/scripts/; ``.sh`` / ``.bash`` files run via bash,
                 anything else via Python.
         context_from: Optional job ID (or list of job IDs) whose most recent output
                       is injected into the prompt as context before each run.
@@ -564,8 +564,8 @@ def create_job(
                 With ``no_agent=True``, ``workdir`` is still applied as the
                 script's cwd so relative paths inside the script behave
                 predictably.
-        profile: Optional Hermes profile name. When set, the job runs with
-                that profile's HERMES_HOME so profile-specific config,
+        profile: Optional Kase profile name. When set, the job runs with
+                that profile's KASE_HOME so profile-specific config,
                 credentials, scripts, skills, and memory paths resolve
                 consistently. ``default`` selects the root profile; empty /
                 None preserves the scheduler's existing behaviour.

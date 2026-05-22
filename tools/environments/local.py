@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 
 from tools.environments.base import BaseEnvironment, _pipe_stdin
-from hermes_cli._subprocess_compat import windows_hide_flags
+from kase_cli._subprocess_compat import windows_hide_flags
 
 _IS_WINDOWS = platform.system() == "Windows"
 
@@ -72,7 +72,7 @@ def _resolve_safe_cwd(cwd: str) -> str:
     return tempfile.gettempdir()
 
 
-# Hermes-internal env vars that should NOT leak into terminal subprocesses.
+# Kase-internal env vars that should NOT leak into terminal subprocesses.
 _HERMES_PROVIDER_ENV_FORCE_PREFIX = "_HERMES_FORCE_"
 
 
@@ -81,7 +81,7 @@ def _build_provider_env_blocklist() -> frozenset:
     blocked: set[str] = set()
 
     try:
-        from hermes_cli.auth import PROVIDER_REGISTRY
+        from kase_cli.auth import PROVIDER_REGISTRY
         for pconfig in PROVIDER_REGISTRY.values():
             blocked.update(pconfig.api_key_env_vars)
             if pconfig.base_url_env_var:
@@ -90,7 +90,7 @@ def _build_provider_env_blocklist() -> frozenset:
         pass
 
     try:
-        from hermes_cli.config import OPTIONAL_ENV_VARS
+        from kase_cli.config import OPTIONAL_ENV_VARS
         for name, metadata in OPTIONAL_ENV_VARS.items():
             category = metadata.get("category")
             if category in {"tool", "messaging"}:
@@ -171,20 +171,20 @@ def _build_provider_env_blocklist() -> frozenset:
 _HERMES_PROVIDER_ENV_BLOCKLIST = _build_provider_env_blocklist()
 
 
-def _inject_context_hermes_home(env: dict) -> None:
-    """Bridge the context-local Hermes home override into subprocess env."""
+def _inject_context_kase_home(env: dict) -> None:
+    """Bridge the context-local Kase home override into subprocess env."""
     try:
-        from hermes_constants import get_hermes_home_override
+        from kase_constants import get_kase_home_override
 
-        value = get_hermes_home_override()
+        value = get_kase_home_override()
         if value:
-            env["HERMES_HOME"] = value
+            env["KASE_HOME"] = value
     except Exception:
         pass
 
 
 def _sanitize_subprocess_env(base_env: dict | None, extra_env: dict | None = None) -> dict:
-    """Filter Hermes-managed secrets from a subprocess environment."""
+    """Filter Kase-managed secrets from a subprocess environment."""
     try:
         from tools.env_passthrough import is_env_passthrough as _is_passthrough
     except Exception:
@@ -205,10 +205,10 @@ def _sanitize_subprocess_env(base_env: dict | None, extra_env: dict | None = Non
         elif key not in _HERMES_PROVIDER_ENV_BLOCKLIST or _is_passthrough(key):
             sanitized[key] = value
 
-    _inject_context_hermes_home(sanitized)
+    _inject_context_kase_home(sanitized)
 
     # Per-profile HOME isolation for background processes (same as _make_run_env).
-    from hermes_constants import get_subprocess_home
+    from kase_constants import get_subprocess_home
     _profile_home = get_subprocess_home()
     if _profile_home:
         sanitized["HOME"] = _profile_home
@@ -238,10 +238,10 @@ def _find_bash() -> str:
     #
     # Layouts (both checked so upgrades between MinGit and PortableGit
     # installs work transparently):
-    #   PortableGit: %LOCALAPPDATA%\hermes\git\bin\bash.exe   (primary)
-    #   MinGit:      %LOCALAPPDATA%\hermes\git\usr\bin\bash.exe (legacy/32-bit fallback)
+    #   PortableGit: %LOCALAPPDATA%\kase\git\bin\bash.exe   (primary)
+    #   MinGit:      %LOCALAPPDATA%\kase\git\usr\bin\bash.exe (legacy/32-bit fallback)
     _local_appdata = os.environ.get("LOCALAPPDATA", "")
-    _hermes_portable_git = os.path.join(_local_appdata, "hermes", "git") if _local_appdata else ""
+    _hermes_portable_git = os.path.join(_local_appdata, "kase", "git") if _local_appdata else ""
     if _hermes_portable_git:
         for candidate in (
             os.path.join(_hermes_portable_git, "bin", "bash.exe"),        # PortableGit (primary)
@@ -263,7 +263,7 @@ def _find_bash() -> str:
             return candidate
 
     raise RuntimeError(
-        "Git Bash not found. Hermes Agent requires Git for Windows on Windows.\n"
+        "Git Bash not found. Kase requires Git for Windows on Windows.\n"
         "Install it from: https://git-scm.com/download/win\n"
         "Or set HERMES_GIT_BASH_PATH to your bash.exe location."
     )
@@ -302,17 +302,17 @@ def _make_run_env(env: dict) -> dict:
     # unrecognisable chunk, which then triggers prepending POSIX paths
     # to a Windows PATH — completely wrong).  Skip the injection entirely
     # on Windows; the native PATH already points at whatever shell
-    # Hermes is driving via _find_bash (Git Bash), and Git Bash itself
+    # Kase is driving via _find_bash (Git Bash), and Git Bash itself
     # prepends its MSYS2 /usr/bin equivalent via the shell-init files.
     if not _IS_WINDOWS and "/usr/bin" not in existing_path.split(":"):
         run_env["PATH"] = f"{existing_path}:{_SANE_PATH}" if existing_path else _SANE_PATH
 
-    _inject_context_hermes_home(run_env)
+    _inject_context_kase_home(run_env)
 
     # Per-profile HOME isolation: redirect system tool configs (git, ssh, gh,
-    # npm …) into {HERMES_HOME}/home/ when that directory exists.  Only the
+    # npm …) into {KASE_HOME}/home/ when that directory exists.  Only the
     # subprocess sees the override — the Python process keeps the real HOME.
-    from hermes_constants import get_subprocess_home
+    from kase_constants import get_subprocess_home
     _profile_home = get_subprocess_home()
     if _profile_home:
         run_env["HOME"] = _profile_home
@@ -338,7 +338,7 @@ def _read_terminal_shell_init_config() -> tuple[list[str], bool]:
     execution never breaks because the config file is unreadable.
     """
     try:
-        from hermes_cli.config import load_config
+        from kase_cli.config import load_config
 
         cfg = load_config() or {}
         terminal_cfg = cfg.get("terminal") or {}
@@ -357,7 +357,7 @@ def _resolve_shell_init_files() -> list[str]:
     Expands ``~`` and ``${VAR}`` references and drops anything that doesn't
     exist on disk, so a missing ``~/.bashrc`` never breaks the snapshot.
     The ``auto_source_bashrc`` path runs only when the user hasn't supplied
-    an explicit list — once they have, Hermes trusts them.
+    an explicit list — once they have, Kase trusts them.
     """
     explicit, auto_bashrc = _read_terminal_shell_init_config()
 
@@ -444,18 +444,18 @@ class LocalEnvironment(BaseEnvironment):
         can't open the path, and the Windows default temp (``%TEMP%``) often
         contains spaces (``C:\\Users\\Some Name\\AppData\\Local\\Temp``) that
         break unquoted bash interpolations.  Use a dedicated cache dir under
-        ``HERMES_HOME`` instead — single-word path, guaranteed to exist, same
+        ``KASE_HOME`` instead — single-word path, guaranteed to exist, same
         string resolves in both Git Bash and native Python.
         """
         if _IS_WINDOWS:
-            # Derive a Windows-safe temp dir under HERMES_HOME.  Using
+            # Derive a Windows-safe temp dir under KASE_HOME.  Using
             # forward slashes makes the same string work unchanged in bash
             # command interpolations AND in Python ``open()`` — Windows
             # accepts forward slashes in filesystem paths, and we control
             # the path so we can guarantee no spaces.
             try:
-                from hermes_constants import get_hermes_home
-                cache_dir = get_hermes_home() / "cache" / "terminal"
+                from kase_constants import get_kase_home
+                cache_dir = get_kase_home() / "cache" / "terminal"
             except Exception:
                 cache_dir = Path(tempfile.gettempdir()) / "hermes_terminal"
             cache_dir.mkdir(parents=True, exist_ok=True)
