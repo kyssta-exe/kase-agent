@@ -1785,30 +1785,82 @@ DEFAULT_CONFIG = {
     # main model/provider configured at the top level.
     "model_routing": {
         "enabled": False,
-        "default": {},  # fallback if no category matches; same schema as categories
+        # Adaptive mode routes each category to its own model.
+        # Classic mode (enabled=False) uses one model for everything.
+        # Unified fallback — kicks in when no category/default resolves.
+        "fallback_unified": {
+            "provider": "",
+            "model": "",
+            "base_url": "",
+            "api_key": "",
+        },
+        # Default fallback for all categories (checked before unified fallback).
+        "default": {
+            "provider": "",
+            "model": "",
+            "base_url": "",
+            "api_key": "",
+        },
+        # Per-category routes — each can also have its own fallback.
         "reasoning": {
             "provider": "",
             "model": "",
             "base_url": "",
             "api_key": "",
+            "fallback": {
+                "provider": "",
+                "model": "",
+                "base_url": "",
+                "api_key": "",
+            },
         },
         "research": {
             "provider": "",
             "model": "",
             "base_url": "",
             "api_key": "",
+            "fallback": {
+                "provider": "",
+                "model": "",
+                "base_url": "",
+                "api_key": "",
+            },
         },
         "coding": {
             "provider": "",
             "model": "",
             "base_url": "",
             "api_key": "",
+            "fallback": {
+                "provider": "",
+                "model": "",
+                "base_url": "",
+                "api_key": "",
+            },
         },
         "agentic": {
             "provider": "",
             "model": "",
             "base_url": "",
             "api_key": "",
+            "fallback": {
+                "provider": "",
+                "model": "",
+                "base_url": "",
+                "api_key": "",
+            },
+        },
+        "image_generation": {
+            "provider": "",
+            "model": "",
+            "base_url": "",
+            "api_key": "",
+            "fallback": {
+                "provider": "",
+                "model": "",
+                "base_url": "",
+                "api_key": "",
+            },
         },
     },
 
