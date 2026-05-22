@@ -207,7 +207,6 @@ all = [
 ]
 
 [project.scripts]
-kase = "kase_cli.main:main"
 kase = "run_agent:main"
 kase-acp = "acp_adapter.entry:main"
 
