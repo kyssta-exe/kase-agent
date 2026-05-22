@@ -13531,6 +13531,57 @@ Examples:
     dashboard_parser.set_defaults(func=cmd_dashboard)
 
     # =========================================================================
+    # web command — alias for dashboard
+    # =========================================================================
+    web_parser = subparsers.add_parser(
+        "web",
+        help="Start the web UI dashboard (alias for dashboard)",
+        description="Launch the Kase web dashboard for managing config, API keys, and sessions",
+    )
+    web_parser.add_argument(
+        "--port", type=int, default=9119, help="Port (default 9119)"
+    )
+    web_parser.add_argument(
+        "--host", default="127.0.0.1", help="Host (default 127.0.0.1)"
+    )
+    web_parser.add_argument(
+        "--no-open", action="store_true", help="Don't open browser automatically"
+    )
+    web_parser.add_argument(
+        "--insecure",
+        action="store_true",
+        help="Allow binding to non-localhost (DANGEROUS: exposes API keys on the network)",
+    )
+    web_parser.add_argument(
+        "--tui",
+        action="store_true",
+        help=(
+            "Expose the in-browser Chat tab (embedded `kase --tui` via PTY/WebSocket). "
+            "Alternatively set HERMES_DASHBOARD_TUI=1."
+        ),
+    )
+    web_parser.add_argument(
+        "--skip-build",
+        action="store_true",
+        help=(
+            "Skip the web UI build step and serve the existing dist directly. "
+            "Useful for non-interactive contexts (Windows Scheduled Tasks, CI) "
+            "where npm may not be available. Pre-build with: cd web && npm run build"
+        ),
+    )
+    web_parser.add_argument(
+        "--stop",
+        action="store_true",
+        help="Stop all running kase web processes and exit",
+    )
+    web_parser.add_argument(
+        "--status",
+        action="store_true",
+        help="List running kase web processes and exit",
+    )
+    web_parser.set_defaults(func=cmd_dashboard)
+
+    # =========================================================================
     # logs command
     # =========================================================================
     logs_parser = subparsers.add_parser(

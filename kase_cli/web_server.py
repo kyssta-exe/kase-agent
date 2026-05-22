@@ -119,6 +119,8 @@ _PUBLIC_API_PATHS: frozenset = frozenset({
     "/api/dashboard/themes",
     "/api/dashboard/plugins",
     "/api/dashboard/plugins/rescan",
+    "/api/dashboard/stats",
+    "/api/dashboard/recent-activity",
 })
 
 
@@ -3090,6 +3092,243 @@ async def update_config_raw(body: RawConfigUpdate):
 
 # ---------------------------------------------------------------------------
 # Token / cost analytics endpoint
+# ---------------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------
+# Dashboard Home — aggregated stats for the landing page
+# ---------------------------------------------------------------------------
+
+
+@app.get("/api/dashboard/stats")
+async def get_dashboard_stats():
+    """Aggregated stats for the dashboard home page.
+
+    Returns total requests, tokens, cost across all sessions plus
+    active-session and today-session counts.
+    """
+    from kase_state import SessionDB
+
+    db = SessionDB()
+    try:
+        now = time.time()
+        today_start = now - (now % 86400)  # start of today (UTC)
+
+        cur = db._conn.execute("""
+            SELECT
+                COALESCE(SUM(api_call_count), 0) as total_api_calls,
+                COALESCE(SUM(input_tokens), 0) as total_input_tokens,
+                COALESCE(SUM(output_tokens), 0) as total_output_tokens,
+                COALESCE(SUM(cache_read_tokens), 0) as total_cache_read,
+                COALESCE(SUM(reasoning_tokens), 0) as total_reasoning,
+                COALESCE(SUM(estimated_cost_usd), 0) as total_estimated_cost,
+                COALESCE(SUM(actual_cost_usd), 0) as total_actual_cost,
+                COUNT(*) as total_sessions
+            FROM sessions
+        """)
+        all_time = dict(cur.fetchone())
+
+        cur = db._conn.execute("""
+            SELECT
+                COALESCE(SUM(api_call_count), 0) as api_calls,
+                COALESCE(SUM(input_tokens), 0) as input_tokens,
+                COALESCE(SUM(output_tokens), 0) as output_tokens,
+                COALESCE(SUM(estimated_cost_usd), 0) as estimated_cost,
+                COUNT(*) as sessions
+            FROM sessions WHERE started_at > ?
+        """, (today_start,))
+        today = dict(cur.fetchone())
+
+        # Active sessions (not ended, active within last 5 min)
+        cur = db._conn.execute("""
+            SELECT COUNT(*) as count FROM sessions
+            WHERE ended_at IS NULL AND last_active > ?
+        """, (now - 300,))
+        active_sessions = dict(cur.fetchone())["count"]
+
+        # Sessions with ended_at IS NULL but no recent activity
+        cur = db._conn.execute("""
+            SELECT COUNT(*) as count FROM sessions
+            WHERE ended_at IS NULL AND (last_active IS NULL OR last_active <= ?)
+        """, (now - 300,))
+        idle_sessions = dict(cur.fetchone())["count"]
+
+        return {
+            "all_time": {
+                "api_calls": all_time["total_api_calls"],
+                "input_tokens": all_time["total_input_tokens"],
+                "output_tokens": all_time["total_output_tokens"],
+                "estimated_cost": all_time["total_estimated_cost"],
+                "actual_cost": all_time["total_actual_cost"],
+                "sessions": all_time["total_sessions"],
+            },
+            "today": {
+                "api_calls": today["api_calls"],
+                "input_tokens": today["input_tokens"],
+                "output_tokens": today["output_tokens"],
+                "estimated_cost": today["estimated_cost"],
+                "sessions": today["sessions"],
+            },
+            "active_sessions": active_sessions,
+            "idle_sessions": idle_sessions,
+            "total_tokens": all_time["total_input_tokens"] + all_time["total_output_tokens"],
+            "total_api_calls": all_time["total_api_calls"],
+            "total_sessions": all_time["total_sessions"],
+        }
+    finally:
+        db.close()
+
+
+@app.get("/api/dashboard/recent-activity")
+async def get_dashboard_recent_activity(limit: int = 10):
+    """Recent session activity for the dashboard home page feed."""
+    from kase_state import SessionDB
+
+    db = SessionDB()
+    try:
+        cur = db._conn.execute("""
+            SELECT id, title, model, started_at, ended_at, last_active,
+                   input_tokens, output_tokens,
+                   COALESCE(api_call_count, 0) as api_calls,
+                   COALESCE(estimated_cost_usd, 0) as estimated_cost
+            FROM sessions
+            WHERE started_at IS NOT NULL
+            ORDER BY started_at DESC
+            LIMIT ?
+        """, (limit,))
+        rows = [dict(r) for r in cur.fetchall()]
+        for r in rows:
+            r["duration_seconds"] = (
+                (r["ended_at"] or time.time()) - r["started_at"]
+            ) if r["started_at"] else 0
+            r["total_tokens"] = (r["input_tokens"] or 0) + (r["output_tokens"] or 0)
+        return {"sessions": rows}
+    finally:
+        db.close()
+
+
+# ---------------------------------------------------------------------------
+# Native Chat WebSocket — ChatGPT-style streaming chat
+# ---------------------------------------------------------------------------
+
+# In-memory store for active chat sessions: session_id -> AIAgent ref + queue
+_chat_sessions: dict = {}
+_chat_lock = threading.Lock()
+
+
+@app.websocket("/api/chat/stream")
+async def chat_stream_ws(ws: WebSocket) -> None:
+    """WebSocket endpoint for ChatGPT-style streaming chat.
+
+    Protocol (JSON messages):
+      Receive: {"type":"message","content":"...","session_id":"..."}
+      Receive: {"type":"new_session","model":"..."}
+      Send:    {"type":"delta","content":"text chunk"}
+      Send:    {"type":"thinking","content":"..."}
+      Send:    {"type":"tool_start","name":"...","arguments":{...}}
+      Send:    {"type":"tool_result","name":"...","result":"..."}
+      Send:    {"type":"complete","usage":{"input_tokens":N,"output_tokens":N}}
+      Send:    {"type":"error","message":"..."}
+    """
+    # Auth
+    token = ws.query_params.get("token", "")
+    if not hmac.compare_digest(token.encode(), _SESSION_TOKEN.encode()):
+        await ws.close(code=4401)
+        return
+
+    if not _ws_client_is_allowed(ws):
+        await ws.close(code=4403)
+        return
+
+    await ws.accept()
+
+    loop = asyncio.get_running_loop()
+
+    async def send_json(data: dict) -> None:
+        try:
+            await ws.send_json(data)
+        except Exception:
+            pass
+
+    try:
+        async for raw in ws.iter_json():
+            msg_type = raw.get("type", "")
+
+            if msg_type == "message":
+                content = raw.get("content", "").strip()
+                session_id = raw.get("session_id", "")
+                model = raw.get("model", "")
+                if not content:
+                    continue
+
+                # Run AIAgent in a thread pool to avoid blocking the event loop
+                def run_chat(sid: str, msg: str) -> dict:
+                    from run_agent import AIAgent
+
+                    agent_kwargs = {
+                        "session_id": sid or None,
+                        "quiet_mode": True,
+                        "skip_context_files": True,
+                        "skip_memory": False,
+                        "max_iterations": 30,
+                        "save_trajectories": False,
+                    }
+                    if model:
+                        agent_kwargs["model"] = model
+
+                    agent = AIAgent(**agent_kwargs)
+                    result = agent.run_conversation(user_message=msg)
+                    return result
+
+                result = await loop.run_in_executor(None, run_chat, session_id, content)
+
+                # Send back the final response
+                final = result.get("final_response", "") or ""
+                if final:
+                    await send_json({
+                        "type": "delta",
+                        "content": final,
+                    })
+
+                # Get usage from messages
+                messages = result.get("messages", [])
+                input_tokens = 0
+                output_tokens = 0
+                for m in messages:
+                    usage = m.get("usage", {}) or {}
+                    if isinstance(usage, dict):
+                        input_tokens += usage.get("prompt_tokens", 0) or usage.get("input_tokens", 0)
+                        output_tokens += usage.get("completion_tokens", 0) or usage.get("output_tokens", 0)
+
+                await send_json({
+                    "type": "complete",
+                    "usage": {
+                        "input_tokens": input_tokens,
+                        "output_tokens": output_tokens,
+                    },
+                })
+
+            elif msg_type == "new_session":
+                session_id = raw.get("session_id", "")
+                model = raw.get("model", "")
+                await send_json({
+                    "type": "session_ready",
+                    "session_id": session_id or "",
+                    "model": model or "",
+                })
+
+    except WebSocketDisconnect:
+        pass
+    except Exception as exc:
+        _log.exception("chat_stream_ws error")
+        try:
+            await send_json({"type": "error", "message": str(exc)[:500]})
+        except Exception:
+            pass
+
+
+# ---------------------------------------------------------------------------
+# Analytics endpoints
 # ---------------------------------------------------------------------------
 
 

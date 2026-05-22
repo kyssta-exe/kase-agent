@@ -332,6 +332,12 @@ export const api = {
       },
     ),
 
+  // Dashboard home
+  getDashboardStats: () =>
+    fetchJSON<DashboardStatsResponse>("/api/dashboard/stats"),
+  getRecentActivity: (limit = 10) =>
+    fetchJSON<RecentActivityResponse>(`/api/dashboard/recent-activity?limit=${limit}`),
+
   // Dashboard themes
   getThemes: () =>
     fetchJSON<DashboardThemesResponse>("/api/dashboard/themes"),
@@ -817,4 +823,50 @@ export interface AgentPluginUpdateResponse {
 export interface PluginProvidersPutRequest {
   memory_provider?: string;
   context_engine?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Dashboard Home — stats + recent activity
+// ---------------------------------------------------------------------------
+
+export interface DashboardStatsResponse {
+  all_time: {
+    api_calls: number;
+    input_tokens: number;
+    output_tokens: number;
+    estimated_cost: number;
+    actual_cost: number;
+    sessions: number;
+  };
+  today: {
+    api_calls: number;
+    input_tokens: number;
+    output_tokens: number;
+    estimated_cost: number;
+    sessions: number;
+  };
+  active_sessions: number;
+  idle_sessions: number;
+  total_tokens: number;
+  total_api_calls: number;
+  total_sessions: number;
+}
+
+export interface RecentActivitySession {
+  id: string;
+  title: string | null;
+  model: string | null;
+  started_at: number;
+  ended_at: number | null;
+  last_active: number;
+  input_tokens: number;
+  output_tokens: number;
+  api_calls: number;
+  estimated_cost: number;
+  duration_seconds: number;
+  total_tokens: number;
+}
+
+export interface RecentActivityResponse {
+  sessions: RecentActivitySession[];
 }
