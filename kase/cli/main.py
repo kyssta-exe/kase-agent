@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import WordCompleter, FuzzyWordCompleter, merge_completers
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.styles import Style as PTStyle
 from prompt_toolkit.patch_stdout import patch_stdout
@@ -49,8 +50,17 @@ class KaseCLI:
         
         self._history_file = self._kase_home / "history.txt"
         self._history_file.parent.mkdir(parents=True, exist_ok=True)
+
+        from kase.cli.completion import get_slash_command_names
+        self._slash_completer = FuzzyWordCompleter(
+            get_slash_command_names(),
+            sentence=True,
+            match_middle=True,
+        )
         self._session = PromptSession(
             history=FileHistory(str(self._history_file)),
+            completer=self._slash_completer,
+            complete_while_typing=True,
         )
         
         self._prompt_style = PTStyle.from_dict({
@@ -449,9 +459,11 @@ def main():
         _cmd_setup(cmd_args)
     elif cmd == "gateway":
         _cmd_gateway(cmd_args)
+    elif cmd == "completion":
+        _cmd_completion(cmd_args)
     elif cmd == "version":
         print(f"Kase Agent v{__version__}")
-    elif cmd in ("-i", "--interactive"):
+    elif cmd in ("-i", "--interactive", "cli"):
         cli = KaseCLI()
         cli.run()
     else:
@@ -476,8 +488,15 @@ def _print_help():
     print("  kase setup model        Configure model provider")
     print("  kase setup msg          Configure messaging platforms")
     print("  kase gateway            Start messaging gateway")
+    print("  kase completion <shell> Generate shell completion script")
     print("  kase --version, -v      Show version")
     print("  kase --help, -h         Show this help")
+    print()
+    print("Completion:")
+    print("  kase completion bash     > /etc/bash_completion.d/kase")
+    print("  kase completion zsh      > /usr/local/share/zsh/site-functions/_kase")
+    print("  kase completion fish     > ~/.config/fish/completions/kase.fish")
+    print("  kase completion powershell > $PROFILE")
     print()
     print("Examples:")
     print("  kase web 9090           Web panel on port 9090")
@@ -518,6 +537,34 @@ def _cmd_setup(args):
 def _cmd_gateway(args):
     from kase.gateway.run import run_gateway
     run_gateway()
+
+
+def _cmd_completion(args):
+    shell = args[0] if args else "bash"
+    from kase.cli.completion import (
+        print_bash_completion, print_zsh_completion,
+        print_fish_completion, print_powershell_completion,
+    )
+    printers = {
+        "bash": print_bash_completion,
+        "zsh": print_zsh_completion,
+        "fish": print_fish_completion,
+        "powershell": print_powershell_completion,
+    }
+    printer = printers.get(shell)
+    if not printer:
+        print(f"Unknown shell: {shell}")
+        print(f"Supported: {', '.join(printers.keys())}")
+        return
+    printer()
+    if shell == "bash":
+        print(f"\n# Install: kase completion bash > /etc/bash_completion.d/kase")
+    elif shell == "zsh":
+        print(f"\n# Install: kase completion zsh > /usr/local/share/zsh/site-functions/_kase")
+    elif shell == "fish":
+        print(f"\n# Install: kase completion fish > ~/.config/fish/completions/kase.fish")
+    elif shell == "powershell":
+        print(f"\n# Install: kase completion powershell > $PROFILE")
 
 
 _PROMPT_INFO = "\033[94mi\033[0m"
