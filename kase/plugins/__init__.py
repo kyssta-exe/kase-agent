@@ -1,0 +1,1 @@
+"""Kase plugin system."""

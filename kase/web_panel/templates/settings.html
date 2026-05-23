@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kase — Settings</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <h2>Kase</h2>
+      <span class="badge">Settings</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item">💬 Chat</a>
+      <a href="/dashboard" class="nav-item">📊 Dashboard</a>
+      <a href="/settings" class="nav-item active">⚙ Settings</a>
+    </nav>
+  </aside>
+  <main id="main">
+    <div id="settings-page">
+      <h1>⚙ Settings</h1>
+      <div class="settings-section">
+        <h2>General</h2>
+        <div class="setting-row"><label>Model</label><input type="text" id="cfg-model" onchange="updateConfig('model', this.value)"></div>
+        <div class="setting-row"><label>Provider</label>
+          <select id="cfg-provider" onchange="updateConfig('provider', this.value)"></select>
+        </div>
+        <div class="setting-row"><label>Max Iterations</label><input type="number" id="cfg-iterations" min="1" max="500" onchange="updateConfig('max_iterations', parseInt(this.value))"></div>
+      </div>
+      <div class="settings-section">
+        <h2>Multi-Model Mode</h2>
+        <div id="multi-model-settings"></div>
+      </div>
+      <div class="settings-section">
+        <h2>Memory</h2>
+        <div class="setting-row">
+          <label>Long-Term Memory</label>
+          <label class="toggle"><input type="checkbox" id="cfg-ltm" onchange="toggleLTM(this.checked)"><span class="slider"></span></label>
+        </div>
+        <div id="memories-list"></div>
+        <button onclick="loadMemories()" class="btn-sm">🔄 Refresh Memories</button>
+      </div>
+      <div class="settings-section">
+        <h2>Messaging Platforms</h2>
+        <p class="muted">Connect Kase to messaging platforms for cross-platform chat.</p>
+        <div id="platforms-config">
+          <div class="platform-row"><span class="platform-name">📱 Telegram</span><span class="platform-status" id="p-telegram">checking...</span><input placeholder="Bot Token" id="p-telegram-key" onchange="savePlatform('telegram','token',this.value)"></div>
+          <div class="platform-row"><span class="platform-name">💬 Discord</span><span class="platform-status" id="p-discord">checking...</span><input placeholder="Bot Token" id="p-discord-key" onchange="savePlatform('discord','token',this.value)"></div>
+          <div class="platform-row"><span class="platform-name">📨 WhatsApp</span><span class="platform-status" id="p-whatsapp">checking...</span><input placeholder="API Key / Phone ID" id="p-whatsapp-key" onchange="savePlatform('whatsapp','token',this.value)"></div>
+          <div class="platform-row"><span class="platform-name">✉ Slack</span><span class="platform-status" id="p-slack">checking...</span><input placeholder="Bot Token" id="p-slack-key" onchange="savePlatform('slack','token',this.value)"></div>
+          <div class="platform-row"><span class="platform-name">📧 Email (SMTP)</span><span class="platform-status" id="p-email">checking...</span><input placeholder="SMTP credentials" id="p-email-key" onchange="savePlatform('email','credentials',this.value)"></div>
+          <div class="platform-row"><span class="platform-name">🔗 Matrix</span><span class="platform-status" id="p-matrix">checking...</span><input placeholder="Homeserver URL / Token" id="p-matrix-key" onchange="savePlatform('matrix','token',this.value)"></div>
+        </div>
+        <div class="setting-row" style="margin-top:12px">
+          <label>Gateway Enabled</label>
+          <label class="toggle"><input type="checkbox" id="cfg-gateway" onchange="saveGatewayEnabled(this.checked)"><span class="slider"></span></label>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h2>System</h2>
+        <div class="setting-row"><label>Kase Home</label><span id="cfg-home" class="setting-value"></span></div>
+        <div class="setting-row"><label>Session ID</label><span id="cfg-session" class="setting-value"></span></div>
+        <button onclick="resetAll()" class="btn-danger">🔄 Reset All Settings</button>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+async function loadConfig() {
+  const [cfg, status, providers] = await Promise.all([
+    fetch('/api/config').then(r=>r.json()),
+    fetch('/api/status').then(r=>r.json()),
+    fetch('/api/models').then(r=>r.json()),
+  ]);
+  document.getElementById('cfg-model').value = cfg.model || status.model || '';
+  const sel = document.getElementById('cfg-provider');
+  sel.innerHTML = (providers.providers||[]).map(p => `<option value="${p}" ${p===cfg.provider?'selected':''}>${p}</option>`).join('');
+  document.getElementById('cfg-iterations').value = cfg.max_iterations || 90;
+  document.getElementById('cfg-home').textContent = cfg._kase_home || '-';
+  document.getElementById('cfg-session').textContent = status.session_id || '-';
+  document.getElementById('cfg-ltm').checked = cfg.long_term_memory !== false;
+  loadMultiModel();
+  loadMemories();
+}
+async function loadMultiModel() {
+  const mm = await fetch('/api/config/multi-model').then(r=>r.json());
+  const div = document.getElementById('multi-model-settings');
+  div.innerHTML = Object.entries(mm).map(([task, cfg]) => `
+    <div class="mm-row">
+      <strong>${task}</strong>
+      <input value="${cfg.model||''}" placeholder="model" onchange="updateMMRoute('${task}','model',this.value)" class="mm-input">
+      <input value="${cfg.provider||'openai'}" placeholder="provider" onchange="updateMMRoute('${task}','provider',this.value)" class="mm-input-sm">
+      <input value="${cfg.temperature||0.7}" type="number" step="0.1" min="0" max="2" onchange="updateMMRoute('${task}','temperature',parseFloat(this.value))" class="mm-input-sm">
+    </div>`).join('');
+}
+async function updateConfig(key, value) {
+  await fetch('/api/config', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({key, value})});
+}
+async function updateMMRoute(task, field, value) {
+  const current = await fetch('/api/config/multi-model').then(r=>r.json());
+  if (!current[task]) current[task] = {};
+  current[task][field] = value;
+  await fetch('/api/config/multi-model', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(current)});
+}
+async function toggleLTM(enabled) {
+  await updateConfig('long_term_memory', enabled);
+}
+async function loadMemories() {
+  const res = await fetch('/api/memories?limit=20').then(r=>r.json());
+  const div = document.getElementById('memories-list');
+  if (!res.memories || res.memories.length === 0) { div.innerHTML = '<p class="muted">No memories yet. Teach me something!</p>'; return; }
+  div.innerHTML = res.memories.map(m => `<div class="memory-item">[${m.memory_type}] ${m.content.slice(0,120)} <button class="btn-del" onclick="deleteMemory('${m.id}')">✕</button></div>`).join('');
+}
+async function deleteMemory(id) {
+  await fetch(`/api/memories/${id}`, {method:'DELETE'});
+  loadMemories();
+}
+async function resetAll() {
+  if (!confirm('Reset all settings to defaults?')) return;
+  await fetch('/api/config', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({key:'_reset', value:true})});
+  location.reload();
+}
+async function loadPlatforms() {
+  const platforms = ['telegram','discord','whatsapp','slack','email','matrix'];
+  const cfg = await fetch('/api/config').then(r=>r.json());
+  const gateway = cfg.gateway || {};
+  document.getElementById('cfg-gateway').checked = gateway.enabled !== false;
+  for (const p of platforms) {
+    const pc = (gateway.platforms||{})[p] || {};
+    const statusEl = document.getElementById(`p-${p}`);
+    const inputEl = document.getElementById(`p-${p}-key`);
+    if (pc.enabled && pc.token) {
+      statusEl.textContent = '✅ Active';
+      statusEl.className = 'platform-status active';
+      inputEl.value = pc.token;
+    } else if (pc.token) {
+      statusEl.textContent = '⏸ Inactive';
+      statusEl.className = 'platform-status inactive';
+      inputEl.value = pc.token;
+    } else {
+      statusEl.textContent = '⚪ Not Configured';
+      statusEl.className = 'platform-status inactive';
+    }
+  }
+}
+async function savePlatform(platform, key, value) {
+  const cfg = await fetch('/api/config').then(r=>r.json());
+  if (!cfg.gateway) cfg.gateway = {};
+  if (!cfg.gateway.platforms) cfg.gateway.platforms = {};
+  if (!cfg.gateway.platforms[platform]) cfg.gateway.platforms[platform] = {};
+  cfg.gateway.platforms[platform][key] = value;
+  cfg.gateway.platforms[platform].enabled = !!value;
+  await fetch('/api/config', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({key:'gateway', value:cfg.gateway})});
+  loadPlatforms();
+}
+async function saveGatewayEnabled(enabled) {
+  const cfg = await fetch('/api/config').then(r=>r.json());
+  if (!cfg.gateway) cfg.gateway = {};
+  cfg.gateway.enabled = enabled;
+  await fetch('/api/config', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({key:'gateway', value:cfg.gateway})});
+}
+loadConfig();
+loadPlatforms();
+</script>
+</body>
+</html>

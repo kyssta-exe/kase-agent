@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kase — AI Agent</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <h2>Kase</h2>
+      <span class="badge">v1.0</span>
+    </div>
+    <div class="sidebar-status" id="sidebar-status">
+      <div class="status-item"><span class="label">Model:</span> <span id="s-model">-</span></div>
+      <div class="status-item"><span class="label">Provider:</span> <span id="s-provider">-</span></div>
+      <div class="status-item"><span class="label">Mode:</span> <span id="s-mode">agentic</span></div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item active">💬 Chat</a>
+      <a href="/dashboard" class="nav-item">📊 Dashboard</a>
+      <a href="/settings" class="nav-item">⚙ Settings</a>
+    </nav>
+    <div class="sidebar-actions">
+      <button onclick="resetConversation()" class="btn-sm">🔄 New Chat</button>
+    </div>
+  </aside>
+  <main id="main">
+    <div id="chat-header">
+      <div class="model-indicator" id="model-indicator">gpt-4o · openai</div>
+    </div>
+    <div id="messages"></div>
+    <div id="input-area">
+      <textarea id="input" rows="1" placeholder="Message Kase..." autofocus></textarea>
+      <button id="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </main>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>

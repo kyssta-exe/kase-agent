@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kase — Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <h2>Kase</h2>
+      <span class="badge">Dashboard</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item">💬 Chat</a>
+      <a href="/dashboard" class="nav-item active">📊 Dashboard</a>
+      <a href="/settings" class="nav-item">⚙ Settings</a>
+    </nav>
+  </aside>
+  <main id="main">
+    <div id="dashboard">
+      <h1>📊 Analytics Overview</h1>
+      <div class="time-controls">
+        <label>Time range:</label>
+        <select id="time-range" onchange="refreshDashboard()">
+          <option value="1">Last Hour</option>
+          <option value="24" selected>Last 24 Hours</option>
+          <option value="168">Last 7 Days</option>
+          <option value="720">Last 30 Days</option>
+        </select>
+      </div>
+      <div class="stats-grid" id="overview-stats">
+        <div class="stat-card"><div class="stat-value" id="stat-calls">-</div><div class="stat-label">API Calls</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-tokens">-</div><div class="stat-label">Total Tokens</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-prompt">-</div><div class="stat-label">Prompt Tokens</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-completion">-</div><div class="stat-label">Completion Tokens</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-errors">-</div><div class="stat-label">Errors</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-avg-duration">-</div><div class="stat-label">Avg Duration</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-sessions">-</div><div class="stat-label">Sessions</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-models">-</div><div class="stat-label">Models Used</div></div>
+      </div>
+      <div class="all-time-stats">
+        <h3>All Time</h3>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-value" id="stat-total-calls">-</div><div class="stat-label">Total Calls</div></div>
+          <div class="stat-card"><div class="stat-value" id="stat-total-tokens">-</div><div class="stat-label">Total Tokens</div></div>
+        </div>
+      </div>
+      <div class="sections-grid">
+        <section class="panel" id="model-breakdown">
+          <h2>Models Breakdown</h2>
+          <div class="table-wrap"><table id="model-table"><thead><tr><th>Model</th><th>Provider</th><th>Calls</th><th>Tokens</th><th>Avg ms</th><th>Errors</th></tr></thead><tbody></tbody></table></div>
+        </section>
+        <section class="panel" id="task-breakdown">
+          <h2>Tasks Breakdown</h2>
+          <div class="table-wrap"><table id="task-table"><thead><tr><th>Task Type</th><th>Calls</th><th>Tokens</th><th>Avg ms</th></tr></thead><tbody></tbody></table></div>
+        </section>
+      </div>
+      <section class="panel" id="recent-calls">
+        <h2>Recent Calls</h2>
+        <div class="table-wrap"><table id="recent-table"><thead><tr><th>Time</th><th>Model</th><th>Type</th><th>Tokens</th><th>Duration</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+      </section>
+    </div>
+  </main>
+</div>
+<script>
+let currentHours = 24;
+async function refreshDashboard() {
+  currentHours = parseInt(document.getElementById('time-range').value);
+  const base = `/api/analytics`;
+  try {
+    const [overview, models, tasks, recent] = await Promise.all([
+      fetch(`${base}/overview?hours=${currentHours}`).then(r=>r.json()),
+      fetch(`${base}/models?hours=${currentHours}`).then(r=>r.json()),
+      fetch(`${base}/tasks?hours=${currentHours}`).then(r=>r.json()),
+      fetch(`${base}/recent?limit=30`).then(r=>r.json()),
+    ]);
+    if (overview.error) { document.getElementById('overview-stats').innerHTML='<p>Analytics not enabled. Start chatting to generate data.</p>'; return; }
+    document.getElementById('stat-calls').textContent = overview.total_calls?.toLocaleString() || '0';
+    document.getElementById('stat-tokens').textContent = overview.total_tokens?.toLocaleString() || '0';
+    document.getElementById('stat-prompt').textContent = overview.prompt_tokens?.toLocaleString() || '0';
+    document.getElementById('stat-completion').textContent = overview.completion_tokens?.toLocaleString() || '0';
+    document.getElementById('stat-errors').textContent = overview.errors || '0';
+    document.getElementById('stat-avg-duration').textContent = (overview.avg_duration_ms||0).toFixed(0) + 'ms';
+    document.getElementById('stat-sessions').textContent = overview.unique_sessions || '0';
+    document.getElementById('stat-models').textContent = (overview.models_used||[]).length;
+    document.getElementById('stat-total-calls').textContent = overview.total_calls_all_time?.toLocaleString() || '0';
+    document.getElementById('stat-total-tokens').textContent = overview.total_tokens_all_time?.toLocaleString() || '0';
+    const mtb = document.querySelector('#model-table tbody');
+    mtb.innerHTML = (models.models||[]).map(m => `<tr><td>${m.model}</td><td>${m.provider}</td><td>${m.calls}</td><td>${(m.tokens||0).toLocaleString()}</td><td>${(m.avg_duration||0).toFixed(0)}</td><td>${m.errors||0}</td></tr>`).join('');
+    const ttb = document.querySelector('#task-table tbody');
+    ttb.innerHTML = (tasks.tasks||[]).map(t => `<tr><td>${t.task_type}</td><td>${t.calls}</td><td>${(t.tokens||0).toLocaleString()}</td><td>${(t.avg_duration||0).toFixed(0)}</td></tr>`).join('');
+    const rtb = document.querySelector('#recent-table tbody');
+    rtb.innerHTML = (recent.calls||[]).map(c => `<tr><td>${(c.timestamp||'').slice(11,19)}</td><td>${c.model}</td><td>${c.task_type}</td><td>${c.total_tokens}</td><td>${(c.duration_ms||0).toFixed(0)}ms</td><td>${c.success?'✅':'❌'}</td></tr>`).join('');
+  } catch(e) { console.error('Dashboard error:', e); }
+}
+refreshDashboard();
+setInterval(refreshDashboard, 15000);
+</script>
+</body>
+</html>
