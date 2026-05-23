@@ -7,6 +7,18 @@
 
 ## Quick Install
 
+### One-Line Setup (Linux/macOS)
+
+```bash
+./setup.sh
+```
+
+### One-Line Setup (Windows PowerShell)
+
+```powershell
+.\setup.ps1
+```
+
 ### From PyPI
 
 ```bash
@@ -18,6 +30,8 @@ pip install kase-agent
 ```bash
 git clone https://github.com/kyssta-exe/kase-agent.git
 cd kase-agent
+make setup          # auto-detects venv if needed
+# or
 pip install -e .
 ```
 
@@ -80,6 +94,28 @@ pip install kase-agent
 kase
 ```
 
+Or use the setup script:
+
+```powershell
+.\setup.ps1
+```
+
+## Linux (Debian/Ubuntu — externally-managed)
+
+If you see `error: externally-managed-environment`, create a virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+Or use the auto-detecting setup script:
+
+```bash
+./setup.sh
+```
+
 ## Upgrading
 
 ```bash
@@ -89,5 +125,6 @@ pip install --upgrade kase-agent
 ## Troubleshooting
 
 - **`command not found: kase`** — ensure Python's bin directory is in your PATH
+- **`error: externally-managed-environment`** — use `python3 -m venv .venv` then `source .venv/bin/activate && pip install -e .`
 - **Import errors** — verify Python 3.11+: `python --version`
 - **`ModuleNotFoundError`** — try reinstalling: `pip install --force-reinstall kase-agent`
