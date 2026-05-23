@@ -54,7 +54,7 @@ class KaseCLI:
         )
         
         self._prompt_style = PTStyle.from_dict({
-            "prompt": "ansigold",
+            "prompt": "ansiyellow",
             "command": "ansicyan",
         })
         
