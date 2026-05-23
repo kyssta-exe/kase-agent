@@ -429,22 +429,98 @@ class KaseCLI:
 def main():
     """Main entry point for the Kase CLI."""
     import sys
-    
-    if "--version" in sys.argv or "-v" in sys.argv:
+    args = sys.argv[1:]
+
+    if "--version" in args or "-v" in args:
         print(f"Kase Agent v{__version__}")
+        _print_version_info()
         return
-    
-    if "--help" in sys.argv or "-h" in sys.argv:
-        print("Usage: kase [--version] [--help]")
-        print()
-        print("Commands:")
-        print("  kase              Start interactive CLI")
-        print("  kase --version    Show version")
-        print("  kase --help       Show this help")
+
+    if not args or args[0] in ("-h", "--help", "help"):
+        _print_help()
         return
-    
-    cli = KaseCLI()
-    cli.run()
+
+    cmd = args[0]
+    cmd_args = args[1:]
+
+    if cmd in ("web", "webui", "server"):
+        _cmd_web(cmd_args)
+    elif cmd == "setup":
+        _cmd_setup(cmd_args)
+    elif cmd == "gateway":
+        _cmd_gateway(cmd_args)
+    elif cmd == "version":
+        print(f"Kase Agent v{__version__}")
+    elif cmd in ("-i", "--interactive"):
+        cli = KaseCLI()
+        cli.run()
+    else:
+        print(f"Unknown command: {cmd}")
+        print(f"Run 'kase --help' for usage.")
+        sys.exit(1)
+
+
+def _print_version_info():
+    import sys
+    print(f"  Python: {sys.version.split()[0]}")
+    print(f"  Platform: {sys.platform}")
+
+
+def _print_help():
+    print("Usage: kase [command] [options]")
+    print()
+    print("Commands:")
+    print("  kase                    Start interactive CLI")
+    print("  kase web [port]         Launch Kase Web Panel  (default port: 8080)")
+    print("  kase setup              Interactive setup wizard")
+    print("  kase setup model        Configure model provider")
+    print("  kase setup msg          Configure messaging platforms")
+    print("  kase gateway            Start messaging gateway")
+    print("  kase --version, -v      Show version")
+    print("  kase --help, -h         Show this help")
+    print()
+    print("Examples:")
+    print("  kase web 9090           Web panel on port 9090")
+    print("  kase web --host 0.0.0.0  Listen on all interfaces")
+    print("  kase setup              Interactive first-run wizard")
+    print("  kase setup model        Switch to a different model provider")
+
+
+def _cmd_web(args):
+    from kase.web_panel.server import run_web_panel
+    port = 8080
+    host = "127.0.0.1"
+    bg = False
+    for i, a in enumerate(args):
+        if a == "--host" and i + 1 < len(args):
+            host = args[i + 1]
+        elif a == "--bg":
+            bg = True
+        elif a.lstrip("-").isdigit():
+            port = int(a)
+    print(f"  {_PROMPT_INFO} Starting Kase Web Panel on http://{host}:{port}")
+    run_web_panel(host=host, port=port, bg=bg)
+
+
+def _cmd_setup(args):
+    from kase.cli.setup import setup_all, setup_model, setup_msg
+    if not args:
+        setup_all()
+    elif args[0] == "model":
+        setup_model()
+    elif args[0] == "msg":
+        setup_msg()
+    else:
+        print(f"Unknown setup command: {args[0]}")
+        print("Usage: kase setup [model|msg]")
+
+
+def _cmd_gateway(args):
+    from kase.gateway.run import run_gateway
+    run_gateway()
+
+
+_PROMPT_INFO = "\033[94mi\033[0m"
 
 
 if __name__ == "__main__":
